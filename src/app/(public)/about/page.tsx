@@ -1,0 +1,84 @@
+import { Metadata } from "next";
+import { Target, Eye, History, Quote } from "lucide-react";
+import { PageHeader } from "@/components/layout/page-header";
+import { Container, Card, SectionHeading } from "@/components/ui/primitives";
+import { Reveal } from "@/components/ui/reveal";
+import { getPage } from "@/lib/queries";
+import { SITE } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "About the Union",
+  description:
+    "The story, mission and vision of ADVAYA — the student union of Alappuzha Medical College.",
+};
+
+export default async function AboutPage() {
+  const page = await getPage("about");
+  const d = (page?.data ?? {}) as Record<string, string>;
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Who We Are"
+        title={page?.title ?? "About the Union"}
+        description={`The elected student voice of ${SITE.college}.`}
+        breadcrumb={[{ label: "About Union" }]}
+      />
+
+      <section className="py-14 sm:py-20">
+        <Container size="narrow">
+          {d.history && (
+            <Reveal>
+              <div className="flex gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+                  <History className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-ink-900">Our story</h2>
+                  <p className="mt-2 leading-relaxed text-ink-600">{d.history}</p>
+                </div>
+              </div>
+            </Reveal>
+          )}
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            <Reveal>
+              <Card className="h-full p-7">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+                  <Target className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-lg font-bold text-ink-900">Mission</h3>
+                <p className="mt-2 leading-relaxed text-ink-600">{d.mission}</p>
+              </Card>
+            </Reveal>
+            <Reveal delay={1}>
+              <Card className="h-full p-7">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+                  <Eye className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-lg font-bold text-ink-900">Vision</h3>
+                <p className="mt-2 leading-relaxed text-ink-600">{d.vision}</p>
+              </Card>
+            </Reveal>
+          </div>
+
+          {d.chairperson && (
+            <Reveal>
+              <Card className="mt-10 overflow-hidden">
+                <div className="relative bg-mesh p-8 sm:p-12">
+                  <Quote className="h-10 w-10 text-purple-400" />
+                  <p className="mt-5 text-xl font-medium leading-relaxed text-ink-800">
+                    {d.chairperson}
+                  </p>
+                  <p className="mt-6 text-sm font-semibold text-purple-700">
+                    — Message from the Chairperson
+                  </p>
+                </div>
+              </Card>
+            </Reveal>
+          )}
+        </Container>
+      </section>
+    </>
+  );
+}

@@ -26,6 +26,7 @@ export const SITE = {
 /** Primary public navigation. */
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
+  { label: "Interventions", href: "/interventions" },
   { label: "Achievements", href: "/achievements" },
   { label: "Events", href: "/events" },
   { label: "Notifications", href: "/notifications" },
@@ -46,10 +47,11 @@ export const NAV_LINKS = [
 
 /** Quick-link tiles shown on the home page. */
 export const QUICK_LINKS = [
+  { label: "Interventions", href: "/interventions", icon: "FileText" },
   { label: "Notifications", href: "/notifications", icon: "Bell" },
   { label: "Events", href: "/events", icon: "CalendarDays" },
   { label: "Achievements", href: "/achievements", icon: "Trophy" },
-  { label: "File a Complaint", href: "/complaints", icon: "MessageSquareWarning" },
+  { label: "Drop Suggestion", href: "/complaints", icon: "MessageSquareWarning" },
   { label: "Finance", href: "/finance", icon: "Wallet" },
   { label: "Emergency", href: "/emergency", icon: "Siren" },
   { label: "Subcommittee", href: "/subcommittee", icon: "Users" },

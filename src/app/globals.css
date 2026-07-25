@@ -132,12 +132,18 @@
     color: transparent;
   }
 
+  /* Touch targets (Apple HIG standard 44px min) */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+  
   /* Glass surface */
   .glass {
     background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 24px -1px rgba(91, 42, 134, 0.08); /* Premium shadow */
   }
   .glass-dark {
     background: rgba(26, 21, 35, 0.55);
@@ -166,12 +172,18 @@
   .animate-in-up {
     animation: fade-up 0.7s var(--ease-brand) both;
   }
+  .animate-marquee {
+    animation: marquee 60s linear infinite;
+  }
+  .animate-marquee:hover {
+    animation: marquee 120s linear infinite;
+  }
 }
 
 /* ---------- Keyframes ---------- */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 @keyframes shimmer {
@@ -204,4 +216,109 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* --- Initial Page Loader --- */
+.page-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-ink-950);
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+.page-loader-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.custom-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.custom-loading-text {
+  color: white;
+  font-size: 14pt;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.custom-dot {
+  margin-left: 3px;
+  animation: blink 1.5s infinite;
+}
+.custom-dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.custom-dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.custom-loading-bar-background {
+  --height: 30px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 5px;
+  width: 200px;
+  height: var(--height);
+  background-color: var(--color-ink-900);
+  box-shadow: #0c0c0c -2px 2px 4px 0px inset;
+  border-radius: calc(var(--height) / 2);
+}
+
+.custom-loading-bar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  --height: 20px;
+  width: 0%;
+  height: var(--height);
+  overflow: hidden;
+  background: var(--color-purple-600);
+  background: linear-gradient(
+    0deg,
+    var(--color-purple-600) 0%,
+    var(--color-purple-400) 100%
+  );
+  border-radius: calc(var(--height) / 2);
+  animation: custom-loading-anim 2s ease-out forwards;
+}
+
+.custom-white-bars-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.custom-white-bar {
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  width: 10px;
+  height: 45px;
+  opacity: 0.3;
+  transform: rotate(45deg);
+}
+
+@keyframes custom-loading-anim {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }

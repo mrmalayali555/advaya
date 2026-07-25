@@ -62,6 +62,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+import { InitialLoader } from "@/components/ui/initial-loader";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -71,7 +73,10 @@ export default function RootLayout({
       className={`${sora.variable} ${jakarta.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-background text-foreground">{children}</body>
+      <body className="min-h-full bg-background text-foreground">
+        <InitialLoader />
+        {children}
+      </body>
     </html>
   );
 }

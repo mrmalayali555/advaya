@@ -1,0 +1,75 @@
+"use client";
+
+import Link from "next/link";
+import { Field, TextArea, Select, Toggle, UploadField, SubmitBtn, DeleteBtn } from "./form-fields";
+
+type EventData = {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  time: string | null;
+  venue: string | null;
+  poster: string | null;
+  status: string;
+  published: boolean;
+};
+
+function toDateInput(d: Date) {
+  return new Date(d).toISOString().slice(0, 10);
+}
+
+export function EventForm({
+  event,
+  action,
+  deleteAction,
+}: {
+  event?: EventData;
+  action: (formData: FormData) => void;
+  deleteAction?: (formData: FormData) => void;
+}) {
+  return (
+    <div className="space-y-6">
+      <form action={action} className="space-y-6">
+        <div className="rounded-2xl border border-ink-100 bg-white p-6 shadow-[var(--shadow-soft)]">
+          <div className="grid gap-5">
+            <Field label="Title" name="title" defaultValue={event?.title} required placeholder="ADVAYA Union Day 2026" />
+            <TextArea label="Description" name="description" defaultValue={event?.description} required rows={5} placeholder="What's this event about?" />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field label="Date" name="date" type="date" defaultValue={event ? toDateInput(event.date) : ""} required />
+              <Field label="Time" name="time" defaultValue={event?.time ?? ""} placeholder="5:00 PM" />
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field label="Venue" name="venue" defaultValue={event?.venue ?? ""} placeholder="Main Auditorium" />
+              <Select
+                label="Status"
+                name="status"
+                defaultValue={event?.status ?? "upcoming"}
+                options={[
+                  { value: "upcoming", label: "Upcoming" },
+                  { value: "completed", label: "Completed" },
+                  { value: "cancelled", label: "Cancelled" },
+                ]}
+              />
+            </div>
+            <UploadField label="Poster" name="poster" defaultUrl={event?.poster} accept="image/*" hint="JPG, PNG, WebP up to 8MB" />
+            <Toggle label="Published" name="published" defaultChecked={event?.published ?? true} hint="Show on the public site" />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <SubmitBtn>{event ? "Save changes" : "Create event"}</SubmitBtn>
+          <Link href="/admin/events" className="text-sm font-medium text-ink-500 hover:text-ink-800">
+            Cancel
+          </Link>
+        </div>
+      </form>
+
+      {event && deleteAction && (
+        <form action={deleteAction} className="border-t border-ink-100 pt-6">
+          <DeleteBtn label="Delete event" />
+        </form>
+      )}
+    </div>
+  );
+}
