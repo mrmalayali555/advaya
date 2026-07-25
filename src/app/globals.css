@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   ADVAYA — Design System
+   Brand: silver "A" + royal-purple swoosh. Premium, trust-first, institutional.
+   ========================================================================== */
+
+@theme {
+  /* --- Brand: Purple (from the swoosh) --- */
+  --color-purple-50: #f5f1fa;
+  --color-purple-100: #e9e0f3;
+  --color-purple-200: #d3c1e7;
+  --color-purple-300: #b79bd4;
+  --color-purple-400: #9d7cbf;
+  --color-purple-500: #7e56a5;
+  --color-purple-600: #5b2a86;  /* primary */
+  --color-purple-700: #4a2270;
+  --color-purple-800: #391a57;
+  --color-purple-900: #2a1240;
+  --color-purple-950: #180a26;
+
+  /* --- Brand: Silver / chrome (the "A" + wordmark) --- */
+  --color-silver-50: #fbfbfc;
+  --color-silver-100: #f2f2f5;
+  --color-silver-200: #e8e8ed;
+  --color-silver-300: #d4d4dc;
+  --color-silver-400: #b6b6c0;
+  --color-silver-500: #9a9aa4;
+  --color-silver-600: #7c7c86;
+
+  /* --- Ink / neutrals --- */
+  --color-ink-50: #f7f6f9;
+  --color-ink-100: #edecf1;
+  --color-ink-200: #d7d5de;
+  --color-ink-300: #b3afc0;
+  --color-ink-400: #85809a;
+  --color-ink-500: #5f5a75;
+  --color-ink-600: #453f59;
+  --color-ink-700: #322d44;
+  --color-ink-800: #221e30;
+  --color-ink-900: #1a1523;  /* charcoal */
+  --color-ink-950: #100c17;
+
+  /* --- Surfaces --- */
+  --color-background: #ffffff;
+  --color-surface: #faf9fc;
+  --color-foreground: #1a1523;
+
+  /* --- Semantic --- */
+  --color-success: #2f9e6b;
+  --color-warning: #d98a2b;
+  --color-danger: #d64545;
+  --color-info: #3b7bd9;
+
+  /* --- Fonts (wired in layout.tsx via next/font) --- */
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-jakarta), ui-sans-serif, sans-serif;
+
+  /* --- Radii --- */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+
+  /* --- Elevation: soft, diffused, brand-tinted (never harsh black) --- */
+  --shadow-soft: 0 1px 2px rgba(26, 21, 35, 0.04), 0 8px 24px -12px rgba(91, 42, 134, 0.14);
+  --shadow-card: 0 2px 8px -2px rgba(26, 21, 35, 0.06), 0 18px 48px -24px rgba(91, 42, 134, 0.22);
+  --shadow-lift: 0 4px 12px -4px rgba(26, 21, 35, 0.08), 0 32px 64px -28px rgba(91, 42, 134, 0.32);
+
+  /* --- Motion --- */
+  --ease-brand: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  * {
+    border-color: var(--color-ink-200);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-purple-600);
+    color: #fff;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-200);
+    border-radius: 99px;
+    border: 3px solid var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-300); }
+}
+
+/* ---------- Utilities ---------- */
+@layer utilities {
+  /* Metallic silver text (the logo wordmark feel) */
+  .text-silver {
+    background: linear-gradient(180deg, #ffffff 0%, #d4d4dc 45%, #9a9aa4 62%, #eaeaef 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Purple brand gradient text */
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-purple-500), var(--color-purple-700));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Glass surface */
+  .glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .glass-dark {
+    background: rgba(26, 21, 35, 0.55);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Concentric card shell (double-bezel) */
+  .card-shell {
+    background: linear-gradient(180deg, rgba(91, 42, 134, 0.04), rgba(91, 42, 134, 0.01));
+    border: 1px solid var(--color-ink-100);
+    border-radius: var(--radius-3xl);
+    padding: 0.4rem;
+  }
+
+  .hairline { border: 1px solid rgba(26, 21, 35, 0.07); }
+
+  .bg-mesh {
+    background-image:
+      radial-gradient(ellipse 80% 55% at 15% -10%, rgba(157, 124, 191, 0.16), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 100% 0%, rgba(91, 42, 134, 0.12), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 110%, rgba(183, 155, 212, 0.10), transparent 60%);
+  }
+
+  .animate-in-up {
+    animation: fade-up 0.7s var(--ease-brand) both;
+  }
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Loading skeleton shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-ink-100) 25%,
+    var(--color-ink-50) 37%,
+    var(--color-ink-100) 63%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
