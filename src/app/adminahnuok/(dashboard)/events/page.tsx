@@ -12,7 +12,7 @@ export default async function AdminEventsPage() {
       <AdminHeader
         title="Events"
         description="Create and manage events. Upcoming ones appear on the home page."
-        action={{ label: "New event", href: "/admin/events/new" }}
+        action={{ label: "New event", href: "/adminahnuok/events/new" }}
       />
 
       {events.length === 0 ? (
@@ -33,7 +33,7 @@ export default async function AdminEventsPage() {
               {events.map((e) => (
                 <tr key={e.id} className="transition-colors hover:bg-ink-50/50">
                   <td className="px-5 py-3.5">
-                    <Link href={`/admin/events/${e.id}`} className="font-medium text-ink-900 hover:text-purple-700">
+                    <Link href={`/adminahnuok/events/${e.id}`} className="font-medium text-ink-900 hover:text-purple-700">
                       {e.title}
                     </Link>
                   </td>
@@ -44,7 +44,7 @@ export default async function AdminEventsPage() {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <Link
-                      href={`/admin/events/${e.id}`}
+                      href={`/adminahnuok/events/${e.id}`}
                       className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600"
                     >
                       <Pencil className="h-4 w-4" />
@@ -59,3 +59,4 @@ export default async function AdminEventsPage() {
     </>
   );
 }
+

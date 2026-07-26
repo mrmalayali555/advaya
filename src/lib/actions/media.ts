@@ -17,5 +17,6 @@ export async function deleteMedia(id: string) {
     }
     await db.media.delete({ where: { id } });
   }
-  revalidatePath("/admin/media");
+  revalidatePath("/adminahnuok/media");
 }
+

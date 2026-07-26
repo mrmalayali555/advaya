@@ -20,5 +20,6 @@ export async function saveMarquee(formData: FormData) {
     await db.marquee.create({ data });
   }
   revalidatePath("/");
-  revalidatePath("/admin/marquee");
+  revalidatePath("/adminahnuok/marquee");
 }
+

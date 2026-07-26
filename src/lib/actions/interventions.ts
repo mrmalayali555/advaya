@@ -43,8 +43,8 @@ export async function createIntervention(formData: FormData) {
   });
 
   revalidatePath("/interventions");
-  revalidatePath("/admin/interventions");
-  redirect("/admin/interventions");
+  revalidatePath("/adminahnuok/interventions");
+  redirect("/adminahnuok/interventions");
 }
 
 export async function updateIntervention(id: string, formData: FormData) {
@@ -78,16 +78,16 @@ export async function updateIntervention(id: string, formData: FormData) {
   });
 
   revalidatePath("/interventions");
-  revalidatePath("/admin/interventions");
-  revalidatePath(`/admin/interventions/${id}`);
-  redirect("/admin/interventions");
+  revalidatePath("/adminahnuok/interventions");
+  revalidatePath(`/adminahnuok/interventions/${id}`);
+  redirect("/adminahnuok/interventions");
 }
 
 export async function deleteIntervention(id: string) {
   await db.intervention.delete({ where: { id } });
   revalidatePath("/interventions");
-  revalidatePath("/admin/interventions");
-  redirect("/admin/interventions");
+  revalidatePath("/adminahnuok/interventions");
+  redirect("/adminahnuok/interventions");
 }
 
 export async function togglePublishIntervention(id: string, currentStatus: boolean) {
@@ -96,7 +96,7 @@ export async function togglePublishIntervention(id: string, currentStatus: boole
     data: { published: !currentStatus },
   });
   revalidatePath("/interventions");
-  revalidatePath("/admin/interventions");
+  revalidatePath("/adminahnuok/interventions");
 }
 
 export async function togglePinIntervention(id: string, currentPinned: boolean) {
@@ -105,5 +105,6 @@ export async function togglePinIntervention(id: string, currentPinned: boolean) 
     data: { pinned: !currentPinned },
   });
   revalidatePath("/interventions");
-  revalidatePath("/admin/interventions");
+  revalidatePath("/adminahnuok/interventions");
 }
+

@@ -27,7 +27,7 @@ export async function savePage(key: string, formData: FormData) {
     create: { key, title, content: JSON.stringify(content) },
   });
 
-  revalidatePath("/admin/pages");
+  revalidatePath("/adminahnuok/pages");
   revalidatePath(`/${key === "about" ? "about" : key}`);
   revalidatePath("/");
 }
@@ -41,7 +41,7 @@ export async function saveSetting(key: string, value: Record<string, unknown>) {
     create: { key, value: JSON.stringify(value) },
   });
   revalidatePath("/");
-  revalidatePath("/admin/settings");
+  revalidatePath("/adminahnuok/settings");
 }
 
 export async function saveSettingsForm(formData: FormData) {
@@ -70,3 +70,4 @@ export async function saveSettingsForm(formData: FormData) {
     saveSetting("stats", stats),
   ]);
 }
+

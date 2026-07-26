@@ -11,7 +11,7 @@ export default async function AdminNotificationsPage() {
       <AdminHeader
         title="Notifications"
         description="Post official notices. They appear newest-first on the site."
-        action={{ label: "New notification", href: "/admin/notifications/new" }}
+        action={{ label: "New notification", href: "/adminahnuok/notifications/new" }}
       />
       {items.length === 0 ? (
         <EmptyRow>No notifications yet.</EmptyRow>
@@ -30,14 +30,14 @@ export default async function AdminNotificationsPage() {
               {items.map((n) => (
                 <tr key={n.id} className="transition-colors hover:bg-ink-50/50">
                   <td className="px-5 py-3.5">
-                    <Link href={`/admin/notifications/${n.id}`} className="font-medium text-ink-900 hover:text-purple-700">
+                    <Link href={`/adminahnuok/notifications/${n.id}`} className="font-medium text-ink-900 hover:text-purple-700">
                       {n.title}
                     </Link>
                   </td>
                   <td className="hidden px-5 py-3.5 text-ink-500 sm:table-cell">{formatDate(n.date)}</td>
                   <td className="px-5 py-3.5"><StatusPill status={n.published ? "published" : "draft"} /></td>
                   <td className="px-5 py-3.5 text-right">
-                    <Link href={`/admin/notifications/${n.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
+                    <Link href={`/adminahnuok/notifications/${n.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
                       <Pencil className="h-4 w-4" />
                     </Link>
                   </td>
@@ -50,3 +50,4 @@ export default async function AdminNotificationsPage() {
     </>
   );
 }
+

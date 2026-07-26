@@ -25,6 +25,21 @@ model Admin {
   avatar       String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  sessions     AdminSession[]
+}
+
+model AdminSession {
+  id           String   @id @default(cuid())
+  adminId      String
+  admin        Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  token        String   @unique
+  ipAddress    String?
+  location     String?
+  userAgent    String?
+  lastActiveAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  @@index([adminId])
 }
 
 // ---------------------------------------------------------------------------

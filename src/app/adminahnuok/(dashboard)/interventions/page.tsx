@@ -42,7 +42,7 @@ export default async function AdminInterventionsPage({
           description="Manage official letters, representations, and requests to authorities."
         />
         <Link
-          href="/admin/interventions/new"
+          href="/adminahnuok/interventions/new"
           className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-purple-700"
         >
           <Plus className="h-4 w-4" /> Add intervention
@@ -54,7 +54,7 @@ export default async function AdminInterventionsPage({
         {tabs.map((t) => (
           <Link
             key={t.key}
-            href={t.key === "all" ? "/admin/interventions" : `/admin/interventions?status=${t.key}`}
+            href={t.key === "all" ? "/adminahnuok/interventions" : `/adminahnuok/interventions?status=${t.key}`}
             className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               status === t.key
                 ? "bg-purple-600 text-white"
@@ -150,7 +150,7 @@ export default async function AdminInterventionsPage({
                     </form>
 
                     <Link
-                      href={`/admin/interventions/${item.id}`}
+                      href={`/adminahnuok/interventions/${item.id}`}
                       className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-ink-200 text-ink-600 transition-colors hover:bg-purple-50 hover:text-purple-700"
                       title="Edit"
                     >
@@ -170,3 +170,4 @@ export default async function AdminInterventionsPage({
     </>
   );
 }
+

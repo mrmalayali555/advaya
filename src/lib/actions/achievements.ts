@@ -35,10 +35,10 @@ export async function createAchievement(formData: FormData) {
   if (!data.title) return;
   const slug = await uniqueSlug(data.title);
   await db.achievement.create({ data: { ...data, slug } });
-  revalidatePath("/admin/achievements");
+  revalidatePath("/adminahnuok/achievements");
   revalidatePath("/achievements");
   revalidatePath("/");
-  redirect("/admin/achievements");
+  redirect("/adminahnuok/achievements");
 }
 
 export async function updateAchievement(id: string, formData: FormData) {
@@ -46,17 +46,18 @@ export async function updateAchievement(id: string, formData: FormData) {
   const data = parse(formData);
   const slug = await uniqueSlug(data.title, id);
   await db.achievement.update({ where: { id }, data: { ...data, slug } });
-  revalidatePath("/admin/achievements");
+  revalidatePath("/adminahnuok/achievements");
   revalidatePath("/achievements");
   revalidatePath("/");
-  redirect("/admin/achievements");
+  redirect("/adminahnuok/achievements");
 }
 
 export async function deleteAchievement(id: string) {
   await requireAdmin();
   await db.achievement.delete({ where: { id } });
-  revalidatePath("/admin/achievements");
+  revalidatePath("/adminahnuok/achievements");
   revalidatePath("/achievements");
   revalidatePath("/");
-  redirect("/admin/achievements");
+  redirect("/adminahnuok/achievements");
 }
+

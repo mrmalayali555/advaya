@@ -27,12 +27,30 @@ export async function verifyPassword(
   return bcrypt.compare(password, hash);
 }
 
-export async function createSession(payload: SessionPayload): Promise<void> {
+export async function createSession(
+  payload: SessionPayload,
+  ipAddress: string = "Unknown",
+  location: string = "Unknown",
+  userAgent: string = "Unknown"
+): Promise<void> {
   const token = await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
     .sign(secret);
+
+  // Save session in DB
+  const { db } = await import("./db");
+  await db.adminSession.create({
+    data: {
+      adminId: payload.sub,
+      token,
+      ipAddress,
+      location,
+      userAgent,
+      lastActiveAt: new Date(),
+    }
+  });
 
   const store = await cookies();
   store.set(COOKIE_NAME, token, {

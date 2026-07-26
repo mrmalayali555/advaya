@@ -23,7 +23,7 @@ export default async function EditInterventionPage({
   return (
     <>
       <Link
-        href="/admin/interventions"
+        href="/adminahnuok/interventions"
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-purple-700"
       >
         <ArrowLeft className="h-4 w-4" /> Back to interventions
@@ -109,7 +109,7 @@ export default async function EditInterventionPage({
 
           <div className="sm:col-span-2 flex items-center justify-end gap-3 pt-4 border-t border-ink-100">
             <Link
-              href="/admin/interventions"
+              href="/adminahnuok/interventions"
               className="rounded-full border border-ink-200 px-6 py-2.5 text-sm font-semibold text-ink-600 hover:bg-ink-50"
             >
               Cancel

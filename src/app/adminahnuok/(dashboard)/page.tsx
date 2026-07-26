@@ -27,13 +27,13 @@ export default async function DashboardPage() {
       />
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Achievements" value={achievements} href="/admin/achievements" icon={<Trophy className="h-5 w-5" />} />
-        <StatCard label="Events" value={events} href="/admin/events" icon={<CalendarDays className="h-5 w-5" />} />
-        <StatCard label="Notifications" value={notifications} href="/admin/notifications" icon={<Bell className="h-5 w-5" />} />
+        <StatCard label="Achievements" value={achievements} href="/adminahnuok/achievements" icon={<Trophy className="h-5 w-5" />} />
+        <StatCard label="Events" value={events} href="/adminahnuok/events" icon={<CalendarDays className="h-5 w-5" />} />
+        <StatCard label="Notifications" value={notifications} href="/adminahnuok/notifications" icon={<Bell className="h-5 w-5" />} />
         <StatCard
           label={newComplaints > 0 ? `Complaints (${newComplaints} new)` : "Complaints"}
           value={complaints}
-          href="/admin/complaints"
+          href="/adminahnuok/complaints"
           icon={<MessageSquareWarning className="h-5 w-5" />}
         />
       </div>
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
         <AdminCard>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-ink-900">Recent complaints</h2>
-            <Link href="/admin/complaints" className="text-sm font-medium text-purple-600 hover:underline">
+            <Link href="/adminahnuok/complaints" className="text-sm font-medium text-purple-600 hover:underline">
               View all
             </Link>
           </div>
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
               {recentComplaints.map((c) => (
                 <li key={c.id}>
                   <Link
-                    href={`/admin/complaints/${c.id}`}
+                    href={`/adminahnuok/complaints/${c.id}`}
                     className="group flex items-start gap-3 py-3"
                   >
                     <div className="min-w-0 flex-1">
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
         <AdminCard>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold text-ink-900">Recent events</h2>
-            <Link href="/admin/events" className="text-sm font-medium text-purple-600 hover:underline">
+            <Link href="/adminahnuok/events" className="text-sm font-medium text-purple-600 hover:underline">
               View all
             </Link>
           </div>
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
               {recentEvents.map((e) => (
                 <li key={e.id}>
                   <Link
-                    href={`/admin/events/${e.id}`}
+                    href={`/adminahnuok/events/${e.id}`}
                     className="group flex items-center gap-3 py-3"
                   >
                     <div className="min-w-0 flex-1">
@@ -108,3 +108,4 @@ export default async function DashboardPage() {
     </>
   );
 }
+

@@ -16,13 +16,14 @@ export async function createFinance(formData: FormData) {
   };
   if (!data.label || !data.amount) return;
   await db.financeEntry.create({ data });
-  revalidatePath("/admin/finance");
+  revalidatePath("/adminahnuok/finance");
   revalidatePath("/finance");
 }
 
 export async function deleteFinance(id: string) {
   await requireAdmin();
   await db.financeEntry.delete({ where: { id } });
-  revalidatePath("/admin/finance");
+  revalidatePath("/adminahnuok/finance");
   revalidatePath("/finance");
 }
+

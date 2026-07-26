@@ -11,7 +11,7 @@ export default async function AdminAchievementsPage() {
       <AdminHeader
         title="Achievements"
         description="Celebrate wins across sports, arts and academics."
-        action={{ label: "New achievement", href: "/admin/achievements/new" }}
+        action={{ label: "New achievement", href: "/adminahnuok/achievements/new" }}
       />
       {items.length === 0 ? (
         <EmptyRow>No achievements yet.</EmptyRow>
@@ -31,7 +31,7 @@ export default async function AdminAchievementsPage() {
               {items.map((a) => (
                 <tr key={a.id} className="transition-colors hover:bg-ink-50/50">
                   <td className="px-5 py-3.5">
-                    <Link href={`/admin/achievements/${a.id}`} className="font-medium text-ink-900 hover:text-purple-700">
+                    <Link href={`/adminahnuok/achievements/${a.id}`} className="font-medium text-ink-900 hover:text-purple-700">
                       {a.title}
                     </Link>
                   </td>
@@ -39,7 +39,7 @@ export default async function AdminAchievementsPage() {
                   <td className="hidden px-5 py-3.5 text-ink-500 sm:table-cell">{formatDate(a.date)}</td>
                   <td className="px-5 py-3.5"><StatusPill status={a.published ? "published" : "draft"} /></td>
                   <td className="px-5 py-3.5 text-right">
-                    <Link href={`/admin/achievements/${a.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
+                    <Link href={`/adminahnuok/achievements/${a.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
                       <Pencil className="h-4 w-4" />
                     </Link>
                   </td>
@@ -52,3 +52,4 @@ export default async function AdminAchievementsPage() {
     </>
   );
 }
+

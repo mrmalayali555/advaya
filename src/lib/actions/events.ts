@@ -38,10 +38,10 @@ export async function createEvent(formData: FormData) {
   if (!data.title) return;
   const slug = await uniqueSlug(data.title);
   await db.event.create({ data: { ...data, slug } });
-  revalidatePath("/admin/events");
+  revalidatePath("/adminahnuok/events");
   revalidatePath("/events");
   revalidatePath("/");
-  redirect("/admin/events");
+  redirect("/adminahnuok/events");
 }
 
 export async function updateEvent(id: string, formData: FormData) {
@@ -49,18 +49,19 @@ export async function updateEvent(id: string, formData: FormData) {
   const data = parse(formData);
   const slug = await uniqueSlug(data.title, id);
   await db.event.update({ where: { id }, data: { ...data, slug } });
-  revalidatePath("/admin/events");
+  revalidatePath("/adminahnuok/events");
   revalidatePath("/events");
   revalidatePath(`/events/${slug}`);
   revalidatePath("/");
-  redirect("/admin/events");
+  redirect("/adminahnuok/events");
 }
 
 export async function deleteEvent(id: string) {
   await requireAdmin();
   await db.event.delete({ where: { id } });
-  revalidatePath("/admin/events");
+  revalidatePath("/adminahnuok/events");
   revalidatePath("/events");
   revalidatePath("/");
-  redirect("/admin/events");
+  redirect("/adminahnuok/events");
 }
+

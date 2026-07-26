@@ -40,7 +40,7 @@ export function NotificationForm({
         </div>
         <div className="flex items-center gap-3">
           <SubmitBtn>{item ? "Save changes" : "Create notification"}</SubmitBtn>
-          <Link href="/admin/notifications" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
+          <Link href="/adminahnuok/notifications" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
         </div>
       </form>
       {item && deleteAction && (
@@ -51,3 +51,4 @@ export function NotificationForm({
     </div>
   );
 }
+

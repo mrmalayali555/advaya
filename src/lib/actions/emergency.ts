@@ -21,21 +21,22 @@ export async function createEmergency(formData: FormData) {
   const data = parse(formData);
   if (!data.name || !data.phone) return;
   await db.emergencyContact.create({ data });
-  revalidatePath("/admin/emergency");
+  revalidatePath("/adminahnuok/emergency");
   revalidatePath("/emergency");
 }
 
 export async function updateEmergency(id: string, formData: FormData) {
   await requireAdmin();
   await db.emergencyContact.update({ where: { id }, data: parse(formData) });
-  revalidatePath("/admin/emergency");
+  revalidatePath("/adminahnuok/emergency");
   revalidatePath("/emergency");
-  redirect("/admin/emergency");
+  redirect("/adminahnuok/emergency");
 }
 
 export async function deleteEmergency(id: string) {
   await requireAdmin();
   await db.emergencyContact.delete({ where: { id } });
-  revalidatePath("/admin/emergency");
+  revalidatePath("/adminahnuok/emergency");
   revalidatePath("/emergency");
 }
+

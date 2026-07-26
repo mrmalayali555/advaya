@@ -32,12 +32,19 @@ export async function loginAction(
     return { error: "Invalid email or password." };
   }
 
+  const headersList = await import("next/headers").then(m => m.headers());
+  const ip = headersList.get("x-real-ip") || headersList.get("x-forwarded-for") || "Unknown";
+  const city = headersList.get("x-vercel-ip-city");
+  const country = headersList.get("x-vercel-ip-country");
+  const location = city && country ? `${city}, ${country}` : country || "Unknown";
+  const userAgent = headersList.get("user-agent") || "Unknown";
+
   await createSession({
     sub: admin.id,
     name: admin.name,
     email: admin.email,
     role: admin.role,
-  });
+  }, ip, location, userAgent);
 
   redirect("/adminahnuok");
 }

@@ -53,6 +53,7 @@ const NAV = [
     section: "Site",
     items: [
       { href: "/adminahnuok/media", label: "Media Library", icon: Images },
+      { href: "/adminahnuok/sessions", label: "Active Sessions", icon: Users },
       { href: "/adminahnuok/settings", label: "Settings", icon: Settings },
     ],
   },

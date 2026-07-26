@@ -57,6 +57,31 @@ export default async function AdminSettingsPage() {
 
         <SubmitBtn>Save all settings</SubmitBtn>
       </form>
+
+      {/* Data Backup Section */}
+      <div className="mt-8 space-y-4">
+        <AdminCard>
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="font-bold text-ink-900">Data Backup</h3>
+              <p className="mt-1 text-sm text-ink-500">
+                Export all database records (Events, Complaints, Users, etc.) as a JSON file.
+              </p>
+            </div>
+          </div>
+          <div className="rounded-xl border border-ink-200 bg-ink-50/50 p-4 flex items-center justify-between">
+            <div className="text-sm text-ink-700">Download complete system backup</div>
+            <a
+              href="/api/admin/backup"
+              download
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-ink-700 shadow-sm border border-ink-200 hover:bg-ink-50 transition-colors"
+            >
+              Download JSON
+            </a>
+          </div>
+        </AdminCard>
+      </div>
     </>
   );
 }
+

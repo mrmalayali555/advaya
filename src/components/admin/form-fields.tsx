@@ -168,10 +168,49 @@ export function UploadField({
 
   const isPdf = url.toLowerCase().endsWith(".pdf");
 
-  async function handleFile(file: File) {
+  async function compressImage(file: File): Promise<File> {
+    if (!file.type.startsWith("image/") || file.type.includes("gif")) return file;
+    return new Promise((resolve) => {
+      const img = document.createElement("img");
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        const max = 1920;
+        if (width > max || height > max) {
+          if (width > height) {
+            height = Math.round((height * max) / width);
+            width = max;
+          } else {
+            width = Math.round((width * max) / height);
+            height = max;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return resolve(file);
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return resolve(file);
+            resolve(new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: "image/jpeg" }));
+          },
+          "image/jpeg",
+          0.85
+        );
+      };
+      img.onerror = () => resolve(file);
+      img.src = url;
+    });
+  }
+
+  async function handleFile(rawFile: File) {
     setBusy(true);
     setError(null);
     try {
+      const file = await compressImage(rawFile);
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
@@ -306,3 +345,4 @@ export function DeleteBtn({ label = "Delete" }: { label?: string }) {
     </button>
   );
 }
+

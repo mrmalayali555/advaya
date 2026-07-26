@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { randomUUID } from "crypto";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { put } from "@vercel/blob";
 
 const MAX = {
   image: 8 * 1024 * 1024, // 8 MB
@@ -44,25 +43,32 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
   const ext = (file.name.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "");
   const filename = `${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`;
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
-  await writeFile(path.join(uploadDir, filename), buffer);
+  try {
+    // Upload to Vercel Blob
+    const blob = await put(filename, file, { access: 'public' });
+    const url = blob.url;
 
-  const url = `/uploads/${filename}`;
+    const media = await db.media.create({
+      data: {
+        name: file.name,
+        url,
+        type: kind,
+        mime: file.type,
+        size: file.size,
+      },
+    });
 
-  const media = await db.media.create({
-    data: {
-      name: file.name,
-      url,
-      type: kind,
-      mime: file.type,
-      size: file.size,
-    },
-  });
-
-  return NextResponse.json({ ok: true, url, id: media.id, type: kind }, { status: 201 });
+    return NextResponse.json({ ok: true, url, id: media.id, type: kind }, { status: 201 });
+  } catch (error: any) {
+    console.error("Upload error:", error);
+    if (error.message && error.message.includes("Vercel Blob storage is not configured")) {
+      return NextResponse.json({ 
+        error: "Vercel Blob is not configured. Please add BLOB_READ_WRITE_TOKEN to your Vercel Environment Variables." 
+      }, { status: 500 });
+    }
+    return NextResponse.json({ error: "Failed to upload file to storage." }, { status: 500 });
+  }
 }

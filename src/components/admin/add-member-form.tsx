@@ -46,3 +46,4 @@ export function AddMemberForm({ committeeId }: { committeeId: string }) {
     </details>
   );
 }
+

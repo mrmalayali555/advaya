@@ -39,7 +39,7 @@ export default async function AdminCommitteesPage() {
                   {committee.description && <p className="text-sm text-ink-500">{committee.description}</p>}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Link href={`/admin/committees/${committee.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
+                  <Link href={`/adminahnuok/committees/${committee.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
                     <Pencil className="h-4 w-4" />
                   </Link>
                 </div>
@@ -67,3 +67,4 @@ export default async function AdminCommitteesPage() {
     </>
   );
 }
+

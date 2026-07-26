@@ -1,4 +1,5 @@
 import Link from "next/link";
+import React from "react";
 import { Megaphone, ArrowRight } from "lucide-react";
 
 export function MarqueeBar({
@@ -30,8 +31,16 @@ export function MarqueeBar({
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-purple-700 via-purple-600 to-purple-700 py-2.5 text-white">
       <div className="flex w-max animate-marquee whitespace-nowrap will-change-transform">
-        <div className="flex shrink-0 items-center">{item}{item}{item}{item}</div>
-        <div className="flex shrink-0 items-center" aria-hidden>{item}{item}{item}{item}</div>
+        <div className="flex shrink-0 items-center">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <React.Fragment key={`m1-${i}`}>{item}</React.Fragment>
+          ))}
+        </div>
+        <div className="flex shrink-0 items-center" aria-hidden>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <React.Fragment key={`m2-${i}`}>{item}</React.Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );

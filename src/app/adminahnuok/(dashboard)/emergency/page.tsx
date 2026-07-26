@@ -46,7 +46,7 @@ export default async function AdminEmergencyPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Link href={`/admin/emergency/${c.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
+                    <Link href={`/adminahnuok/emergency/${c.id}`} className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600">
                       <Pencil className="h-4 w-4" />
                     </Link>
                     <form action={deleteEmergency.bind(null, c.id)}>
@@ -62,3 +62,4 @@ export default async function AdminEmergencyPage() {
     </>
   );
 }
+

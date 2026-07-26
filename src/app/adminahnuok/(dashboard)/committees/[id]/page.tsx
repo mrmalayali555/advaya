@@ -24,7 +24,7 @@ export default async function EditCommitteePage({
           <Field label="Order" name="order" type="number" defaultValue={c.order} />
           <div className="flex items-center gap-3">
             <SubmitBtn>Save changes</SubmitBtn>
-            <Link href="/admin/committees" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
+            <Link href="/adminahnuok/committees" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
           </div>
         </form>
       </AdminCard>

@@ -9,13 +9,14 @@ export async function setComplaintStatus(id: string, formData: FormData) {
   await requireAdmin();
   const status = String(formData.get("status") || "new");
   await db.complaint.update({ where: { id }, data: { status } });
-  revalidatePath("/admin/complaints");
-  revalidatePath(`/admin/complaints/${id}`);
+  revalidatePath("/adminahnuok/complaints");
+  revalidatePath(`/adminahnuok/complaints/${id}`);
 }
 
 export async function deleteComplaint(id: string) {
   await requireAdmin();
   await db.complaint.delete({ where: { id } });
-  revalidatePath("/admin/complaints");
-  redirect("/admin/complaints");
+  revalidatePath("/adminahnuok/complaints");
+  redirect("/adminahnuok/complaints");
 }
+

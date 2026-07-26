@@ -23,7 +23,7 @@ export default async function ComplaintDetailPage({
 
   return (
     <>
-      <Link href="/admin/complaints" className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-purple-700">
+      <Link href="/adminahnuok/complaints" className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-purple-700">
         <ArrowLeft className="h-4 w-4" /> Back to complaints
       </Link>
       <AdminHeader title="Complaint" description={formatDate(c.createdAt)} />

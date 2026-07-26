@@ -59,7 +59,7 @@ export function EventForm({
 
         <div className="flex items-center gap-3">
           <SubmitBtn>{event ? "Save changes" : "Create event"}</SubmitBtn>
-          <Link href="/admin/events" className="text-sm font-medium text-ink-500 hover:text-ink-800">
+          <Link href="/adminahnuok/events" className="text-sm font-medium text-ink-500 hover:text-ink-800">
             Cancel
           </Link>
         </div>
@@ -73,3 +73,4 @@ export function EventForm({
     </div>
   );
 }
+

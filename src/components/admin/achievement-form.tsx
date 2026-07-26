@@ -51,7 +51,7 @@ export function AchievementForm({
         </div>
         <div className="flex items-center gap-3">
           <SubmitBtn>{item ? "Save changes" : "Create achievement"}</SubmitBtn>
-          <Link href="/admin/achievements" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
+          <Link href="/adminahnuok/achievements" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
         </div>
       </form>
       {item && deleteAction && (
@@ -62,3 +62,4 @@ export function AchievementForm({
     </div>
   );
 }
+

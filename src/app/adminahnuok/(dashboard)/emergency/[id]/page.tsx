@@ -29,7 +29,7 @@ export default async function EditEmergencyPage({
           <Toggle label="Active" name="active" defaultChecked={c.active} />
           <div className="flex items-center gap-3">
             <SubmitBtn>Save changes</SubmitBtn>
-            <Link href="/admin/emergency" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
+            <Link href="/adminahnuok/emergency" className="text-sm font-medium text-ink-500 hover:text-ink-800">Cancel</Link>
           </div>
         </form>
       </AdminCard>

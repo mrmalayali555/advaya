@@ -32,7 +32,7 @@ export default async function AdminComplaintsPage({
         {tabs.map((t) => (
           <Link
             key={t.key}
-            href={t.key === "all" ? "/admin/complaints" : `/admin/complaints?status=${t.key}`}
+            href={t.key === "all" ? "/adminahnuok/complaints" : `/adminahnuok/complaints?status=${t.key}`}
             className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               status === t.key ? "bg-purple-600 text-white" : "border border-ink-200 bg-white text-ink-600 hover:text-purple-700"
             }`}
@@ -49,7 +49,7 @@ export default async function AdminComplaintsPage({
           {items.map((c) => (
             <Link
               key={c.id}
-              href={`/admin/complaints/${c.id}`}
+              href={`/adminahnuok/complaints/${c.id}`}
               className="block rounded-2xl border border-ink-100 bg-white p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]"
             >
               <div className="flex items-center justify-between gap-3">
@@ -69,3 +69,4 @@ export default async function AdminComplaintsPage({
     </>
   );
 }
+

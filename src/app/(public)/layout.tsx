@@ -13,9 +13,8 @@ export default async function PublicLayout({
   return (
     <>
       <Navbar />
-      <main className="flex-1">{children}</main>
       {marquee && (
-        <div className="sticky bottom-0 z-30">
+        <div className="sticky top-[64px] z-30">
           <MarqueeBar
             text={marquee.text}
             buttonText={marquee.buttonText}
@@ -23,6 +22,7 @@ export default async function PublicLayout({
           />
         </div>
       )}
+      <main className="flex-1">{children}</main>
       <Footer />
     </>
   );

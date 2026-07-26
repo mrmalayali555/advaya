@@ -7,10 +7,16 @@ export function InitialLoader() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Hide the loader after 2.2 seconds to allow the animation to finish
-    // and give the site a smooth, authentic initial load feel.
+    // Check if the user has already seen the loader this session
+    if (sessionStorage.getItem("hasSeenLoader")) {
+      setLoading(false);
+      return;
+    }
+
+    // Hide the loader after 2.2 seconds and mark as seen
     const timer = setTimeout(() => {
       setLoading(false);
+      sessionStorage.setItem("hasSeenLoader", "true");
     }, 2200);
 
     return () => clearTimeout(timer);
