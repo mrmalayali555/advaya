@@ -62,13 +62,13 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, url, id: media.id, type: kind }, { status: 201 });
-  } catch (error: any) {
+    } catch (error: any) {
     console.error("Upload error:", error);
     if (error.message && error.message.includes("Vercel Blob storage is not configured")) {
       return NextResponse.json({ 
         error: "Vercel Blob is not configured. Please add BLOB_READ_WRITE_TOKEN to your Vercel Environment Variables." 
       }, { status: 500 });
     }
-    return NextResponse.json({ error: "Failed to upload file to storage." }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to upload file to storage." }, { status: 500 });
   }
 }
