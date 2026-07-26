@@ -4,6 +4,8 @@ import { Hero } from "@/components/sections/hero";
 import { EventTicket } from "@/components/sections/event-ticket";
 import { HeartButton } from "@/components/ui/heart-button";
 import { Container, SectionHeading, Card } from "@/components/ui/primitives";
+import AppleInvites from "@/components/ui/apple-invites";
+import { FanEvents } from "@/components/ui/fan-events";
 import { ButtonLink } from "@/components/ui/button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icon";
@@ -167,13 +169,9 @@ export default async function HomePage() {
               </ButtonLink>
             </div>
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {achievements.map((a) => (
-              <RevealItem key={a.id}>
-                <AchievementCard achievement={a} />
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          <Reveal className="mt-10">
+            <AppleInvites achievements={achievements} />
+          </Reveal>
         </Container>
       </section>
 
@@ -192,13 +190,9 @@ export default async function HomePage() {
               </ButtonLink>
             </div>
           </Reveal>
-          <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((e) => (
-              <RevealItem key={e.id}>
-                <EventCard event={e} />
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          <Reveal className="mt-10">
+            <FanEvents events={events} />
+          </Reveal>
         </Container>
       </section>
 

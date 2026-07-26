@@ -37,13 +37,17 @@ export function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="mx-auto max-w-7xl px-0 sm:px-4">
         <div
           className={cn(
-            "mt-3 flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-500 ease-brand sm:mt-4 sm:px-5",
+            "flex items-center justify-between gap-4 transition-all duration-500 ease-brand",
+            // Mobile (default): Flush top, flat border, no margins
+            "w-full mt-0 rounded-none border-b border-ink-100 bg-white/95 px-4 py-3 shadow-sm",
+            // Desktop (sm and up): Floating pill design
+            "sm:mt-4 sm:rounded-full sm:border sm:px-5 sm:py-2.5",
             scrolled
-              ? "glass shadow-[var(--shadow-soft)]"
-              : "bg-white/40 backdrop-blur-md"
+              ? "sm:glass sm:shadow-[var(--shadow-soft)]"
+              : "sm:bg-white/45 sm:backdrop-blur-md sm:border-ink-100/30"
           )}
         >
           <Link href="/" className="shrink-0" aria-label="ADVAYA home">

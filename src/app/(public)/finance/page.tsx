@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Container, Card } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { getFinance } from "@/lib/queries";
+import { FinanceCard } from "@/components/ui/finance-card";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -30,29 +31,11 @@ export default async function FinancePage() {
       <section className="py-14 sm:py-20">
         <Container>
           <Reveal>
-            <div className="grid gap-4 sm:grid-cols-3">
-              <SummaryCard
-                icon={<TrendingUp className="h-6 w-6" />}
-                label="Total Income"
-                value={inr(totalIncome)}
-                tone="text-emerald-600"
-                bg="bg-emerald-50"
-              />
-              <SummaryCard
-                icon={<TrendingDown className="h-6 w-6" />}
-                label="Total Expenditure"
-                value={inr(totalExpenditure)}
-                tone="text-red-600"
-                bg="bg-red-50"
-              />
-              <SummaryCard
-                icon={<Wallet className="h-6 w-6" />}
-                label="Balance"
-                value={inr(balance)}
-                tone="text-purple-700"
-                bg="bg-purple-50"
-              />
-            </div>
+            <FinanceCard
+              totalIncome={totalIncome}
+              totalExpenditure={totalExpenditure}
+              balance={balance}
+            />
           </Reveal>
 
           <div className="mt-12 grid gap-8 lg:grid-cols-2">

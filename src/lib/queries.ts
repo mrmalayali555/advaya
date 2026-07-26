@@ -23,8 +23,15 @@ export async function getPage(key: string) {
 }
 
 export async function getMarquee() {
-  const m = await db.marquee.findFirst({ orderBy: { updatedAt: "desc" } });
-  return m?.enabled ? m : null;
+  const [m, speedSetting] = await Promise.all([
+    db.marquee.findFirst({ orderBy: { updatedAt: "desc" } }),
+    db.setting.findUnique({ where: { key: "marquee_speed" } }),
+  ]);
+  if (!m?.enabled) return null;
+  return {
+    ...m,
+    speed: speedSetting ? parseInt(speedSetting.value) || 8 : 8,
+  };
 }
 
 // --- Achievements ---

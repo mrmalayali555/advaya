@@ -19,6 +19,14 @@ export async function saveMarquee(formData: FormData) {
   } else {
     await db.marquee.create({ data });
   }
+
+  const speed = String(formData.get("speed") || "8");
+  await db.setting.upsert({
+    where: { key: "marquee_speed" },
+    update: { value: speed },
+    create: { key: "marquee_speed", value: speed },
+  });
+
   revalidatePath("/");
   revalidatePath("/adminahnuok/marquee");
 }

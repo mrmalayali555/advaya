@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -7,27 +8,36 @@ export function CautionTape({
   text,
   buttonText,
   buttonUrl,
+  speed = 8,
 }: {
   text: string;
   buttonText?: string | null;
   buttonUrl?: string | null;
+  speed?: number;
 }) {
+  const items = Array.from({ length: 8 }).map((_, i) => (
+    <span key={`t-${i}`} className="caution-tape-item">
+      <span className="caution-tape-diamond">◆</span>
+      <span className="caution-tape-text">{text}</span>
+      {buttonText && buttonUrl && (
+        <Link href={buttonUrl} className="caution-tape-btn">
+          {buttonText} <ArrowRight className="inline h-3 w-3" />
+        </Link>
+      )}
+    </span>
+  ));
+
+  // Render native marquee safely to avoid any TS compiler errors with non-standard tags
+  const MarqueeTag = "marquee" as any;
+
   return (
     <div className="caution-tape-wrapper">
       <div className="caution-tape">
-        <div className="caution-tape-scroll">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <span key={`t-${i}`} className="caution-tape-item">
-              <span className="caution-tape-diamond">◆</span>
-              <span className="caution-tape-text">{text}</span>
-              {buttonText && buttonUrl && (
-                <Link href={buttonUrl} className="caution-tape-btn">
-                  {buttonText} <ArrowRight className="inline h-3 w-3" />
-                </Link>
-              )}
-            </span>
-          ))}
-        </div>
+        <MarqueeTag scrollamount={speed} className="caution-tape-scroll">
+          <div className="flex items-center">
+            {items}
+          </div>
+        </MarqueeTag>
       </div>
 
       <style jsx>{`
@@ -53,12 +63,10 @@ export function CautionTape({
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.2);
         }
 
-        .caution-tape-scroll {
-          display: flex;
-          white-space: nowrap;
-          animation: caution-scroll 40s linear infinite;
-          background: linear-gradient(90deg, #f59e0b 0%, #eab308 50%, #f59e0b 100%);
-          padding: 7px 0;
+        :global(.caution-tape-scroll) {
+          background: linear-gradient(90deg, #f59e0b 0%, #eab308 50%, #f59e0b 100%) !important;
+          padding: 7px 0 !important;
+          display: block !important;
         }
 
         .caution-tape-item {
@@ -66,7 +74,7 @@ export function CautionTape({
           align-items: center;
           gap: 12px;
           padding: 0 24px;
-          flex-shrink: 0;
+          white-space: nowrap;
         }
 
         .caution-tape-diamond {
@@ -76,7 +84,7 @@ export function CautionTape({
         }
 
         .caution-tape-text {
-          font-family: var(--font-sora), system-ui, sans-serif;
+          font-family: var(--font-display), system-ui, sans-serif;
           font-size: 12px;
           font-weight: 700;
           letter-spacing: 0.08em;
@@ -102,15 +110,6 @@ export function CautionTape({
 
         .caution-tape-btn:hover {
           background: rgba(0, 0, 0, 1);
-        }
-
-        @keyframes caution-scroll {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-50%);
-          }
         }
       `}</style>
     </div>
