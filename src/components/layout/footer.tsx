@@ -9,6 +9,7 @@ import {
 import { Logo } from "@/components/ui/logo";
 import { Container } from "@/components/ui/primitives";
 import { SITE, NAV_LINKS } from "@/lib/site";
+import { GuybrushAnimation } from "@/components/ui/guybrush-animation";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -109,8 +110,8 @@ export function Footer() {
           <p>
             © {year} {SITE.name} — {SITE.college}. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <span>Designed with care.</span>
+          <div className="flex items-center gap-4">
+            <GuybrushAnimation className="scale-75 origin-right" />
           </div>
         </div>
       </Container>
