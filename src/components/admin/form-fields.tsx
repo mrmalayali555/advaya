@@ -6,141 +6,12 @@ import { useFormStatus } from "react-dom";
 import { Loader2, Upload, X, FileText, Trash2, Crop } from "lucide-react";
 import { ImageCropperModal } from "./image-cropper-modal";
 
+import { CyberLoader } from "@/components/ui/cyber-loader";
+
 const inputCls =
   "w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-base text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100";
 
-
-export function Field({
-  label,
-  name,
-  defaultValue,
-  placeholder,
-  type = "text",
-  required,
-  hint,
-}: {
-  label: string;
-  name: string;
-  defaultValue?: string | number;
-  placeholder?: string;
-  type?: string;
-  required?: boolean;
-  hint?: string;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink-700">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        required={required}
-        step={type === "number" ? "any" : undefined}
-        className={inputCls}
-      />
-      {hint && <p className="mt-1 text-xs text-ink-400">{hint}</p>}
-    </div>
-  );
-}
-
-export function TextArea({
-  label,
-  name,
-  defaultValue,
-  placeholder,
-  required,
-  rows = 5,
-}: {
-  label: string;
-  name: string;
-  defaultValue?: string;
-  placeholder?: string;
-  required?: boolean;
-  rows?: number;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink-700">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <textarea
-        id={name}
-        name={name}
-        rows={rows}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        required={required}
-        className={inputCls + " resize-y"}
-      />
-    </div>
-  );
-}
-
-export function Select({
-  label,
-  name,
-  options,
-  defaultValue,
-}: {
-  label: string;
-  name: string;
-  options: { value: string; label: string }[];
-  defaultValue?: string;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink-700">
-        {label}
-      </label>
-      <select id={name} name={name} defaultValue={defaultValue} className={inputCls}>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-export function Toggle({
-  label,
-  name,
-  defaultChecked = true,
-  hint,
-}: {
-  label: string;
-  name: string;
-  defaultChecked?: boolean;
-  hint?: string;
-}) {
-  const [on, setOn] = useState(defaultChecked);
-  return (
-    <div className="flex items-center justify-between rounded-xl border border-ink-200 px-4 py-3">
-      <div>
-        <div className="text-sm font-medium text-ink-700">{label}</div>
-        {hint && <div className="text-xs text-ink-400">{hint}</div>}
-      </div>
-      <input type="hidden" name={name} value={on ? "on" : ""} />
-      <button
-        type="button"
-        onClick={() => setOn((v) => !v)}
-        className={`relative h-6 w-11 rounded-full transition-colors ${on ? "bg-purple-600" : "bg-ink-200"}`}
-        aria-pressed={on}
-      >
-        <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${on ? "left-[22px]" : "left-0.5"}`}
-        />
-      </button>
-    </div>
-  );
-}
-
-/** Single-file upload that stores the resulting URL in a hidden input. */
+// ... existing code ...
 export function UploadField({
   label,
   name,
@@ -158,6 +29,7 @@ export function UploadField({
 }) {
   const [url, setUrl] = useState(defaultUrl || "");
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [cropperRawSrc, setCropperRawSrc] = useState<string | null>(null);
   const [originalFileName, setOriginalFileName] = useState("photo.jpg");
@@ -209,18 +81,47 @@ export function UploadField({
   async function handleFile(rawFile: File) {
     setBusy(true);
     setError(null);
+    setProgress(0);
     try {
       const file = await compressImage(rawFile);
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed.");
+      
+      const data = await new Promise<any>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const fd = new FormData();
+        fd.append("file", file);
+
+        xhr.upload.addEventListener("progress", (event) => {
+          if (event.lengthComputable) {
+            const p = Math.round((event.loaded / event.total) * 100);
+            setProgress(p);
+          }
+        });
+
+        xhr.addEventListener("load", () => {
+          try {
+            const d = JSON.parse(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve(d);
+            } else {
+              reject(new Error(d.error || "Upload failed."));
+            }
+          } catch {
+            reject(new Error("Upload failed."));
+          }
+        });
+
+        xhr.addEventListener("error", () => reject(new Error("Network error during upload.")));
+        
+        xhr.open("POST", "/api/admin/upload");
+        xhr.send(fd);
+      });
+
       setUrl(data.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed.");
     } finally {
       setBusy(false);
+      setProgress(0);
     }
   }
 
@@ -288,14 +189,16 @@ export function UploadField({
       ) : (
         <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-ink-200 bg-ink-50/50 px-4 py-8 text-center transition-colors hover:border-purple-300 hover:bg-purple-50/40">
           {busy ? (
-            <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
+            <CyberLoader progress={progress} />
           ) : (
-            <Upload className="h-6 w-6 text-ink-400" />
+            <>
+              <Upload className="h-6 w-6 text-ink-400" />
+              <span className="mt-2 text-sm font-medium text-ink-600">
+                Click to upload
+              </span>
+              <span className="mt-0.5 text-xs text-ink-400">{hint || accept}</span>
+            </>
           )}
-          <span className="mt-2 text-sm font-medium text-ink-600">
-            {busy ? "Uploading…" : "Click to upload"}
-          </span>
-          <span className="mt-0.5 text-xs text-ink-400">{hint || accept}</span>
           <input
             type="file"
             accept={accept}
