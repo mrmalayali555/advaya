@@ -262,14 +262,14 @@ export default function AppleInvites({
   };
 
   return (
-    <div className={`relative flex h-[380px] w-full items-center justify-center overflow-hidden ${className}`}>
+    <div className={`relative flex h-[460px] w-full items-center justify-center overflow-hidden py-6 ${className}`}>
       <AnimatePresence custom={direction} initial={false}>
         {visibleAchievements.map((achievement, index) => {
           const itemKey = `${achievement.id}-${index}`;
           return (
             <motion.div
               animate={getVariant(index)}
-              className={`absolute top-1/2 left-1/2 origin-center -translate-y-1/2 ${cardClassName}`}
+              className={`absolute top-1/2 left-1/2 origin-center -translate-y-1/2 ${cardClassName} select-none`}
               custom={direction}
               exit="hidden"
               initial="hidden"
@@ -279,6 +279,18 @@ export default function AppleInvites({
                 height: responsiveHeight,
               }}
               variants={variants}
+              drag={index === 1 ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.4}
+              onDragEnd={(e, info) => {
+                if (index === 1) {
+                  if (info.offset.x < -50) {
+                    setPageWithDirection(page + 1, 1);
+                  } else if (info.offset.x > 50) {
+                    setPageWithDirection(page - 1, -1);
+                  }
+                }
+              }}
             >
               <Link
                 href={`/achievements/${achievement.slug}`}

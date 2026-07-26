@@ -153,7 +153,7 @@ export function NotificationRow({
             {formatDate(notification.date)}
           </time>
           <Link href={`/notifications/${notification.slug}`}>
-            <h3 className="mt-1 truncate text-base font-semibold text-ink-900 transition-colors hover:text-purple-700">
+            <h3 className="mt-1 line-clamp-2 text-base font-semibold text-ink-900 transition-colors hover:text-purple-700">
               {notification.title}
             </h3>
           </Link>

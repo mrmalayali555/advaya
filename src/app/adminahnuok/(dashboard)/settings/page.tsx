@@ -14,10 +14,11 @@ async function getSetting<T>(key: string, fallback: T): Promise<T> {
 }
 
 export default async function AdminSettingsPage() {
-  const [hero, contact, stats] = await Promise.all([
+  const [hero, contact, stats, carouselInterval] = await Promise.all([
     getSetting("hero", { badge: SITE.college, title: "The voice of every student.", subtitle: SITE.description }),
     getSetting("contact", { address: SITE.address, phone: SITE.phone, email: SITE.email }),
     getSetting("stats", { students: 1200, events: 48, achievements: 96, committees: 12 }),
+    getSetting("carousel_interval", { value: 4000 }),
   ]);
 
   return (
@@ -31,6 +32,7 @@ export default async function AdminSettingsPage() {
             <Field label="Badge text" name="hero_badge" defaultValue={hero.badge} hint="The small pill above the title" />
             <Field label="Title" name="hero_title" defaultValue={hero.title} hint="Last two words are highlighted in purple" />
             <TextArea label="Subtitle" name="hero_subtitle" defaultValue={hero.subtitle} rows={2} />
+            <Field label="Carousel Auto-scroll Delay (in seconds)" name="carousel_interval" type="number" defaultValue={carouselInterval.value / 1000} hint="Time each slide stays visible (e.g. 2, 3 or 4 seconds)" />
           </div>
         </AdminCard>
 

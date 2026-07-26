@@ -6,6 +6,7 @@ import { HeartButton } from "@/components/ui/heart-button";
 import { Container, SectionHeading, Card } from "@/components/ui/primitives";
 import AppleInvites from "@/components/ui/apple-invites";
 import { FanEvents } from "@/components/ui/fan-events";
+import { EditableText } from "@/components/admin/visual-editor";
 import { ButtonLink } from "@/components/ui/button";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icon";
@@ -26,7 +27,7 @@ import {
 } from "@/lib/queries";
 
 export default async function HomePage() {
-  const [hero, stats, notifications, achievements, events, emergency, about, marquee] =
+  const [hero, stats, notifications, achievements, events, emergency, about, marquee, carouselInterval] =
     await Promise.all([
       getSetting("hero", {
         badge: SITE.college,
@@ -45,6 +46,7 @@ export default async function HomePage() {
       getEmergencyContacts(),
       getPage("about"),
       getMarquee(),
+      getSetting("carousel_interval", { value: 4000 }),
     ]);
 
   const aboutData = (about?.data ?? {}) as Record<string, string>;
@@ -170,7 +172,7 @@ export default async function HomePage() {
             </div>
           </Reveal>
           <Reveal className="mt-10">
-            <AppleInvites achievements={achievements} />
+            <AppleInvites achievements={achievements} interval={carouselInterval.value} />
           </Reveal>
         </Container>
       </section>
@@ -216,16 +218,18 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={1}>
               <Card className="overflow-hidden">
-                <div className="relative aspect-[4/3] bg-mesh">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-                    <HeartButton />
-                    <p className="mt-5 max-w-sm text-lg font-medium leading-relaxed text-ink-700">
-                      &ldquo;{aboutData.chairperson}&rdquo;
-                    </p>
-                    <p className="mt-4 text-sm font-semibold text-purple-700">
-                      — Message from the Chairperson
-                    </p>
-                  </div>
+                <div className="relative flex flex-col items-center justify-center p-6 sm:p-10 text-center min-h-[340px] bg-mesh">
+                  <HeartButton />
+                  <p className="mt-5 max-w-sm text-base sm:text-lg font-medium leading-relaxed text-ink-700">
+                    &ldquo;
+                    <EditableText type="page" keyName="about" field="chairperson">
+                      {aboutData.chairperson}
+                    </EditableText>
+                    &rdquo;
+                  </p>
+                  <p className="mt-4 text-xs sm:text-sm font-semibold text-purple-700">
+                    — Message from the Chairperson
+                  </p>
                 </div>
               </Card>
             </Reveal>

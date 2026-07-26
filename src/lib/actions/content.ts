@@ -63,11 +63,15 @@ export async function saveSettingsForm(formData: FormData) {
     achievements: Number(formData.get("stats_achievements") || 0),
     committees: Number(formData.get("stats_committees") || 0),
   };
+  const carouselInterval = {
+    value: Math.max(1, Number(formData.get("carousel_interval") || 4)) * 1000
+  };
 
   await Promise.all([
     saveSetting("hero", hero),
     saveSetting("contact", contact),
     saveSetting("stats", stats),
+    saveSetting("carousel_interval", carouselInterval),
   ]);
 }
 

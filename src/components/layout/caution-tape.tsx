@@ -84,10 +84,10 @@ export function CautionTape({
         }
 
         .caution-tape-text {
-          font-family: var(--font-display), system-ui, sans-serif;
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
+          font-family: 'Unbounded', 'Syne', var(--font-display), system-ui, sans-serif;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           color: #1a1a1a;
         }
