@@ -1,31 +1,98 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
-import "./heart-button.css";
+
+function random(lower = 0, upper = 1, floating?: boolean) {
+  if (upper === undefined) {
+    upper = lower;
+    lower = 0;
+  }
+  if (floating === true || !Number.isInteger(lower) || !Number.isInteger(upper)) {
+    return Math.random() * (upper - lower) + lower;
+  }
+  return Math.floor(Math.random() * (upper - lower + 1)) + lower;
+}
 
 export function HeartButton({ className }: { className?: string }) {
+  const [liked, setLiked] = useState(false);
+  const [particles, setParticles] = useState<
+    { id: number; angle: number; distance: number }[]
+  >([]);
+  const nextId = useRef(0);
+
+  const handleClick = () => {
+    const newLiked = !liked;
+    setLiked(newLiked);
+
+    if (newLiked) {
+      const newParticles = Array.from({ length: 8 }).map(() => ({
+        id: nextId.current++,
+        angle: random(0, 360),
+        distance: random(32, 48),
+      }));
+      setParticles(newParticles);
+
+      setTimeout(() => {
+        setParticles([]);
+      }, 1200);
+    }
+  };
+
   return (
-    <button className={cn("uiverse-heart-btn", className)} aria-label="Like">
+    <button
+      onClick={handleClick}
+      className={cn(
+        "particleButton relative inline-flex items-center justify-center p-3 rounded-full transition-colors cursor-pointer select-none group",
+        className
+      )}
+      aria-label="Like this post"
+    >
       <svg
-        className="empty"
-        xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        width="32"
-        height="32"
+        fill="none"
+        className="w-8 h-8 transition-transform duration-300 group-hover:scale-110"
       >
-        <path fill="none" d="M0 0H24V24H0z"></path>
-        <path d="M16.5 3C19.538 3 22 5.5 22 9c0 7-7.5 11-10 12.5C9.5 20 2 16 2 9c0-3.5 2.5-6 5.5-6C9.36 3 11 4 12 5c1-1 2.64-2 4.5-2zm-3.566 15.604c.881-.556 1.676-1.109 2.42-1.701C18.335 14.533 20 11.943 20 9c0-2.36-1.537-4-3.5-4-1.076 0-2.24.57-3.086 1.414L12 7.828l-1.414-1.414C9.74 5.57 8.576 5 7.5 5 5.56 5 4 6.656 4 9c0 2.944 1.666 5.533 4.645 7.903.745.592 1.54 1.145 2.421 1.7.299.189.595.37.934.572.339-.202.635-.383.934-.571z"></path>
+        <path
+          d="M3.68546 5.43796C8.61936 1.29159 11.8685 7.4309 12.0406 7.4309C12.2126 7.43091 15.4617 1.29159 20.3956 5.43796C26.8941 10.8991 13.5 21.8215 12.0406 21.8215C10.5811 21.8215 -2.81297 10.8991 3.68546 5.43796Z"
+          className={liked ? "fill-purple-600 stroke-purple-600" : "stroke-purple-600 hover:stroke-purple-700"}
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
       </svg>
-      <svg
-        className="filled"
-        height="32"
-        width="32"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M0 0H24V24H0z" fill="none"></path>
-        <path d="M16.5 3C19.538 3 22 5.5 22 9c0 7-7.5 11-10 12.5C9.5 20 2 16 2 9c0-3.5 2.5-6 5.5-6C9.36 3 11 4 12 5c1-1 2.64-2 4.5-2z"></path>
-      </svg>
+
+      {/* Particle bursts */}
+      {particles.map((p) => (
+        <span
+          key={p.id}
+          className="particle-burst absolute inset-0 m-auto w-3 h-3 rounded-full bg-purple-500 pointer-events-none"
+          style={{
+            "--angle": `${p.angle}deg`,
+            "--distance": `${p.distance}px`,
+          } as React.CSSProperties}
+        />
+      ))}
+
+      <style jsx>{`
+        .particle-burst {
+          animation: fadeOut 1000ms forwards, disperse 500ms forwards cubic-bezier(0.2, 0.56, 0, 1);
+        }
+
+        @keyframes fadeOut {
+          to {
+            opacity: 0;
+          }
+        }
+
+        @keyframes disperse {
+          to {
+            transform: translate(
+              calc(cos(var(--angle)) * var(--distance)),
+              calc(sin(var(--angle)) * var(--distance))
+            );
+          }
+        }
+      `}</style>
     </button>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -15,13 +15,16 @@ export function CautionTape({
   buttonUrl?: string | null;
   speed?: number;
 }) {
+  const [currentSpeed, setCurrentSpeed] = useState(speed);
+
   const items = Array.from({ length: 8 }).map((_, i) => (
     <span key={`t-${i}`} className="caution-tape-item">
       <span className="caution-tape-diamond">◆</span>
       <span className="caution-tape-text font-marquee">{text}</span>
       {buttonText && buttonUrl && (
-        <Link href={buttonUrl} className="caution-tape-btn font-sans">
-          {buttonText} <ArrowRight className="inline h-3 w-3" />
+        <Link href={buttonUrl} className="caution-tape-btn font-sans group">
+          <span>{buttonText}</span>
+          <ArrowRight className="inline h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
         </Link>
       )}
     </span>
@@ -30,9 +33,13 @@ export function CautionTape({
   const MarqueeTag = "marquee" as any;
 
   return (
-    <div className="caution-tape-wrapper">
+    <div 
+      className="caution-tape-wrapper"
+      onMouseEnter={() => setCurrentSpeed(Math.max(2, Math.floor(speed / 3)))}
+      onMouseLeave={() => setCurrentSpeed(speed)}
+    >
       <div className="caution-tape">
-        <MarqueeTag scrollamount={speed} className="caution-tape-scroll">
+        <MarqueeTag scrollamount={currentSpeed} className="caution-tape-scroll">
           <div className="flex items-center">
             {items}
           </div>
@@ -48,6 +55,7 @@ export function CautionTape({
           margin-top: -8px;
           transform: rotate(-1.2deg);
           transform-origin: left center;
+          cursor: pointer;
         }
 
         .caution-tape {
@@ -94,21 +102,26 @@ export function CautionTape({
         .caution-tape-btn {
           display: inline-flex;
           align-items: center;
-          gap: 4px;
-          background: rgba(0, 0, 0, 0.85);
-          color: #f59e0b;
-          padding: 3px 10px;
-          border-radius: 100px;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
+          gap: 6px;
+          background: #1a1523;
+          color: #ffffff;
+          padding: 5px 14px;
+          border-radius: 9999px;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
           text-transform: uppercase;
           text-decoration: none;
-          transition: background 0.2s;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.25s ease;
         }
 
         .caution-tape-btn:hover {
-          background: rgba(0, 0, 0, 1);
+          background: #5b2a86;
+          color: #ffffff;
+          box-shadow: 0 4px 14px rgba(91, 42, 134, 0.4);
+          transform: translateY(-1px);
         }
       `}</style>
     </div>
