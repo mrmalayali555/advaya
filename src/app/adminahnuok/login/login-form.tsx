@@ -18,9 +18,9 @@ export function LoginForm() {
           id="email"
           name="email"
           type="email"
-          autoComplete="username"
+          autoComplete="off"
           required
-          defaultValue="admin@advaya.local"
+          placeholder="admin@advaya.local"
           className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/30"
         />
       </div>

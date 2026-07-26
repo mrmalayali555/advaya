@@ -16,15 +16,44 @@ async function isValid(token?: string): Promise<boolean> {
   }
 }
 
+/** Paths commonly probed by bots — return 404 immediately. */
+const BLOCKED = [
+  "/wp-admin", "/wp-login", "/phpmyadmin", "/.env",
+  "/xmlrpc.php", "/admin.php", "/wp-content", "/wp-includes",
+  "/.git", "/cgi-bin", "/config.php",
+];
+
+function addSecurityHeaders(res: NextResponse): NextResponse {
+  res.headers.set("X-Content-Type-Options", "nosniff");
+  res.headers.set("X-Frame-Options", "DENY");
+  res.headers.set("X-XSS-Protection", "1; mode=block");
+  res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.headers.set(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  );
+  res.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains; preload"
+  );
+  return res;
+}
+
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Block common bot probes.
+  if (BLOCKED.some((b) => pathname.toLowerCase().startsWith(b))) {
+    return new NextResponse("Not Found", { status: 404 });
+  }
+
   const token = req.cookies.get(COOKIE)?.value;
   const authed = await isValid(token);
 
   // Login page: if already authed, bounce to dashboard.
   if (pathname === "/adminahnuok/login") {
     if (authed) return NextResponse.redirect(new URL("/adminahnuok", req.url));
-    return NextResponse.next();
+    return addSecurityHeaders(NextResponse.next());
   }
 
   // Everything else under /adminahnuok requires a valid session.
@@ -34,14 +63,17 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Security headers for the admin area.
-  const res = NextResponse.next();
-  res.headers.set("X-Frame-Options", "DENY");
-  res.headers.set("X-Content-Type-Options", "nosniff");
-  res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  return res;
+  return addSecurityHeaders(NextResponse.next());
 }
 
 export const config = {
-  matcher: ["/adminahnuok/:path*"],
+  matcher: [
+    "/adminahnuok/:path*",
+    "/wp-admin/:path*",
+    "/wp-login/:path*",
+    "/phpmyadmin/:path*",
+    "/.env",
+    "/.git/:path*",
+  ],
 };
+

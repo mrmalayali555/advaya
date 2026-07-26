@@ -20,10 +20,11 @@ import {
   getUpcomingEvents,
   getEmergencyContacts,
   getPage,
+  getMarquee,
 } from "@/lib/queries";
 
 export default async function HomePage() {
-  const [hero, stats, notifications, achievements, events, emergency, about] =
+  const [hero, stats, notifications, achievements, events, emergency, about, marquee] =
     await Promise.all([
       getSetting("hero", {
         badge: SITE.college,
@@ -41,6 +42,7 @@ export default async function HomePage() {
       getUpcomingEvents(3),
       getEmergencyContacts(),
       getPage("about"),
+      getMarquee(),
     ]);
 
   const aboutData = (about?.data ?? {}) as Record<string, string>;
@@ -52,6 +54,7 @@ export default async function HomePage() {
         title={hero.title}
         subtitle={hero.subtitle}
         stats={stats}
+        marquee={marquee}
       />
 
       {/* Quick links */}

@@ -16,7 +16,8 @@ export const SITE = {
   mapEmbed:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3932.0!2d76.33!3d9.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sAlappuzha%20Medical%20College!5e0!3m2!1sen!2sin!4v1700000000000",
   socials: {
-    instagram: "https://instagram.com/",
+    instagram: "https://www.instagram.com/tdmcunion26_27/",
+    whatsapp: "https://chat.whatsapp.com/HTnGS3oE7cIEzlGg9oloku?mode=gi_t",
     facebook: "https://facebook.com/",
     youtube: "https://youtube.com/",
     twitter: "https://twitter.com/",
