@@ -1,13 +1,25 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
-import { PenTool, Check, X, AlertCircle } from "lucide-react";
+import { PenTool, Undo2, Redo2, Check, X, AlertCircle } from "lucide-react";
+
+interface HistoryState {
+  type: "setting" | "page";
+  key: string;
+  field: string;
+  oldValue: string;
+  newValue: string;
+}
 
 interface EditContextType {
   isEditMode: boolean;
   setEditMode: (val: boolean) => void;
   isAdminUser: boolean;
-  saveField: (type: "setting" | "page", key: string, field: string, value: string) => Promise<boolean>;
+  saveField: (type: "setting" | "page", key: string, field: string, value: string, oldValue: string) => Promise<boolean>;
+  undo: () => void;
+  redo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 const EditContext = createContext<EditContextType>({
@@ -15,6 +27,10 @@ const EditContext = createContext<EditContextType>({
   setEditMode: () => {},
   isAdminUser: false,
   saveField: async () => false,
+  undo: () => {},
+  redo: () => {},
+  canUndo: false,
+  canRedo: false,
 });
 
 export function VisualEditorProvider({ 
@@ -25,22 +41,33 @@ export function VisualEditorProvider({
   isAdmin: boolean;
 }) {
   const [isEditMode, setEditMode] = useState(false);
+  const [history, setHistory] = useState<HistoryState[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
   const [activePrompt, setActivePrompt] = useState<{
     type: "setting" | "page";
     key: string;
     field: string;
     value: string;
+    oldValue: string;
     onConfirm: () => void;
     onCancel: () => void;
   } | null>(null);
 
-  const saveField = async (type: "setting" | "page", key: string, field: string, value: string): Promise<boolean> => {
+  const saveField = async (
+    type: "setting" | "page", 
+    key: string, 
+    field: string, 
+    value: string, 
+    oldValue: string
+  ): Promise<boolean> => {
     return new Promise((resolve) => {
       setActivePrompt({
         type,
         key,
         field,
         value,
+        oldValue,
         onConfirm: async () => {
           try {
             const res = await fetch("/api/admin/save-inline", {
@@ -49,6 +76,11 @@ export function VisualEditorProvider({
               body: JSON.stringify({ type, key, field, value }),
             });
             if (res.ok) {
+              // Add to history stack
+              const newEntry: HistoryState = { type, key, field, oldValue, newValue: value };
+              const updatedHistory = history.slice(0, historyIndex + 1);
+              setHistory([...updatedHistory, newEntry]);
+              setHistoryIndex(updatedHistory.length);
               resolve(true);
             } else {
               resolve(false);
@@ -66,30 +98,96 @@ export function VisualEditorProvider({
     });
   };
 
+  const undo = async () => {
+    if (historyIndex < 0) return;
+    const item = history[historyIndex];
+    try {
+      const res = await fetch("/api/admin/save-inline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: item.type, key: item.key, field: item.field, value: item.oldValue }),
+      });
+      if (res.ok) {
+        setHistoryIndex(historyIndex - 1);
+        window.location.reload();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const redo = async () => {
+    if (historyIndex >= history.length - 1) return;
+    const item = history[historyIndex + 1];
+    try {
+      const res = await fetch("/api/admin/save-inline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: item.type, key: item.key, field: item.field, value: item.newValue }),
+      });
+      if (res.ok) {
+        setHistoryIndex(historyIndex + 1);
+        window.location.reload();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <EditContext.Provider value={{ isEditMode, setEditMode, isAdminUser: isAdmin, saveField }}>
+    <EditContext.Provider value={{ 
+      isEditMode, 
+      setEditMode, 
+      isAdminUser: isAdmin, 
+      saveField,
+      undo,
+      redo,
+      canUndo: historyIndex >= 0,
+      canRedo: historyIndex < history.length - 1
+    }}>
       {children}
       
-      {/* Floating Visual Edit Mode Toggle */}
+      {/* Floating Toolbar with Visual Edit Mode, Undo, and Redo */}
       {isAdmin && (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-ink-950/90 backdrop-blur-lg p-2 rounded-full border border-purple-500/30 shadow-2xl">
           <button
             onClick={() => setEditMode(!isEditMode)}
-            className={`flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold shadow-2xl transition-all duration-300 ${
+            className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
               isEditMode 
                 ? "bg-amber-500 text-white animate-pulse" 
-                : "bg-purple-600 text-white hover:bg-purple-700 hover:-translate-y-0.5"
+                : "bg-purple-600 text-white hover:bg-purple-700"
             }`}
           >
-            <PenTool className="h-4 w-4" />
+            <PenTool className="h-3.5 w-3.5" />
             {isEditMode ? "Exit Edit Mode" : "Visual Edit Mode"}
           </button>
+
+          {isEditMode && (
+            <div className="flex items-center gap-1 border-l border-white/20 pl-2 pr-1">
+              <button
+                onClick={undo}
+                disabled={historyIndex < 0}
+                className="p-2 rounded-full text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                title="Undo last change"
+              >
+                <Undo2 className="h-4 w-4" />
+              </button>
+              <button
+                onClick={redo}
+                disabled={historyIndex >= history.length - 1}
+                className="p-2 rounded-full text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                title="Redo change"
+              >
+                <Redo2 className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
       {/* Warning confirmation overlay modal (styled exactly as requested) */}
       {activePrompt && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="card">
             <div className="header">
               <div className="image">
@@ -110,7 +208,7 @@ export function VisualEditorProvider({
               <div className="content">
                 <span className="title">Confirm Visual Edit</span>
                 <p className="message">
-                  Are you sure you want to save these edits? These changes will be instantly visible to all website users and visitors. This action cannot be undone.
+                  Are you sure you want to save these edits? These changes will be permanently updated and instantly visible to all users.
                 </p>
               </div>
               <div className="actions">
@@ -264,17 +362,16 @@ export function EditableText({ type, keyName, field, className = "", children }:
     const newValue = elementRef.current.innerText.trim();
     if (newValue === content) return;
 
-    const success = await saveField(type, keyName, field, newValue);
+    const success = await saveField(type, keyName, field, newValue, content);
     if (success) {
       setContent(newValue);
     } else {
-      // Revert content if failed or cancelled
       elementRef.current.innerText = content;
     }
   };
 
   const editableClass = isEditMode && isAdminUser
-    ? "relative border-2 border-dashed border-amber-400 p-1 rounded bg-amber-50/10 cursor-pointer focus:outline-none focus:bg-amber-50/20 group-edit"
+    ? "relative border-2 border-dashed border-amber-400 p-0.5 rounded bg-amber-50/10 cursor-pointer focus:outline-none focus:bg-amber-50/20 group-edit"
     : "";
 
   return (

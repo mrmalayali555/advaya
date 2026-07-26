@@ -18,16 +18,15 @@ export function CautionTape({
   const items = Array.from({ length: 8 }).map((_, i) => (
     <span key={`t-${i}`} className="caution-tape-item">
       <span className="caution-tape-diamond">◆</span>
-      <span className="caution-tape-text">{text}</span>
+      <span className="caution-tape-text font-marquee">{text}</span>
       {buttonText && buttonUrl && (
-        <Link href={buttonUrl} className="caution-tape-btn">
+        <Link href={buttonUrl} className="caution-tape-btn font-sans">
           {buttonText} <ArrowRight className="inline h-3 w-3" />
         </Link>
       )}
     </span>
   ));
 
-  // Render native marquee safely to avoid any TS compiler errors with non-standard tags
   const MarqueeTag = "marquee" as any;
 
   return (
@@ -72,24 +71,24 @@ export function CautionTape({
         .caution-tape-item {
           display: inline-flex;
           align-items: center;
-          gap: 12px;
+          gap: 14px;
           padding: 0 24px;
           white-space: nowrap;
         }
 
         .caution-tape-diamond {
           color: #1a1a1a;
-          font-size: 8px;
-          opacity: 0.6;
+          font-size: 9px;
+          opacity: 0.7;
         }
 
         .caution-tape-text {
-          font-family: 'Unbounded', 'Syne', var(--font-display), system-ui, sans-serif;
-          font-size: 11px;
-          font-weight: 900;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #1a1a1a;
+          font-family: 'Unbounded', 'Syne', system-ui, sans-serif !important;
+          font-size: 12px;
+          font-weight: 900 !important;
+          letter-spacing: 0.14em !important;
+          text-transform: uppercase !important;
+          color: #1a1a1a !important;
         }
 
         .caution-tape-btn {

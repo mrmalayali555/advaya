@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 
-// Custom wrap function to replace popmotion dependency
 function wrap(min: number, max: number, v: number): number {
   const range = max - min;
   return ((((v - min) % range) + range) % range) + min;
@@ -30,8 +29,8 @@ const breakpoints = {
   "2xl": 1536,
 } as const;
 
-const DEFAULT_CARD_WIDTH = 280;
-const DEFAULT_ASPECT_RATIO = 1.4; // Slightly wider than 5:8 for good image display
+const DEFAULT_CARD_WIDTH = 260;
+const DEFAULT_ASPECT_RATIO = 1.35;
 
 function formatSize(size: number | string): string {
   return typeof size === "number" ? `${size}px` : size;
@@ -245,7 +244,6 @@ export default function AppleInvites({
 
   const activeIndex = wrap(0, achievements.length, page);
 
-  // If we only have 1 or 2 achievements, duplicate them to make a stack loop
   const displayList = [...achievements];
   while (displayList.length < 3) {
     displayList.push(...achievements);
@@ -262,7 +260,7 @@ export default function AppleInvites({
   };
 
   return (
-    <div className={`relative flex h-[460px] w-full items-center justify-center overflow-hidden py-6 ${className}`}>
+    <div className={`relative flex h-[480px] w-full items-center justify-center overflow-hidden py-8 ${className}`}>
       <AnimatePresence custom={direction} initial={false}>
         {visibleAchievements.map((achievement, index) => {
           const itemKey = `${achievement.id}-${index}`;
@@ -296,7 +294,7 @@ export default function AppleInvites({
                 href={`/achievements/${achievement.slug}`}
                 className="relative block h-full w-full overflow-hidden rounded-3xl border border-white/20 bg-ink-900 shadow-2xl group"
               >
-                {/* Image background - full resolution optimized next/image */}
+                {/* Image background */}
                 {achievement.coverImage ? (
                   <Image
                     alt={achievement.title}
@@ -310,7 +308,7 @@ export default function AppleInvites({
                   <div className="absolute inset-0 bg-mesh opacity-70" />
                 )}
 
-                {/* Glassmorphic Gradient Overlay */}
+                {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent" />
 
                 {/* Category Badge */}
@@ -321,7 +319,7 @@ export default function AppleInvites({
                   </span>
                 </div>
 
-                {/* Content Area */}
+                {/* Content */}
                 <div className="absolute bottom-0 z-10 w-full p-5 text-white">
                   <p className="text-[10px] font-medium tracking-wider text-purple-300">
                     {formatDate(achievement.date)}
@@ -333,11 +331,6 @@ export default function AppleInvites({
                     {achievement.description}
                   </p>
                 </div>
-
-                {/* Background blurred layers for Apple Stack effect */}
-                <div className="absolute inset-x-0 bottom-0 z-1 h-1/2">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                </div>
               </Link>
             </motion.div>
           );
@@ -345,7 +338,7 @@ export default function AppleInvites({
       </AnimatePresence>
 
       {/* Manual controls */}
-      <div className="absolute bottom-2 flex items-center gap-1.5 z-20">
+      <div className="absolute bottom-3 flex items-center gap-2 z-20">
         {achievements.map((_, i) => (
           <button
             key={i}
@@ -353,8 +346,8 @@ export default function AppleInvites({
               const diff = i - activeIndex;
               setPageWithDirection(page + diff, diff > 0 ? 1 : -1);
             }}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === activeIndex ? "w-6 bg-purple-600" : "w-2 bg-purple-600/30"
+            className={`h-2.5 rounded-full transition-all duration-300 ${
+              i === activeIndex ? "w-7 bg-purple-600 shadow-md shadow-purple-600/40" : "w-2.5 bg-purple-600/30 hover:bg-purple-600/60"
             }`}
             aria-label={`Go to slide ${i + 1}`}
           />

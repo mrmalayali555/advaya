@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Container, Card } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { getPage } from "@/lib/queries";
+import { EditableText } from "@/components/admin/visual-editor";
 
 export const metadata: Metadata = {
   title: "Undergraduate (UG)",
@@ -30,11 +31,13 @@ export default async function UGPage() {
                 <GraduationCap className="h-8 w-8" strokeWidth={1.5} />
               </div>
               <h2 className="mt-6 text-2xl font-bold text-ink-900">
-                {data.intro ? "For our UG students" : "Coming soon"}
+                For our UG students
               </h2>
               <p className="mx-auto mt-3 max-w-lg text-ink-500">
-                {data.intro ||
-                  "This section is being set up. Resources, schedules and UG union activities will appear here shortly."}
+                <EditableText type="page" keyName="ug" field="intro">
+                  {data.intro ||
+                    "This section is being set up. Resources, schedules and UG union activities will appear here shortly."}
+                </EditableText>
               </p>
             </Card>
           </Reveal>

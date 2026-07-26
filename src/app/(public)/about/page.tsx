@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 import { Target, Eye, History, Quote } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Container, Card, SectionHeading } from "@/components/ui/primitives";
+import { Container, Card } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { getPage } from "@/lib/queries";
 import { SITE } from "@/lib/site";
+import { EditableText } from "@/components/admin/visual-editor";
 
 export const metadata: Metadata = {
   title: "About the Union",
@@ -35,7 +36,11 @@ export default async function AboutPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-ink-900">Our story</h2>
-                  <p className="mt-2 leading-relaxed text-ink-600">{d.history}</p>
+                  <p className="mt-2 leading-relaxed text-ink-600">
+                    <EditableText type="page" keyName="about" field="history">
+                      {d.history}
+                    </EditableText>
+                  </p>
                 </div>
               </div>
             </Reveal>
@@ -48,7 +53,11 @@ export default async function AboutPage() {
                   <Target className="h-5 w-5" />
                 </div>
                 <h3 className="mt-5 text-lg font-bold text-ink-900">Mission</h3>
-                <p className="mt-2 leading-relaxed text-ink-600">{d.mission}</p>
+                <p className="mt-2 leading-relaxed text-ink-600">
+                  <EditableText type="page" keyName="about" field="mission">
+                    {d.mission}
+                  </EditableText>
+                </p>
               </Card>
             </Reveal>
             <Reveal delay={1}>
@@ -57,7 +66,11 @@ export default async function AboutPage() {
                   <Eye className="h-5 w-5" />
                 </div>
                 <h3 className="mt-5 text-lg font-bold text-ink-900">Vision</h3>
-                <p className="mt-2 leading-relaxed text-ink-600">{d.vision}</p>
+                <p className="mt-2 leading-relaxed text-ink-600">
+                  <EditableText type="page" keyName="about" field="vision">
+                    {d.vision}
+                  </EditableText>
+                </p>
               </Card>
             </Reveal>
           </div>
@@ -68,7 +81,9 @@ export default async function AboutPage() {
                 <div className="relative bg-mesh p-8 sm:p-12">
                   <Quote className="h-10 w-10 text-purple-400" />
                   <p className="mt-5 text-xl font-medium leading-relaxed text-ink-800">
-                    {d.chairperson}
+                    <EditableText type="page" keyName="about" field="chairperson">
+                      {d.chairperson}
+                    </EditableText>
                   </p>
                   <p className="mt-6 text-sm font-semibold text-purple-700">
                     — Message from the Chairperson

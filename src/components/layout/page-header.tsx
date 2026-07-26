@@ -2,6 +2,7 @@ import { Container, Eyebrow } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { EditableText } from "@/components/admin/visual-editor";
 
 export function PageHeader({
   eyebrow,
@@ -14,6 +15,8 @@ export function PageHeader({
   description?: string;
   breadcrumb?: { label: string; href?: string }[];
 }) {
+  const pageKey = breadcrumb?.[0]?.label?.toLowerCase() || "page";
+
   return (
     <section className="relative overflow-hidden border-b border-ink-100 bg-surface pt-28 pb-14 sm:pt-36 sm:pb-16">
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-70" />
@@ -41,11 +44,15 @@ export function PageHeader({
           )}
           {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
           <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-ink-900 sm:text-5xl">
-            {title}
+            <EditableText type="page" keyName={pageKey} field="title">
+              {title}
+            </EditableText>
           </h1>
           {description && (
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-500">
-              {description}
+              <EditableText type="page" keyName={pageKey} field="intro">
+                {description}
+              </EditableText>
             </p>
           )}
         </Reveal>
