@@ -90,14 +90,12 @@ export function GalleryLightbox({
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative overflow-hidden rounded-xl bg-white p-2 shadow-2xl">
-          <Image
+        <div className="relative overflow-hidden rounded-xl bg-white p-2 shadow-2xl flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={photo.url}
             alt={photo.caption || "Gallery photo"}
-            width={1600}
-            height={1200}
-            className="max-h-[90vh] max-w-[90vw] sm:max-w-[85vw] w-auto rounded-lg object-contain"
-            priority
+            className="max-h-[90vh] max-w-[90vw] sm:max-w-[85vw] h-auto w-auto rounded-lg object-contain"
           />
         </div>
 
