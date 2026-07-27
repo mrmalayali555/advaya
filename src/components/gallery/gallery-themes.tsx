@@ -362,7 +362,12 @@ export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
 
   // Strip HTML for preview
   const plainText = gallery.blogText
-    ? gallery.blogText.replace(/<[^>]*>/g, "").trim()
+    ? gallery.blogText
+        .replace(/&nbsp;/g, " ")
+        .replace(/<\/?(p|div|br|h[1-6])[^>]*>/gi, " ")
+        .replace(/<[^>]*>/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
     : "";
   const previewText = plainText.slice(0, 200);
   const needsExpand = plainText.length > 200;
