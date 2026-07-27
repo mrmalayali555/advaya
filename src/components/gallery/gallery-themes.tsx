@@ -324,6 +324,7 @@ export function CorkBoardGallery({ gallery }: { gallery: GalleryData }) {
           {gallery.photos.map((photo, i) => (
             <figure
               key={photo.id}
+              data-photo-id={photo.id}
               className="relative m-2.5 bg-white p-2.5 text-center shadow-[1px_2px_3px_black] transition-all duration-300 hover:scale-110 hover:shadow-[5px_10px_40px_rgba(0,0,0,0.6)] hover:z-20"
               style={{
                 transform: `rotate(${CORK_ROTATIONS[i % CORK_ROTATIONS.length]})`,
@@ -450,9 +451,16 @@ function GalleryClickWrapper({
       e.preventDefault();
       onPhotoClick({ url: photo.url, caption: photo.caption || null });
     } else if (img) {
-      // Fallback if matching fails, just use the clicked img src
       e.preventDefault();
-      onPhotoClick({ url: img.src, caption: null });
+      let src = img.src;
+      try {
+        const urlObj = new URL(src, window.location.origin);
+        if (urlObj.pathname.startsWith("/_next/image")) {
+          const orig = urlObj.searchParams.get("url");
+          if (orig) src = orig;
+        }
+      } catch (err) {}
+      onPhotoClick({ url: src, caption: null });
     }
   }
 
