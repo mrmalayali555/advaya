@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { CalendarDays, Clock, MapPin, Paperclip, Download } from "lucide-react";
+import { CalendarDays, Clock, MapPin, Paperclip, Download, UserPlus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
@@ -56,6 +56,24 @@ export default async function EventDetail({
                 className="object-cover"
                 priority
               />
+            </div>
+          )}
+
+          {e.registrationForm && e.registrationForm.published && (!e.registrationForm.deadline || new Date() <= new Date(e.registrationForm.deadline)) && (
+            <div className="mt-8 rounded-2xl bg-purple-50 p-6 border border-purple-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div>
+                <h3 className="font-bold text-purple-900 text-lg">Registration Open</h3>
+                <p className="text-purple-700 text-sm mt-1">
+                  {e.registrationForm.deadline ? `Closes on ${new Date(e.registrationForm.deadline).toLocaleDateString()}` : "Register now to secure your spot"}
+                </p>
+              </div>
+              <a 
+                href={`/registration/${e.registrationForm.slug}`} 
+                className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-purple-700 shrink-0"
+              >
+                <UserPlus className="h-4 w-4" />
+                Register Now
+              </a>
             </div>
           )}
 

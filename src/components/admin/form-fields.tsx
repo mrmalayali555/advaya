@@ -87,11 +87,13 @@ export function Select({
   name,
   options,
   defaultValue,
+  hint,
 }: {
   label: string;
   name: string;
   options: { value: string; label: string }[];
   defaultValue?: string;
+  hint?: string;
 }) {
   return (
     <div>
@@ -105,6 +107,7 @@ export function Select({
           </option>
         ))}
       </select>
+      {hint && <p className="mt-1 text-xs text-ink-400">{hint}</p>}
     </div>
   );
 }

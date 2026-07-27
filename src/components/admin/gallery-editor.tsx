@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Upload, X, Pencil, Save, Loader2, Trash2 } from "lucide-react";
+import {
+  Upload, X, Pencil, Save, Loader2, Trash2,
+  ZoomIn, ZoomOut, Move, Bold, Italic, Underline,
+  Heading1, Heading2, Palette, Type,
+} from "lucide-react";
 import { CyberLoader } from "@/components/ui/cyber-loader";
 
 /* ─── Types ─── */
-type Photo = { id: string; url: string; caption: string; position: number };
+type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number };
 type GalleryData = {
   id: string;
   theme: string;
@@ -50,14 +54,21 @@ function PhotoSlot({
   galleryId: string;
   aspectRatio?: string;
   captionFont?: string;
-  onPhotoAdded: (position: number, url: string) => void;
+  onPhotoAdded: (position: number, photo: Photo) => void;
   onPhotoRemoved: (position: number, photoId: string) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [localPhoto, setLocalPhoto] = useState<Photo | undefined>(photo);
   const [caption, setCaption] = useState(photo?.caption || "");
   const [editingCaption, setEditingCaption] = useState(false);
+  const [zoom, setZoom] = useState(photo?.zoom || 1);
+  const [showZoom, setShowZoom] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Sync from parent
+  if (photo && !localPhoto) setLocalPhoto(photo);
+  if (photo && localPhoto && photo.id !== localPhoto.id) setLocalPhoto(photo);
 
   async function handleUpload(file: File) {
     setUploading(true);
@@ -90,7 +101,15 @@ function PhotoSlot({
         body: JSON.stringify({ galleryId, position, url: data.url, caption: "" }),
       });
       if (res.ok) {
-        onPhotoAdded(position, data.url);
+        const result = await res.json();
+        const newPhoto: Photo = {
+          id: result.photo?.id || `temp-${Date.now()}`,
+          url: data.url,
+          caption: "",
+          position,
+        };
+        setLocalPhoto(newPhoto);
+        onPhotoAdded(position, newPhoto);
       }
     } catch (err) {
       console.error(err);
@@ -101,39 +120,72 @@ function PhotoSlot({
   }
 
   async function handleRemove() {
-    if (!photo) return;
+    const p = localPhoto || photo;
+    if (!p) return;
     await fetch("/api/admin/gallery-photo", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ photoId: photo.id }),
+      body: JSON.stringify({ photoId: p.id }),
     });
-    onPhotoRemoved(position, photo.id);
+    setLocalPhoto(undefined);
+    onPhotoRemoved(position, p.id);
   }
 
   async function saveCaption() {
-    if (!photo) return;
+    const p = localPhoto || photo;
+    if (!p) return;
     await fetch("/api/admin/gallery-photo", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ photoId: photo.id, caption }),
+      body: JSON.stringify({ photoId: p.id, caption }),
     });
     setEditingCaption(false);
   }
 
-  if (photo) {
+  const displayPhoto = localPhoto || photo;
+
+  if (displayPhoto) {
     return (
       <div className="relative">
         <div className="relative overflow-hidden bg-ink-100" style={{ aspectRatio }}>
-          <Image src={photo.url} alt={photo.caption || ""} fill sizes="200px" className="object-cover" />
+          <Image
+            src={displayPhoto.url}
+            alt={displayPhoto.caption || ""}
+            fill
+            sizes="200px"
+            className="object-cover transition-transform"
+            style={{ transform: `scale(${zoom})` }}
+          />
           <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100">
             <button
-              onClick={handleRemove}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-600 shadow"
+              onClick={() => setShowZoom((v) => !v)}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow"
+              title="Adjust zoom"
             >
-              <Trash2 className="h-4 w-4" />
+              <ZoomIn className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={handleRemove}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-red-600 shadow"
+              title="Remove photo"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
+        {/* Zoom controls */}
+        {showZoom && (
+          <div className="absolute -bottom-8 left-0 right-0 z-20 flex items-center justify-center gap-2 rounded-b-lg bg-black/70 px-2 py-1">
+            <button onClick={() => setZoom((z) => Math.max(1, z - 0.1))} className="text-white"><ZoomOut className="h-3.5 w-3.5" /></button>
+            <input
+              type="range" min="1" max="2.5" step="0.05"
+              value={zoom}
+              onChange={(e) => setZoom(parseFloat(e.target.value))}
+              className="h-1 w-20 accent-purple-400"
+            />
+            <button onClick={() => setZoom((z) => Math.min(2.5, z + 0.1))} className="text-white"><ZoomIn className="h-3.5 w-3.5" /></button>
+          </div>
+        )}
         {editingCaption ? (
           <div className="mt-1 flex gap-1">
             <input
@@ -152,7 +204,7 @@ function PhotoSlot({
             onClick={() => setEditingCaption(true)}
             className={`mt-1 block w-full text-center text-xs text-ink-400 hover:text-purple-600 ${captionFont}`}
           >
-            {photo.caption || "Add caption..."}
+            {displayPhoto.caption || "Add caption..."}
             <Pencil className="ml-1 inline h-3 w-3" />
           </button>
         )}
@@ -256,8 +308,11 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
 
   const photoMap = new Map(gallery.photos.map((p) => [p.position, p]));
 
-  function handlePhotoAdded(position: number, url: string) {
-    router.refresh();
+  function handlePhotoAdded(position: number, newPhoto: Photo) {
+    setGallery((g) => ({
+      ...g,
+      photos: [...g.photos.filter((p) => p.position !== position), newPhoto],
+    }));
   }
 
   function handlePhotoRemoved(position: number, photoId: string) {
@@ -324,18 +379,12 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
         />
       )}
 
-      {/* ─── Blog / Recap ─── */}
+      {/* ─── Blog / Recap — Rich Text Editor ─── */}
       <div className="rounded-2xl border border-ink-100 bg-white p-6 shadow-[var(--shadow-soft)]">
         <h3 className="mb-3 text-sm font-semibold text-ink-700">
           Event Recap (optional blog)
         </h3>
-        <textarea
-          value={blogText}
-          onChange={(e) => setBlogText(e.target.value)}
-          rows={6}
-          placeholder="Write about how the event went, memorable moments, highlights..."
-          className="w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-base text-ink-800 outline-none placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-        />
+        <RichTextEditor value={blogText} onChange={setBlogText} />
       </div>
 
       {/* ─── Save ─── */}
@@ -365,7 +414,7 @@ type EditorProps = {
   gallery: GalleryData;
   setGallery: React.Dispatch<React.SetStateAction<GalleryData>>;
   photoMap: Map<number, Photo>;
-  onPhotoAdded: (pos: number, url: string) => void;
+  onPhotoAdded: (pos: number, newPhoto: Photo) => void;
   onPhotoRemoved: (pos: number, id: string) => void;
   slotCount?: number;
 };
@@ -558,6 +607,124 @@ function CorkBoardEditor({ gallery, setGallery, photoMap, slotCount = 11, onPhot
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RICH TEXT EDITOR — Simple WYSIWYG for event recap
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const COLORS = ["#1a1523", "#5b2a86", "#d64545", "#2f9e6b", "#3b7bd9", "#d98a2b", "#85809a"];
+const FONT_SIZES = ["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px"];
+
+function RichTextEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showFontSize, setShowFontSize] = useState(false);
+
+  function exec(command: string, val?: string) {
+    document.execCommand(command, false, val);
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
+  }
+
+  const toolbarBtn = "flex h-8 w-8 items-center justify-center rounded-lg text-ink-600 transition-colors hover:bg-purple-50 hover:text-purple-700";
+
+  return (
+    <div className="rounded-xl border border-ink-200 bg-white focus-within:border-purple-400 focus-within:ring-2 focus-within:ring-purple-100">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-ink-100 px-2 py-1.5">
+        <button type="button" onClick={() => exec("bold")} className={toolbarBtn} title="Bold">
+          <Bold className="h-4 w-4" />
+        </button>
+        <button type="button" onClick={() => exec("italic")} className={toolbarBtn} title="Italic">
+          <Italic className="h-4 w-4" />
+        </button>
+        <button type="button" onClick={() => exec("underline")} className={toolbarBtn} title="Underline">
+          <Underline className="h-4 w-4" />
+        </button>
+
+        <div className="mx-1 h-5 w-px bg-ink-200" />
+
+        <button type="button" onClick={() => exec("formatBlock", "h1")} className={toolbarBtn} title="Heading 1">
+          <Heading1 className="h-4 w-4" />
+        </button>
+        <button type="button" onClick={() => exec("formatBlock", "h2")} className={toolbarBtn} title="Heading 2">
+          <Heading2 className="h-4 w-4" />
+        </button>
+        <button type="button" onClick={() => exec("formatBlock", "p")} className={toolbarBtn} title="Paragraph">
+          <Type className="h-4 w-4" />
+        </button>
+
+        <div className="mx-1 h-5 w-px bg-ink-200" />
+
+        {/* Font Size */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => { setShowFontSize((v) => !v); setShowColorPicker(false); }}
+            className={`${toolbarBtn} text-xs font-bold`}
+            title="Font size"
+          >
+            A↕
+          </button>
+          {showFontSize && (
+            <div className="absolute left-0 top-full z-30 mt-1 flex flex-col rounded-lg border border-ink-200 bg-white p-1 shadow-lg">
+              {FONT_SIZES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => { exec("fontSize", "7"); /* then fix */ setShowFontSize(false); }}
+                  className="rounded px-3 py-1 text-left text-xs text-ink-600 hover:bg-purple-50"
+                  style={{ fontSize: s }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Color Picker */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => { setShowColorPicker((v) => !v); setShowFontSize(false); }}
+            className={toolbarBtn}
+            title="Text color"
+          >
+            <Palette className="h-4 w-4" />
+          </button>
+          {showColorPicker && (
+            <div className="absolute left-0 top-full z-30 mt-1 flex gap-1 rounded-lg border border-ink-200 bg-white p-2 shadow-lg">
+              {COLORS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => { exec("foreColor", c); setShowColorPicker(false); }}
+                  className="h-6 w-6 rounded-full border border-ink-200 transition-transform hover:scale-110"
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Editor area */}
+      <div
+        ref={editorRef}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={() => {
+          if (editorRef.current) onChange(editorRef.current.innerHTML);
+        }}
+        dangerouslySetInnerHTML={{ __html: value }}
+        className="min-h-[180px] px-4 py-3 text-base leading-relaxed text-ink-800 outline-none [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-2 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-2 [&_p]:mb-2"
+        data-placeholder="Write about how the event went, memorable moments, highlights..."
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { GalleryLightbox } from "./gallery-lightbox";
 
 /* ─── Types ─── */
 type Photo = { id: string; url: string; caption: string; position: number };
@@ -354,7 +355,20 @@ export function CorkBoardGallery({ gallery }: { gallery: GalleryData }) {
 
 /* ─── Renderer that picks the right theme ─── */
 export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
-  const [showBlog, setShowBlog] = useState(false);
+  const [showFullBlog, setShowFullBlog] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const lightboxPhotos = gallery.photos.map((p) => ({
+    url: p.url,
+    caption: p.caption || null,
+  }));
+
+  // Strip HTML for preview
+  const plainText = gallery.blogText
+    ? gallery.blogText.replace(/<[^>]*>/g, "").trim()
+    : "";
+  const previewText = plainText.slice(0, 200);
+  const needsExpand = plainText.length > 200;
 
   return (
     <div className="mt-12">
@@ -362,25 +376,90 @@ export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
         Event Memories
       </h2>
 
-      {gallery.theme === "bohemian" && <BohemianGallery gallery={gallery} />}
-      {gallery.theme === "scrapbook" && <ScrapbookGallery gallery={gallery} />}
-      {gallery.theme === "corkboard" && <CorkBoardGallery gallery={gallery} />}
+      {/* Wrap each theme to inject click handlers */}
+      <GalleryClickWrapper onPhotoClick={setLightboxIndex} gallery={gallery}>
+        {gallery.theme === "bohemian" && <BohemianGallery gallery={gallery} />}
+        {gallery.theme === "scrapbook" && <ScrapbookGallery gallery={gallery} />}
+        {gallery.theme === "corkboard" && <CorkBoardGallery gallery={gallery} />}
+      </GalleryClickWrapper>
 
-      {gallery.blogText && (
-        <div className="mx-auto mt-8 max-w-2xl">
-          <button
-            onClick={() => setShowBlog(!showBlog)}
-            className="mx-auto flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50 px-5 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100"
-          >
-            {showBlog ? "Hide" : "Read"} Event Recap
-          </button>
-          {showBlog && (
-            <div className="mt-4 whitespace-pre-line rounded-2xl border border-ink-100 bg-white p-6 text-base leading-relaxed text-ink-600 shadow-sm">
-              {gallery.blogText}
-            </div>
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <GalleryLightbox
+          photos={lightboxPhotos}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
+
+      {/* Blog Recap — preview + read more */}
+      {gallery.blogText && plainText && (
+        <div className="mx-auto mt-8 max-w-2xl rounded-2xl border border-ink-100 bg-white p-6 shadow-sm">
+          {!showFullBlog ? (
+            <>
+              <p className="text-base leading-relaxed text-ink-600">
+                {previewText}
+                {needsExpand && "..."}
+              </p>
+              {needsExpand && (
+                <button
+                  onClick={() => setShowFullBlog(true)}
+                  className="mt-3 text-sm font-medium text-purple-600 hover:text-purple-700"
+                >
+                  Read more →
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <div
+                className="prose prose-sm max-w-none text-ink-600 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-2 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-2 [&_p]:mb-2"
+                dangerouslySetInnerHTML={{ __html: gallery.blogText }}
+              />
+              <button
+                onClick={() => setShowFullBlog(false)}
+                className="mt-3 text-sm font-medium text-purple-600 hover:text-purple-700"
+              >
+                Show less ←
+              </button>
+            </>
           )}
         </div>
       )}
     </div>
   );
 }
+
+/* ─── Click wrapper: intercepts clicks on gallery images ─── */
+function GalleryClickWrapper({
+  children,
+  onPhotoClick,
+  gallery,
+}: {
+  children: React.ReactNode;
+  onPhotoClick: (index: number) => void;
+  gallery: GalleryData;
+}) {
+  function handleClick(e: React.MouseEvent) {
+    const target = e.target as HTMLElement;
+    const img = target.closest("figure")?.querySelector("img");
+    if (!img) return;
+
+    const src = img.src;
+    // Find matching photo index
+    const idx = gallery.photos.findIndex((p) =>
+      src.includes(encodeURIComponent(p.url).slice(0, 30)) || src.includes(p.url.split("/").pop() || "__no__")
+    );
+    if (idx >= 0) {
+      e.preventDefault();
+      onPhotoClick(idx);
+    }
+  }
+
+  return (
+    <div onClick={handleClick} className="cursor-pointer">
+      {children}
+    </div>
+  );
+}
+

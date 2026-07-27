@@ -81,7 +81,7 @@ export async function getUpcomingEvents(take = 3) {
 export async function getEvent(slug: string) {
   return db.event.findUnique({
     where: { slug },
-    include: { media: { orderBy: { order: "asc" } }, attachments: true, gallery: { include: { photos: { orderBy: { position: "asc" } } } } },
+    include: { media: { orderBy: { order: "asc" } }, attachments: true, gallery: { include: { photos: { orderBy: { position: "asc" } } } }, registrationForm: true },
   });
 }
 

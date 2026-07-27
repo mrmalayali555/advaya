@@ -22,6 +22,7 @@ import {
   Menu,
   X,
   ExternalLink,
+  ClipboardList,
 } from "lucide-react";
 import { LogoMark } from "@/components/ui/logo";
 import { logoutAction } from "@/lib/actions/auth";
@@ -34,6 +35,7 @@ const NAV = [
     items: [
       { href: "/adminahnuok/interventions", label: "Interventions", icon: FileText },
       { href: "/adminahnuok/events", label: "Events", icon: CalendarDays },
+      { href: "/adminahnuok/registrations", label: "Registrations", icon: ClipboardList },
       { href: "/adminahnuok/achievements", label: "Achievements", icon: Trophy },
       { href: "/adminahnuok/notifications", label: "Notifications", icon: Bell },
       { href: "/adminahnuok/marquee", label: "Marquee", icon: Megaphone },

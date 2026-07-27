@@ -89,6 +89,7 @@ model Event {
   media       EventMedia[]
   attachments EventAttachment[]
   gallery     EventGallery?
+  registrationForm RegistrationForm?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
@@ -280,6 +281,45 @@ model Setting {
   key       String   @id
   value     String   @default("{}") // JSON
   updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Registration Forms
+// ---------------------------------------------------------------------------
+model RegistrationForm {
+  id            String                   @id @default(cuid())
+  title         String
+  slug          String                   @unique
+  description   String?
+  event         Event?                   @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  eventId       String?                  @unique
+  fields        RegistrationField[]
+  submissions   RegistrationSubmission[]
+  deadline      DateTime?
+  published     Boolean                  @default(true)
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+}
+
+model RegistrationField {
+  id         String           @id @default(cuid())
+  form       RegistrationForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId     String
+  label      String
+  type       String
+  required   Boolean          @default(false)
+  placeholder String?
+  options    String?
+  order      Int              @default(0)
+}
+
+model RegistrationSubmission {
+  id        String           @id @default(cuid())
+  form      RegistrationForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId    String
+  data      String
+  files     String?
+  createdAt DateTime         @default(now())
 }
 
 // ---------------------------------------------------------------------------
