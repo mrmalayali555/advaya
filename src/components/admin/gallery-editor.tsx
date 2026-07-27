@@ -334,6 +334,7 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           titleLine2: gallery.titleLine2,
           subtitle: gallery.subtitle,
           blogText,
+          theme: gallery.theme,
         }),
       });
       router.refresh();
@@ -348,6 +349,23 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
 
   return (
     <div className="space-y-8">
+      {/* ─── THEME SELECTOR ─── */}
+      <div className="rounded-2xl border border-ink-100 bg-white p-6 shadow-soft flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-ink-700">Gallery Theme</h3>
+          <p className="text-xs text-ink-500">Change the visual style of this gallery.</p>
+        </div>
+        <select
+          value={gallery.theme}
+          onChange={(e) => setGallery(g => ({ ...g, theme: e.target.value }))}
+          className="rounded-xl border border-ink-200 bg-ink-50 px-4 py-2 text-sm font-medium text-ink-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+        >
+          <option value="bohemian">Bohemian (7 slots)</option>
+          <option value="scrapbook">Scrapbook (8 slots)</option>
+          <option value="corkboard">Corkboard (11 slots)</option>
+        </select>
+      </div>
+
       {/* ─── LIVE TEMPLATE EDITOR ─── */}
       {gallery.theme === "bohemian" && (
         <BohemianEditor
