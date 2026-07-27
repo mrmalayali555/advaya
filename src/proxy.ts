@@ -52,6 +52,13 @@ export async function proxy(req: NextRequest) {
 
   // Login page: if already authed, bounce to dashboard.
   if (pathname === "/adminahnuok/login") {
+    // If the server tells us to clear the session, do it here and prevent infinite redirect
+    if (req.nextUrl.searchParams.get("clear_session") === "1") {
+      const res = NextResponse.redirect(new URL("/adminahnuok/login", req.url));
+      res.cookies.delete(COOKIE);
+      return addSecurityHeaders(res);
+    }
+    
     if (authed) return NextResponse.redirect(new URL("/adminahnuok", req.url));
     return addSecurityHeaders(NextResponse.next());
   }
