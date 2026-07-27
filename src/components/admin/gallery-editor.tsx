@@ -661,12 +661,10 @@ function CorkBoardEditor({ gallery, setGallery, photoMap, slotCount = 11, onPhot
    RICH TEXT EDITOR — Simple WYSIWYG for event recap
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const COLORS = ["#1a1523", "#5b2a86", "#d64545", "#2f9e6b", "#3b7bd9", "#d98a2b", "#85809a"];
 const FONT_SIZES = ["12px", "14px", "16px", "18px", "20px", "24px", "28px", "32px"];
 
 function RichTextEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFontSize, setShowFontSize] = useState(false);
 
   function exec(command: string, val?: string) {
@@ -713,7 +711,7 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (v: stri
         <div className="relative">
           <button
             type="button"
-            onClick={() => { setShowFontSize((v) => !v); setShowColorPicker(false); }}
+            onClick={() => { setShowFontSize((v) => !v); }}
             className={`${toolbarBtn} text-xs font-bold`}
             title="Font size"
           >
@@ -737,28 +735,15 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (v: stri
         </div>
 
         {/* Color Picker */}
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => { setShowColorPicker((v) => !v); setShowFontSize(false); }}
-            className={toolbarBtn}
-            title="Text color"
-          >
+        <div className="relative flex items-center">
+          <label className={`${toolbarBtn} cursor-pointer relative overflow-hidden`} title="Text color">
             <Palette className="h-4 w-4" />
-          </button>
-          {showColorPicker && (
-            <div className="absolute left-0 top-full z-30 mt-1 flex gap-1 rounded-lg border border-ink-200 bg-white p-2 shadow-lg">
-              {COLORS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => { exec("foreColor", c); setShowColorPicker(false); }}
-                  className="h-6 w-6 rounded-full border border-ink-200 transition-transform hover:scale-110"
-                  style={{ backgroundColor: c }}
-                />
-              ))}
-            </div>
-          )}
+            <input
+              type="color"
+              onChange={(e) => exec("foreColor", e.target.value)}
+              className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+            />
+          </label>
         </div>
       </div>
 
