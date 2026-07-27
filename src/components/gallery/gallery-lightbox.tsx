@@ -157,6 +157,6 @@ export function GalleryLightbox({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
