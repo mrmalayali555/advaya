@@ -160,15 +160,37 @@ export default function RegistrationForm({
                 ))}
               </select>
             ) : field.type === "checkbox" ? (
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  required={field.required}
-                  onChange={(e) => handleCheckChange(field.id, e.target.checked)}
-                  className="h-5 w-5 rounded border-ink-200 text-purple-600 focus:ring-purple-500"
-                />
-                <span className="text-sm text-ink-700">{field.placeholder || "Yes, I agree"}</span>
-              </label>
+              field.options ? (
+                <div className="space-y-3 pt-1">
+                  {field.options.split(",").map((opt) => (
+                    <label key={opt.trim()} className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        required={field.required && (!formData[field.id] || formData[field.id].length === 0)}
+                        onChange={(e) => {
+                          setFormData((prev) => {
+                            const current = Array.isArray(prev[field.id]) ? prev[field.id] : [];
+                            if (e.target.checked) return { ...prev, [field.id]: [...current, opt.trim()] };
+                            return { ...prev, [field.id]: current.filter((v: string) => v !== opt.trim()) };
+                          });
+                        }}
+                        className="h-5 w-5 rounded border-ink-200 text-purple-600 focus:ring-purple-500"
+                      />
+                      <span className="text-sm text-ink-700">{opt.trim()}</span>
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    required={field.required}
+                    onChange={(e) => handleCheckChange(field.id, e.target.checked)}
+                    className="h-5 w-5 rounded border-ink-200 text-purple-600 focus:ring-purple-500"
+                  />
+                  <span className="text-sm text-ink-700">{field.placeholder || "Yes, I agree"}</span>
+                </label>
+              )
             ) : field.type === "file" ? (
               <div className="relative">
                 <input

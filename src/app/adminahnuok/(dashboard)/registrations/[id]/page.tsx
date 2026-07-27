@@ -181,10 +181,10 @@ export default async function EditRegistrationPage({ params }: { params: Promise
                     placeholder="Optional hint..."
                   />
                   <Field
-                    label="Options (for Select only)"
+                    label="Options (for Select or Checkbox)"
                     name="options"
                     placeholder="Comma separated: Option 1, Option 2"
-                    hint="Only used if type is Dropdown Select."
+                    hint="Only used if type is Dropdown Select or Checkbox."
                   />
                 </div>
                 <div className="flex items-center justify-between pt-2">
