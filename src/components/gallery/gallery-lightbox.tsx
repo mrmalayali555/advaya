@@ -85,7 +85,7 @@ export function GalleryLightbox({
 
       {/* Image */}
       <div
-        className={`relative max-h-[85vh] max-w-[90vw] transition-all duration-300 ${
+        className={`relative max-h-[95vh] max-w-[95vw] transition-all duration-300 ${
           animating ? "scale-75 opacity-0" : "scale-100 opacity-100"
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -94,9 +94,9 @@ export function GalleryLightbox({
           <Image
             src={photo.url}
             alt={photo.caption || "Gallery photo"}
-            width={1200}
-            height={800}
-            className="max-h-[78vh] w-auto rounded-lg object-contain"
+            width={1600}
+            height={1200}
+            className="max-h-[90vh] max-w-[90vw] sm:max-w-[85vw] w-auto rounded-lg object-contain"
             priority
           />
         </div>
