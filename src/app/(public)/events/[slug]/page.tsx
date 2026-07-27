@@ -5,6 +5,7 @@ import { CalendarDays, Clock, MapPin, Paperclip, Download } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
+import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
 import { getEvent } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 
@@ -93,6 +94,10 @@ export default async function EventDetail({
               <h2 className="mb-6 text-2xl font-bold text-ink-900">Gallery</h2>
               <MediaGallery media={e.media} />
             </div>
+          )}
+
+          {e.gallery && e.gallery.photos.length > 0 && (
+            <EventGalleryRenderer gallery={e.gallery} />
           )}
         </Container>
       </section>
