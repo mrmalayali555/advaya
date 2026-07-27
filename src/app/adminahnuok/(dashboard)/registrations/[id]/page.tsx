@@ -170,7 +170,11 @@ export default async function EditRegistrationPage({ params }: { params: Promise
                       { label: "File Upload", value: "file" },
                       { label: "Dropdown Select", value: "select" },
                       { label: "Checkbox", value: "checkbox" },
+                      { label: "Radio Buttons", value: "radio" },
                       { label: "URL", value: "url" },
+                      { label: "Date (Calendar)", value: "date" },
+                      { label: "Time", value: "time" },
+                      { label: "Color Picker", value: "color" },
                     ]}
                   />
                 </div>

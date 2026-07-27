@@ -71,10 +71,25 @@ export async function getSession(): Promise<SessionPayload | null> {
   const store = await cookies();
   const token = store.get(COOKIE_NAME)?.value;
   if (!token) return null;
+  
   try {
     const { payload } = await jwtVerify(token, secret);
+    
+    // Check if session still exists in DB
+    const { db } = await import("./db");
+    const sessionRecord = await db.adminSession.findUnique({
+      where: { token },
+      select: { id: true },
+    });
+    
+    if (!sessionRecord) {
+      store.delete(COOKIE_NAME);
+      return null;
+    }
+    
     return payload as unknown as SessionPayload;
   } catch {
+    store.delete(COOKIE_NAME);
     return null;
   }
 }
@@ -83,6 +98,25 @@ export async function getSession(): Promise<SessionPayload | null> {
 export async function verifyToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secret);
+    
+    // We can't import Prisma directly into edge middleware, 
+    // but verifyToken is only used if there's middleware.
+    // If it's used in edge middleware, doing db calls will fail.
+    // Let's assume we are safe to do standard fetch or DB call if not on Edge.
+    // However, if verifyToken is truly in middleware, we skip the DB check here to avoid Edge crash.
+    // Wait, let's just do a dynamic import for DB check. If it crashes, it's Edge.
+    // Actually, in Advaya, we don't have Edge middleware.
+    
+    const { db } = await import("./db");
+    const sessionRecord = await db.adminSession.findUnique({
+      where: { token },
+      select: { id: true },
+    });
+    
+    if (!sessionRecord) {
+      return null;
+    }
+    
     return payload as unknown as SessionPayload;
   } catch {
     return null;
