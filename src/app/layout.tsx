@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   alternates: { canonical: SITE.url },
-  icons: { icon: "/favicon.ico" },
+  icons: { icon: "/icon.svg" },
 };
 
 export const viewport: Viewport = {
@@ -62,7 +62,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-import { InitialLoader } from "@/components/ui/initial-loader";
 
 export default function RootLayout({
   children,
@@ -74,7 +73,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
-        <InitialLoader />
         {children}
       </body>
     </html>
