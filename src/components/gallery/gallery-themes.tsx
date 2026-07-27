@@ -5,7 +5,7 @@ import { useState } from "react";
 import { GalleryLightbox } from "./gallery-lightbox";
 
 /* ─── Types ─── */
-type Photo = { id: string; url: string; caption: string; position: number };
+type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number; };
 type GalleryData = {
   id: string;
   theme: string;
@@ -41,7 +41,8 @@ function Polaroid({
           alt={photo.caption || "Gallery photo"}
           fill
           sizes="200px"
-          className="object-cover"
+          className="object-cover transition-transform"
+          style={{ transform: `scale(${photo.zoom || 1}) translate(${photo.offsetX || 0}%, ${photo.offsetY || 0}%)` }}
         />
       </div>
       {photo.caption && (

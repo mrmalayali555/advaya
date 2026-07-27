@@ -63,6 +63,8 @@ function PhotoSlot({
   const [caption, setCaption] = useState(photo?.caption || "");
   const [editingCaption, setEditingCaption] = useState(false);
   const [zoom, setZoom] = useState(photo?.zoom || 1);
+  const [offsetX, setOffsetX] = useState(photo?.offsetX || 0);
+  const [offsetY, setOffsetY] = useState(photo?.offsetY || 0);
   const [showZoom, setShowZoom] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -154,7 +156,7 @@ function PhotoSlot({
             fill
             sizes="200px"
             className="object-cover transition-transform"
-            style={{ transform: `scale(${zoom})` }}
+            style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%)` }}
           />
           <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100">
             <button
@@ -173,17 +175,43 @@ function PhotoSlot({
             </button>
           </div>
         </div>
-        {/* Zoom controls */}
+        {/* Transform controls */}
         {showZoom && (
-          <div className="absolute -bottom-8 left-0 right-0 z-20 flex items-center justify-center gap-2 rounded-b-lg bg-black/70 px-2 py-1">
-            <button onClick={() => setZoom((z) => Math.max(1, z - 0.1))} className="text-white"><ZoomOut className="h-3.5 w-3.5" /></button>
-            <input
-              type="range" min="1" max="2.5" step="0.05"
-              value={zoom}
-              onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="h-1 w-20 accent-purple-400"
-            />
-            <button onClick={() => setZoom((z) => Math.min(2.5, z + 0.1))} className="text-white"><ZoomIn className="h-3.5 w-3.5" /></button>
+          <div className="absolute -bottom-14 left-0 right-0 z-20 flex flex-col gap-2 rounded-b-lg bg-black/80 p-2 shadow-xl">
+            <div className="flex items-center justify-between gap-2">
+              <button onClick={() => setZoom((z) => Math.max(1, z - 0.1))} className="text-white hover:text-purple-300"><ZoomOut className="h-3.5 w-3.5" /></button>
+              <input
+                type="range" min="1" max="3" step="0.05"
+                value={zoom}
+                onChange={(e) => setZoom(parseFloat(e.target.value))}
+                className="h-1 w-20 accent-purple-400"
+              />
+              <button onClick={() => setZoom((z) => Math.min(3, z + 0.1))} className="text-white hover:text-purple-300"><ZoomIn className="h-3.5 w-3.5" /></button>
+            </div>
+            <div className="flex items-center justify-between text-white">
+              <div className="flex gap-1">
+                <button onClick={() => setOffsetX(x => x - 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">←</button>
+                <button onClick={() => setOffsetX(x => x + 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">→</button>
+                <button onClick={() => setOffsetY(y => y - 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">↑</button>
+                <button onClick={() => setOffsetY(y => y + 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">↓</button>
+              </div>
+              <button 
+                onClick={async () => {
+                  const p = localPhoto || photo;
+                  if (p) {
+                    await fetch("/api/admin/gallery-photo", {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ photoId: p.id, zoom, offsetX, offsetY }),
+                    });
+                  }
+                  setShowZoom(false);
+                }} 
+                className="text-xs font-bold text-purple-400 hover:text-purple-300"
+              >
+                Save
+              </button>
+            </div>
           </div>
         )}
         {editingCaption ? (

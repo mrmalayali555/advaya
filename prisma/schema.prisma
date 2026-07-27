@@ -119,6 +119,9 @@ model GalleryPhoto {
   caption   String       @default("")
   position  Int
   order     Int          @default(0)
+  zoom      Float        @default(1.0)
+  offsetX   Float        @default(0.0)
+  offsetY   Float        @default(0.0)
 }
 
 model EventMedia {
