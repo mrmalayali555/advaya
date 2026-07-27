@@ -356,12 +356,7 @@ export function CorkBoardGallery({ gallery }: { gallery: GalleryData }) {
 /* ─── Renderer that picks the right theme ─── */
 export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
   const [showFullBlog, setShowFullBlog] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  const lightboxPhotos = gallery.photos.map((p) => ({
-    url: p.url,
-    caption: p.caption || null,
-  }));
+  const [lightboxPhoto, setLightboxPhoto] = useState<{ url: string; caption: string | null } | null>(null);
 
   // Strip HTML for preview
   const plainText = gallery.blogText
@@ -377,18 +372,18 @@ export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
       </h2>
 
       {/* Wrap each theme to inject click handlers */}
-      <GalleryClickWrapper onPhotoClick={setLightboxIndex} gallery={gallery}>
+      <GalleryClickWrapper onPhotoClick={setLightboxPhoto} gallery={gallery}>
         {gallery.theme === "bohemian" && <BohemianGallery gallery={gallery} />}
         {gallery.theme === "scrapbook" && <ScrapbookGallery gallery={gallery} />}
         {gallery.theme === "corkboard" && <CorkBoardGallery gallery={gallery} />}
       </GalleryClickWrapper>
 
       {/* Lightbox */}
-      {lightboxIndex !== null && (
+      {lightboxPhoto !== null && (
         <GalleryLightbox
-          photos={lightboxPhotos}
-          initialIndex={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
+          photos={[lightboxPhoto]}
+          initialIndex={0}
+          onClose={() => setLightboxPhoto(null)}
         />
       )}
 
@@ -437,7 +432,7 @@ function GalleryClickWrapper({
   gallery,
 }: {
   children: React.ReactNode;
-  onPhotoClick: (index: number) => void;
+  onPhotoClick: (photo: { url: string; caption: string | null }) => void;
   gallery: GalleryData;
 }) {
   function handleClick(e: React.MouseEvent) {
@@ -446,13 +441,18 @@ function GalleryClickWrapper({
     if (!img) return;
 
     const src = img.src;
-    // Find matching photo index
-    const idx = gallery.photos.findIndex((p) =>
+    // Find matching photo
+    const photo = gallery.photos.find((p) =>
       src.includes(encodeURIComponent(p.url).slice(0, 30)) || src.includes(p.url.split("/").pop() || "__no__")
     );
-    if (idx >= 0) {
+    
+    if (photo) {
       e.preventDefault();
-      onPhotoClick(idx);
+      onPhotoClick({ url: photo.url, caption: photo.caption || null });
+    } else {
+      // Fallback if matching fails, just use the clicked img src
+      e.preventDefault();
+      onPhotoClick({ url: img.src, caption: null });
     }
   }
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ChevronDown, Search } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
@@ -35,9 +35,20 @@ export function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (open && navRef.current) {
+      setTimeout(() => {
+        if (!navRef.current) return;
+        navRef.current.scrollTo({ top: navRef.current.scrollHeight, behavior: "smooth" });
+      }, 600);
+    }
+  }, [open]);
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4">
-      <div className="mx-auto max-w-7xl">
+      <div className="relative z-50 mx-auto max-w-7xl">
         <div
           className={cn(
             "flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-500 ease-brand border shadow-[var(--shadow-soft)]",
@@ -134,6 +145,7 @@ export function Navbar() {
               onClick={() => setOpen(false)}
             />
             <motion.nav
+              ref={navRef}
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
