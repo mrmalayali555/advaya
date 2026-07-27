@@ -32,8 +32,7 @@ function Polaroid({
 }) {
   if (!photo) return null;
   return (
-    <figure
-      className={`group relative bg-white p-2 pb-8 shadow-[2px_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300 hover:scale-105 hover:shadow-[4px_8px_32px_rgba(0,0,0,0.3)] hover:z-20 ${className}`}
+    <figure data-photo-id={photo.id} className={`group relative bg-white p-2 pb-8 shadow-[2px_4px_16px_rgba(0,0,0,0.08)] transition-all duration-300 hover:scale-105 hover:shadow-[4px_8px_32px_rgba(0,0,0,0.15)] hover:z-20 ${className}`}
       style={{ transform: `rotate(${rotate})` }}
     >
       <div className={`relative overflow-hidden bg-ink-100 ${imgClassName}`}>
@@ -120,7 +119,7 @@ export function BohemianGallery({ gallery }: { gallery: GalleryData }) {
               zIndex: 1,
             }}
           >
-            <figure className="group bg-white p-1.5 pb-6 shadow-[2px_3px_10px_rgba(0,0,0,0.12)] transition-all duration-300 hover:scale-110 hover:shadow-[4px_8px_24px_rgba(0,0,0,0.25)] hover:z-20">
+            <figure data-photo-id={photo.id} className="group bg-white p-1.5 pb-6 shadow-[2px_3px_10px_rgba(0,0,0,0.12)] transition-all duration-300 hover:scale-110 hover:shadow-[4px_8px_24px_rgba(0,0,0,0.25)] hover:z-20">
               <div className="relative aspect-[3/4] overflow-hidden bg-ink-100">
                 <Image
                   src={photo.url}
@@ -148,6 +147,7 @@ export function BohemianGallery({ gallery }: { gallery: GalleryData }) {
         {gallery.photos.map((photo) => (
           <figure
             key={photo.id}
+            data-photo-id={photo.id}
             className="bg-white p-1.5 pb-5 shadow-[1px_2px_8px_rgba(0,0,0,0.1)]"
           >
             <div className="relative aspect-[3/4] overflow-hidden bg-ink-100">
@@ -248,7 +248,7 @@ export function ScrapbookGallery({ gallery }: { gallery: GalleryData }) {
                 style={{ clipPath: "polygon(2% 0%, 98% 0%, 100% 100%, 0% 100%)" }}
               />
 
-              <figure className="bg-white p-2 pb-7 shadow-[2px_3px_12px_rgba(0,0,0,0.15)]">
+              <figure data-photo-id={photo.id} className="bg-white p-2 pb-7 shadow-[2px_3px_12px_rgba(0,0,0,0.15)]">
                 <div className="relative aspect-square overflow-hidden bg-ink-100">
                   <Image
                     src={photo.url}
@@ -437,19 +437,19 @@ function GalleryClickWrapper({
 }) {
   function handleClick(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
-    const img = target.closest("figure")?.querySelector("img");
-    if (!img) return;
+    const figure = target.closest("figure");
+    if (!figure) return;
 
-    const src = img.src;
+    const id = figure.getAttribute("data-photo-id");
+    const img = figure.querySelector("img");
+    
     // Find matching photo
-    const photo = gallery.photos.find((p) =>
-      src.includes(encodeURIComponent(p.url).slice(0, 30)) || src.includes(p.url.split("/").pop() || "__no__")
-    );
+    const photo = gallery.photos.find((p) => p.id === id);
     
     if (photo) {
       e.preventDefault();
       onPhotoClick({ url: photo.url, caption: photo.caption || null });
-    } else {
+    } else if (img) {
       // Fallback if matching fails, just use the clicked img src
       e.preventDefault();
       onPhotoClick({ url: img.src, caption: null });

@@ -635,7 +635,10 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (v: stri
   return (
     <div className="rounded-xl border border-ink-200 bg-white focus-within:border-purple-400 focus-within:ring-2 focus-within:ring-purple-100">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-ink-100 px-2 py-1.5">
+      <div
+        className="flex flex-wrap items-center gap-0.5 border-b border-ink-100 px-2 py-1.5"
+        onMouseDown={(e) => e.preventDefault()}
+      >
         <button type="button" onClick={() => exec("bold")} className={toolbarBtn} title="Bold">
           <Bold className="h-4 w-4" />
         </button>
@@ -672,11 +675,11 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (v: stri
           </button>
           {showFontSize && (
             <div className="absolute left-0 top-full z-30 mt-1 flex flex-col rounded-lg border border-ink-200 bg-white p-1 shadow-lg">
-              {FONT_SIZES.map((s) => (
+              {FONT_SIZES.map((s, idx) => (
                 <button
                   key={s}
                   type="button"
-                  onClick={() => { exec("fontSize", "7"); /* then fix */ setShowFontSize(false); }}
+                  onClick={() => { exec("fontSize", String(idx + 1)); setShowFontSize(false); }}
                   className="rounded px-3 py-1 text-left text-xs text-ink-600 hover:bg-purple-50"
                   style={{ fontSize: s }}
                 >
