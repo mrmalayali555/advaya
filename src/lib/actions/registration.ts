@@ -59,6 +59,7 @@ export async function deleteRegistrationForm(id: string) {
   });
 
   revalidatePath("/adminahnuok/registrations");
+  redirect("/adminahnuok/registrations");
 }
 
 export async function addRegistrationField(formId: string, formData: FormData) {

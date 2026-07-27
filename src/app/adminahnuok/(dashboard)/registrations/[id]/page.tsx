@@ -80,13 +80,15 @@ export default async function EditRegistrationPage({ params }: { params: Promise
                   <Toggle label="Published" name="published" defaultChecked={form.published} />
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-4 border-t border-ink-100">
-                <form action={deleteRegistrationForm.bind(null, form.id)}>
-                  <DeleteBtn label="Delete Form" />
-                </form>
+              <div className="flex justify-end pt-4 border-t border-ink-100">
                 <SubmitBtn>Save Settings</SubmitBtn>
               </div>
             </form>
+            <div className="mt-4 flex justify-start">
+              <form action={deleteRegistrationForm.bind(null, form.id)}>
+                <DeleteBtn label="Delete Form" />
+              </form>
+            </div>
           </section>
 
           {/* Form Builder */}
