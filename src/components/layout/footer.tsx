@@ -9,13 +9,17 @@ import {
 import { Logo } from "@/components/ui/logo";
 import { Container } from "@/components/ui/primitives";
 import { SITE, NAV_LINKS } from "@/lib/site";
-import { GuybrushAnimation } from "@/components/ui/guybrush-animation";
+import { GuybrushWalkingBG } from "@/components/ui/guybrush-animation";
 
 export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative mt-24 overflow-hidden bg-ink-900 text-white">
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-40" />
+
+      {/* Guybrush walking across the footer background */}
+      <GuybrushWalkingBG />
+
       <Container className="relative py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
@@ -110,9 +114,6 @@ export function Footer() {
           <p>
             © {year} {SITE.name} — {SITE.college}. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <GuybrushAnimation className="scale-75 origin-right" />
-          </div>
         </div>
       </Container>
     </footer>

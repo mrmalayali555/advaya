@@ -2,23 +2,33 @@
 
 import React, { useEffect, useRef } from "react";
 
+/* ──────────────────────────────────────────────────────
+   Colour palette (from original SCSS variables)
+   ────────────────────────────────────────────────────── */
 const PALETTE: Record<number, string> = {
-  1: "#A85C2C",
-  2: "#7C440C",
-  3: "#E48070",
-  4: "#DC6C50",
-  5: "#A85C2C",
-  6: "#E4E4E4",
-  7: "#C0C0C0",
-  8: "#A0A0A0",
-  9: "#1C98E8",
-  10: "#575757",
-  11: "#404040",
-  12: "#000000",
-  13: "#E8B458",
-  14: "#DC6C50",
-  15: "#000000",
+  1: "#A85C2C",   // hair
+  2: "#7C440C",   // hair-shadow
+  3: "#E48070",   // skin
+  4: "#DC6C50",   // skin-shadow
+  5: "#A85C2C",   // skin-darker-shadow
+  6: "#E4E4E4",   // t-shirt
+  7: "#C0C0C0",   // t-shirt-shadow
+  8: "#A0A0A0",   // t-shirt-darker-shadow
+  9: "#1C98E8",   // t-shirt-deco
+  10: "#575757",  // pants
+  11: "#404040",  // pants-shadow
+  12: "#000000",  // pants-darker-shadow
+  13: "#E8B458",  // pants-deco
+  14: "#DC6C50",  // pants-deco-shadow
+  15: "#000000",  // eye
 };
+
+/* ──────────────────────────────────────────────────────
+   Sprite data — Frame 1 (standing / spyglass idle)
+   36 cols × 47 rows
+   ────────────────────────────────────────────────────── */
+const COLS = 36;
+const ROWS = 47;
 
 const FRAME_1 = [
   0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -67,10 +77,69 @@ const FRAME_1 = [
   0,0,0,0,0,0,0,0,0,12,14,13,12,12,12,0,0,12,12,12,11,11,11,11,0,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,12,12,11,11,11,11,12,0,0,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,0,0,12,11,11,11,11,11,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+  0,0,0,0,0,0,0,0,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 ];
 
-export function GuybrushAnimation({ className = "" }: { className?: string }) {
+/* A second frame with a slight walk cycle offset (left leg forward) */
+const FRAME_2 = [
+  0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,1,1,1,1,2,2,3,2,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,1,1,1,1,2,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,1,1,1,3,1,3,15,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,2,1,4,3,4,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,1,4,3,3,3,3,3,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,1,1,2,1,4,3,3,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,1,1,2,4,3,4,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,4,3,3,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,7,7,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,7,7,7,6,6,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,7,6,6,6,6,6,6,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,7,6,6,6,6,6,6,6,6,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,7,6,6,6,7,6,6,6,6,9,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,7,6,6,7,8,7,6,6,6,6,6,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,7,6,6,6,8,8,7,6,6,6,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,8,6,6,7,8,6,6,6,6,6,6,8,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,7,7,7,7,6,8,7,6,6,6,6,6,8,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,8,7,7,7,7,8,7,7,6,6,7,6,8,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,5,4,4,8,8,7,7,7,8,7,8,8,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,5,3,3,12,12,11,11,10,10,10,11,12,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,5,3,3,12,12,11,10,10,10,13,11,13,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,4,3,12,11,11,10,10,10,10,11,12,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,4,3,4,11,10,10,10,10,13,11,13,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,5,3,3,4,10,10,10,10,10,11,12,12,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,5,3,3,10,10,10,11,11,11,11,12,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,5,4,10,10,11,11,12,12,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,12,11,10,10,11,12,12,12,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,12,11,10,10,11,12,12,12,10,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,11,11,10,10,12,12,12,11,10,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,11,10,10,11,12,12,12,11,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,12,11,11,12,12,12,12,11,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  // boots shifted — walk frame
+  0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,12,8,8,8,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,8,8,8,7,7,0,0,8,7,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,8,8,7,6,0,0,0,8,7,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,8,8,7,6,0,0,0,8,8,7,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,8,8,7,6,0,0,0,0,8,7,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,8,7,6,0,0,0,0,0,8,8,7,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,12,12,0,0,0,0,0,0,8,8,7,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,12,12,12,0,0,0,0,12,12,12,14,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,12,14,13,12,12,12,0,0,12,12,12,11,11,11,11,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,12,12,11,11,11,11,12,0,0,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,12,11,11,11,11,11,11,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,12,12,12,12,12,12,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+];
+
+const FRAMES = [FRAME_1, FRAME_2];
+
+/**
+ * GuybrushWalkingBG
+ * Renders Guybrush as a walking pixel-art character that moves across
+ * the footer from right to left and loops, positioned as a background element.
+ */
+export function GuybrushWalkingBG() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -79,42 +148,87 @@ export function GuybrushAnimation({ className = "" }: { className?: string }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const cols = 36;
-    const rows = 47;
-    const pixelSize = 3;
+    const pixelSize = 2;
+    const spriteW = COLS * pixelSize;
+    const spriteH = ROWS * pixelSize;
 
-    canvas.width = cols * pixelSize;
-    canvas.height = rows * pixelSize;
+    // Canvas is the full width of the footer, height = sprite height + padding
+    const parent = canvas.parentElement;
+    if (!parent) return;
 
-    let frameIndex = 0;
-    const frames = [FRAME_1];
+    const resizeCanvas = () => {
+      canvas.width = parent.clientWidth;
+      canvas.height = spriteH + 10;
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-    const render = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const data = frames[frameIndex % frames.length];
+    let posX = canvas.width + 20; // start off-screen right
+    let frameIdx = 0;
+    let tickCount = 0;
+    let animId: number;
 
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const val = data[r * cols + c];
+    const renderFrame = (data: number[]) => {
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const val = data[r * COLS + c];
           if (val > 0 && PALETTE[val]) {
             ctx.fillStyle = PALETTE[val];
-            ctx.fillRect(c * pixelSize, r * pixelSize, pixelSize, pixelSize);
+            ctx.fillRect(
+              posX + c * pixelSize,
+              5 + r * pixelSize,
+              pixelSize,
+              pixelSize
+            );
           }
         }
       }
-
-      frameIndex++;
     };
 
-    const interval = setInterval(render, 150);
-    render();
+    const loop = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    return () => clearInterval(interval);
+      // Swap frame every 8 ticks for a walk cycle
+      tickCount++;
+      if (tickCount % 8 === 0) {
+        frameIdx = (frameIdx + 1) % FRAMES.length;
+      }
+
+      renderFrame(FRAMES[frameIdx]);
+
+      // Move left at ~1px per frame
+      posX -= 1;
+
+      // When fully off-screen left, wrap to right
+      if (posX < -spriteW - 20) {
+        posX = canvas.width + 20;
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resizeCanvas);
+    };
   }, []);
 
   return (
-    <div className={`guybrush inline-block p-2 rounded-2xl border border-purple-500/20 bg-ink-950/80 shadow-2xl backdrop-blur-md ${className}`}>
-      <canvas ref={canvasRef} className="block image-rendering-pixelated" />
+    <div className="pointer-events-none absolute bottom-0 left-0 right-0 overflow-hidden opacity-30">
+      <canvas
+        ref={canvasRef}
+        className="block w-full"
+        style={{ imageRendering: "pixelated" }}
+      />
     </div>
   );
+}
+
+/**
+ * Legacy static export for backward compat — now just re-exports walking BG
+ */
+export function GuybrushAnimation({ className = "" }: { className?: string }) {
+  return null; // No longer renders inline — use GuybrushWalkingBG instead
 }
