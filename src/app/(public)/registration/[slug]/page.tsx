@@ -26,7 +26,7 @@ export default async function RegistrationPage({ params }: { params: Promise<{ s
     where: { slug },
     include: {
       fields: { orderBy: { order: "asc" } },
-      event: { select: { slug: true } }
+      event: { select: { slug: true, status: true } }
     },
   });
 
@@ -34,7 +34,7 @@ export default async function RegistrationPage({ params }: { params: Promise<{ s
     notFound();
   }
 
-  const isClosed = form.deadline && new Date() > new Date(form.deadline);
+  const isClosed = (form.deadline && new Date() > new Date(form.deadline)) || form.event?.status === "completed";
 
   return (
     <div className="min-h-screen bg-ink-50 pt-24 pb-20">
@@ -57,7 +57,11 @@ export default async function RegistrationPage({ params }: { params: Promise<{ s
             </div>
             <h2 className="font-display text-2xl font-bold text-ink-900 mb-2">Registration Closed</h2>
             <p className="text-ink-600">
-              The deadline for this registration was {new Date(form.deadline!).toLocaleString()}. We are no longer accepting submissions.
+              {form.event?.status === "completed" 
+                ? "This event has already been completed, so registrations are now closed." 
+                : `The deadline for this registration was ${new Date(form.deadline!).toLocaleString()}. `
+              } 
+              We are no longer accepting submissions.
             </p>
           </div>
         ) : (
