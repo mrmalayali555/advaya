@@ -63,6 +63,8 @@ export const viewport: Viewport = {
 };
 
 
+import NextTopLoader from "nextjs-toploader";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -73,6 +75,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
+        <NextTopLoader color="#5b2a86" showSpinner={false} />
         {children}
       </body>
     </html>

@@ -350,6 +350,17 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
     }));
   }
 
+  async function handleSwap(posA: number, posB: number) {
+    const photos = [...gallery.photos];
+    const idxA = photos.findIndex(p => p.position === posA);
+    const idxB = photos.findIndex(p => p.position === posB);
+
+    if (idxA > -1) photos[idxA].position = posB;
+    if (idxB > -1) photos[idxB].position = posA;
+
+    setGallery((g) => ({ ...g, photos }));
+  }
+
   async function saveText() {
     setSaving(true);
     try {
@@ -402,6 +413,7 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           photoMap={photoMap}
           onPhotoAdded={handlePhotoAdded}
           onPhotoRemoved={handlePhotoRemoved}
+          onSwap={handleSwap}
         />
       )}
       {gallery.theme === "scrapbook" && (
@@ -412,6 +424,7 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           slotCount={slotCount}
           onPhotoAdded={handlePhotoAdded}
           onPhotoRemoved={handlePhotoRemoved}
+          onSwap={handleSwap}
         />
       )}
       {gallery.theme === "corkboard" && (
@@ -422,6 +435,7 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           slotCount={slotCount}
           onPhotoAdded={handlePhotoAdded}
           onPhotoRemoved={handlePhotoRemoved}
+          onSwap={handleSwap}
         />
       )}
 
@@ -462,10 +476,11 @@ type EditorProps = {
   photoMap: Map<number, Photo>;
   onPhotoAdded: (pos: number, newPhoto: Photo) => void;
   onPhotoRemoved: (pos: number, id: string) => void;
+  onSwap: (posA: number, posB: number) => void;
   slotCount?: number;
 };
 
-function BohemianEditor({ gallery, setGallery, photoMap, onPhotoAdded, onPhotoRemoved }: EditorProps) {
+function BohemianEditor({ gallery, setGallery, photoMap, onPhotoAdded, onPhotoRemoved, onSwap }: EditorProps) {
   return (
     <div className="relative mx-auto w-full max-w-3xl rounded-2xl bg-[#f9f7f4] p-8 shadow-lg sm:p-12" style={{ minHeight: 600 }}>
       {/* Center text - editable */}
@@ -502,10 +517,17 @@ function BohemianEditor({ gallery, setGallery, photoMap, onPhotoAdded, onPhotoRe
       {BOHEMIAN_SLOTS.map((slot, i) => (
         <div
           key={i}
-          className="absolute"
+          className="absolute shadow-[2px_3px_10px_rgba(0,0,0,0.12)] transition-all hover:z-50 focus-within:z-50 group"
+          draggable
+          onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            const fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+            if (!isNaN(fromIdx) && fromIdx !== i) onSwap(fromIdx, i);
+          }}
           style={{ ...slot.style, transform: `rotate(${slot.rotate})`, zIndex: 1 }}
         >
-          <div className="bg-white p-1.5 pb-6 shadow-[2px_3px_10px_rgba(0,0,0,0.12)]">
+          <div className="bg-white p-1.5 pb-6">
             <PhotoSlot
               photo={photoMap.get(i)}
               position={i}
@@ -522,7 +544,7 @@ function BohemianEditor({ gallery, setGallery, photoMap, onPhotoAdded, onPhotoRe
   );
 }
 
-function ScrapbookEditor({ gallery, setGallery, photoMap, slotCount = 8, onPhotoAdded, onPhotoRemoved }: EditorProps) {
+function ScrapbookEditor({ gallery, setGallery, photoMap, slotCount = 8, onPhotoAdded, onPhotoRemoved, onSwap }: EditorProps) {
   return (
     <div>
       {/* Title */}
@@ -569,7 +591,14 @@ function ScrapbookEditor({ gallery, setGallery, photoMap, slotCount = 8, onPhoto
           {Array.from({ length: slotCount }).map((_, i) => (
             <div
               key={i}
-              className="relative"
+              className="relative transition-all hover:z-50 focus-within:z-50 group"
+              draggable
+              onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                const fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+                if (!isNaN(fromIdx) && fromIdx !== i) onSwap(fromIdx, i);
+              }}
               style={{ transform: `rotate(${SCRAPBOOK_ROTATIONS[i % SCRAPBOOK_ROTATIONS.length]})` }}
             >
               {/* Washi tape */}
@@ -595,7 +624,7 @@ function ScrapbookEditor({ gallery, setGallery, photoMap, slotCount = 8, onPhoto
   );
 }
 
-function CorkBoardEditor({ gallery, setGallery, photoMap, slotCount = 11, onPhotoAdded, onPhotoRemoved }: EditorProps) {
+function CorkBoardEditor({ gallery, setGallery, photoMap, slotCount = 11, onPhotoAdded, onPhotoRemoved, onSwap }: EditorProps) {
   return (
     <div>
       {/* Title */}
@@ -633,7 +662,14 @@ function CorkBoardEditor({ gallery, setGallery, photoMap, slotCount = 11, onPhot
           {Array.from({ length: slotCount }).map((_, i) => (
             <div
               key={i}
-              className="m-2.5 w-[170px]"
+              className="m-2.5 w-[170px] relative transition-all hover:z-50 focus-within:z-50 group cursor-move"
+              draggable
+              onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                const fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+                if (!isNaN(fromIdx) && fromIdx !== i) onSwap(fromIdx, i);
+              }}
               style={{
                 transform: `rotate(${CORK_ROTATIONS[i % CORK_ROTATIONS.length]})`,
                 fontFamily: "'Cedarville Cursive', cursive",
