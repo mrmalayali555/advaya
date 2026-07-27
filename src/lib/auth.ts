@@ -83,13 +83,11 @@ export async function getSession(): Promise<SessionPayload | null> {
     });
     
     if (!sessionRecord) {
-      store.delete(COOKIE_NAME);
       return null;
     }
     
     return payload as unknown as SessionPayload;
   } catch {
-    store.delete(COOKIE_NAME);
     return null;
   }
 }
