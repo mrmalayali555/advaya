@@ -203,13 +203,33 @@ export default async function HomePage() {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <Reveal>
               <SectionHeading
-                eyebrow="About ADVAYA"
-                title={<>More than a union — <span className="text-gradient">a student voice.</span></>}
-                description={aboutData.history}
+                eyebrow={
+                  <EditableText type="page" keyName="about" field="eyebrow_home">
+                    {aboutData.eyebrow_home || "About ADVAYA"}
+                  </EditableText>
+                }
+                title={
+                  <EditableText type="page" keyName="about" field="title_home">
+                    {aboutData.title_home || "More than a union — a student voice."}
+                  </EditableText>
+                }
+                description={
+                  <EditableText type="page" keyName="about" field="history">
+                    {aboutData.history}
+                  </EditableText>
+                }
               />
               <div className="mt-8 space-y-5">
-                <ValueRow icon={<Target className="h-5 w-5" />} title="Mission" text={aboutData.mission} />
-                <ValueRow icon={<Eye className="h-5 w-5" />} title="Vision" text={aboutData.vision} />
+                <ValueRow 
+                  icon={<Target className="h-5 w-5" />} 
+                  title={<EditableText type="page" keyName="about" field="mission_title">{aboutData.mission_title || "Mission"}</EditableText>} 
+                  text={<EditableText type="page" keyName="about" field="mission">{aboutData.mission}</EditableText>} 
+                />
+                <ValueRow 
+                  icon={<Eye className="h-5 w-5" />} 
+                  title={<EditableText type="page" keyName="about" field="vision_title">{aboutData.vision_title || "Vision"}</EditableText>} 
+                  text={<EditableText type="page" keyName="about" field="vision">{aboutData.vision}</EditableText>} 
+                />
               </div>
               <div className="mt-8">
                 <ButtonLink href="/about" arrow>Learn more</ButtonLink>
@@ -228,7 +248,11 @@ export default async function HomePage() {
                   </p>
                   <div className="mt-6 flex items-center gap-3">
                     <div className="h-px w-8 bg-purple-400" />
-                    <p className="text-sm font-semibold text-purple-700">Message from the Chairperson</p>
+                    <p className="text-sm font-semibold text-purple-700">
+                      <EditableText type="page" keyName="about" field="chairperson_title">
+                        {aboutData.chairperson_title || "Message from the Chairperson"}
+                      </EditableText>
+                    </p>
                   </div>
                 </div>
               </Card>
@@ -319,8 +343,8 @@ function ValueRow({
   text,
 }: {
   icon: React.ReactNode;
-  title: string;
-  text?: string;
+  title: React.ReactNode;
+  text?: React.ReactNode;
 }) {
   return (
     <div className="flex gap-4">

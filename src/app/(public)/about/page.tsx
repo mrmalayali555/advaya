@@ -35,7 +35,11 @@ export default async function AboutPage() {
                   <History className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-ink-900">Our story</h2>
+                  <h2 className="text-xl font-bold text-ink-900">
+                    <EditableText type="page" keyName="about" field="history_title">
+                      {d.history_title || "Our story"}
+                    </EditableText>
+                  </h2>
                   <p className="mt-2 leading-relaxed text-ink-600">
                     <EditableText type="page" keyName="about" field="history">
                       {d.history}
@@ -52,7 +56,11 @@ export default async function AboutPage() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
                   <Target className="h-5 w-5" />
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-ink-900">Mission</h3>
+                <h3 className="mt-5 text-lg font-bold text-ink-900">
+                  <EditableText type="page" keyName="about" field="mission_title">
+                    {d.mission_title || "Mission"}
+                  </EditableText>
+                </h3>
                 <p className="mt-2 leading-relaxed text-ink-600">
                   <EditableText type="page" keyName="about" field="mission">
                     {d.mission}
@@ -65,7 +73,11 @@ export default async function AboutPage() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
                   <Eye className="h-5 w-5" />
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-ink-900">Vision</h3>
+                <h3 className="mt-5 text-lg font-bold text-ink-900">
+                  <EditableText type="page" keyName="about" field="vision_title">
+                    {d.vision_title || "Vision"}
+                  </EditableText>
+                </h3>
                 <p className="mt-2 leading-relaxed text-ink-600">
                   <EditableText type="page" keyName="about" field="vision">
                     {d.vision}
@@ -86,7 +98,9 @@ export default async function AboutPage() {
                     </EditableText>
                   </p>
                   <p className="mt-6 text-sm font-semibold text-purple-700">
-                    — Message from the Chairperson
+                    <EditableText type="page" keyName="about" field="chairperson_title_about">
+                      {d.chairperson_title_about || "— Message from the Chairperson"}
+                    </EditableText>
                   </p>
                 </div>
               </Card>
