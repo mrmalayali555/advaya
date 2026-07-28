@@ -203,11 +203,17 @@ export function Hero({
           letter-spacing: 0.01em !important;
           color: #ffffff !important;
           box-shadow: 0 8px 32px rgba(91, 42, 134, 0.35), 0 2px 8px rgba(91, 42, 134, 0.2) !important;
-          transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          transition:
+            transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
+            box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1),
+            background 200ms cubic-bezier(0.32, 0.72, 0, 1) !important;
         }
         .hero-cta-primary:hover {
           box-shadow: 0 12px 40px rgba(91, 42, 134, 0.5), 0 4px 16px rgba(91, 42, 134, 0.3) !important;
           transform: translateY(-2px) !important;
+        }
+        .hero-cta-primary:active {
+          transform: translateY(0px) scale(0.97) !important;
         }
         .hero-cta-primary::after {
           content: '';
@@ -233,7 +239,12 @@ export function Hero({
           border: 2px solid rgba(37, 211, 102, 0.4);
           backdrop-filter: blur(8px);
           box-shadow: 0 4px 16px rgba(37, 211, 102, 0.12);
-          transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+          transition:
+            transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
+            box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1),
+            background 200ms cubic-bezier(0.32, 0.72, 0, 1),
+            color 200ms cubic-bezier(0.32, 0.72, 0, 1),
+            border-color 200ms cubic-bezier(0.32, 0.72, 0, 1);
           text-decoration: none;
         }
         .hero-cta-whatsapp:hover {
@@ -242,6 +253,9 @@ export function Hero({
           border-color: #25D366;
           box-shadow: 0 8px 32px rgba(37, 211, 102, 0.35);
           transform: translateY(-2px);
+        }
+        .hero-cta-whatsapp:active {
+          transform: translateY(0px) scale(0.97);
         }
         .hero-cta-whatsapp svg {
           color: #25D366;

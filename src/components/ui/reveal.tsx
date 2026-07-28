@@ -1,18 +1,9 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { type ReactNode } from "react";
 
 const BRAND_EASE = [0.32, 0.72, 0, 1] as const;
-
-const variants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: BRAND_EASE, delay: i * 0.08 },
-  }),
-};
 
 export function Reveal({
   children,
@@ -25,7 +16,22 @@ export function Reveal({
   className?: string;
   as?: "div" | "section" | "li" | "article";
 }) {
+  const prefersReduced = useReducedMotion();
   const MotionTag = motion[as];
+
+  const variants: Variants = {
+    hidden: { opacity: 0, y: prefersReduced ? 0 : 24 },
+    visible: (i: number = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: prefersReduced ? 0.01 : 0.7,
+        ease: BRAND_EASE,
+        delay: prefersReduced ? 0 : i * 0.08,
+      },
+    }),
+  };
+
   return (
     <MotionTag
       className={className}

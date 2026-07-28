@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, X, ChevronDown, Search } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { NAV_LINKS } from "@/lib/site";
@@ -13,6 +13,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -137,7 +138,7 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
             className="fixed inset-0 z-40 lg:hidden"
           >
             <div
@@ -146,10 +147,10 @@ export function Navbar() {
             />
             <motion.nav
               ref={navRef}
-              initial={{ y: -20, opacity: 0 }}
+              initial={{ y: prefersReduced ? 0 : -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+              exit={{ y: prefersReduced ? 0 : -20, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
               className="absolute inset-x-3 top-20 max-h-[80vh] overflow-auto rounded-3xl border border-ink-100 bg-white p-3 shadow-[var(--shadow-lift)]"
             >
               {NAV_LINKS.flatMap((link) =>

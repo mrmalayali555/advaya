@@ -120,11 +120,14 @@ export function FanEvents({ events }: { events: EventItem[] }) {
           position: absolute;
           width: 250px;
           height: 290px;
-          transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+          transition:
+            transform 220ms cubic-bezier(0.32, 0.72, 0, 1),
+            opacity 220ms cubic-bezier(0.32, 0.72, 0, 1),
+            margin-left 220ms cubic-bezier(0.32, 0.72, 0, 1);
           border-radius: 1rem;
           transform: rotate(calc(var(--r) * 1deg)) translateZ(0);
           transform-origin: center bottom;
-          will-change: transform, margin;
+          will-change: transform;
         }
 
         /* Order layering */

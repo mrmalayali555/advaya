@@ -99,6 +99,10 @@ export function ComplaintForm() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
+            transition={{
+              height: { duration: 0.22, ease: [0.32, 0.72, 0, 1] },
+              opacity: { duration: 0.15, ease: [0.32, 0.72, 0, 1] },
+            }}
             className="overflow-hidden"
           >
             <div className="grid gap-4 pt-5 sm:grid-cols-2">
