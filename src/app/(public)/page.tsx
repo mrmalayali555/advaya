@@ -289,8 +289,16 @@ export default async function HomePage() {
                 <SectionHeading
                   align="center"
                   eyebrow="Get in touch"
-                  title="Have something to say?"
-                  description="Whether it's a concern, an idea, or a suggestion — the union is listening."
+                  title={
+                    <EditableText type="setting" keyName="contact_cta" field="title">
+                      Have something to say?
+                    </EditableText>
+                  }
+                  description={
+                    <EditableText type="setting" keyName="contact_cta" field="description">
+                      Whether it&apos;s a concern, an idea, or a suggestion — the union is listening.
+                    </EditableText>
+                  }
                 />
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
                   <ButtonLink href="/complaints" size="lg" arrow>Drop your suggestion</ButtonLink>
