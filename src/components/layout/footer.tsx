@@ -111,6 +111,17 @@ export function Footer() {
           <p>
             © {year} {SITE.name} — {SITE.college}. All rights reserved.
           </p>
+          <p>
+            Developed by{" "}
+            <a
+              href="https://www.instagram.com/justinkjames.xyz/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-purple-300 transition-colors hover:text-purple-200"
+            >
+              @justinkjames.xyz
+            </a>
+          </p>
         </div>
       </Container>
     </footer>

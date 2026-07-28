@@ -54,6 +54,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: SITE.url },
   icons: { icon: "/icon.svg" },
+  generator: "Next.js",
+  publisher: SITE.name,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 };
 
 export const viewport: Viewport = {
@@ -68,6 +75,35 @@ import NextTopLoader from "nextjs-toploader";
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollegeOrUniversity",
+    name: SITE.college,
+    url: SITE.url,
+    logo: `${SITE.url}/icon.svg`,
+    description: SITE.description,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: SITE.address,
+      addressLocality: "Alappuzha",
+      addressRegion: "Kerala",
+      postalCode: "688005",
+      addressCountry: "IN"
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: SITE.phone,
+      email: SITE.email,
+      contactType: "Student Union"
+    },
+    sameAs: [
+      SITE.socials.instagram,
+      SITE.socials.facebook,
+      SITE.socials.youtube,
+      SITE.socials.twitter,
+    ].filter(Boolean)
+  };
+
   return (
     <html
       lang="en"
@@ -76,6 +112,10 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-background text-foreground">
         <NextTopLoader color="#5b2a86" showSpinner={false} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
       </body>
     </html>
