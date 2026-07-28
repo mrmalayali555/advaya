@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FileText, Film, Trash2 } from "lucide-react";
 import { AdminHeader, EmptyRow } from "@/components/admin/admin-ui";
 import { MediaUploader } from "@/components/admin/media-uploader";
+import { IconDeleteBtn } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
 import { deleteMedia } from "@/lib/actions/media";
 
@@ -32,9 +33,7 @@ export default async function AdminMediaPage() {
                   </div>
                 )}
                 <form action={deleteMedia.bind(null, m.id)} className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
-                  <button type="submit" className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-600 shadow hover:bg-white">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  <IconDeleteBtn />
                 </form>
               </div>
               <div className="p-3">

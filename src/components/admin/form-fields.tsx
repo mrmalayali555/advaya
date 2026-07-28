@@ -383,3 +383,19 @@ export function DeleteBtn({ label = "Delete" }: { label?: string }) {
   );
 }
 
+export function IconDeleteBtn({ className }: { className?: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      onClick={(e) => {
+        if (!confirm("Are you sure you want to delete this media? This cannot be undone.")) e.preventDefault();
+      }}
+      className={className || "flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-600 shadow hover:bg-white"}
+    >
+      {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+    </button>
+  );
+}
+
