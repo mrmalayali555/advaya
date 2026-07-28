@@ -50,19 +50,7 @@ export function Hero({
         <Container className="relative">
           <div className="mx-auto max-w-3xl text-center">
 
-            {/* Badge pill */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.03 }}
-              className="flex justify-center"
-            >
-              <span className="inline-flex items-center gap-2 rounded-full border border-purple-200/70 bg-purple-50/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-purple-700">
-                <EditableText type="setting" keyName="hero" field="badge">
-                  {badge}
-                </EditableText>
-              </span>
-            </motion.div>
+
 
             {/* Logo Mark */}
             <motion.div
