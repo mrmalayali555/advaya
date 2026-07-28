@@ -39,11 +39,11 @@ export default async function EditRegistrationPage({ params }: { params: Promise
           <ArrowLeftIcon className="h-4 w-4" />
           Back to Forms
         </Link>
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <AdminHeader title="Edit Form" description="Update details, manage fields, and view submissions." />
           <Link
             href={`/adminahnuok/registrations/${form.id}/submissions`}
-            className="inline-flex items-center gap-2 rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-ink-800"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-ink-800 w-full sm:w-auto shrink-0 mb-8 sm:mb-0"
           >
             <UsersIcon className="h-4 w-4" />
             View Submissions ({form._count.submissions})

@@ -482,65 +482,117 @@ type EditorProps = {
 
 function BohemianEditor({ gallery, setGallery, photoMap, onPhotoAdded, onPhotoRemoved, onSwap }: EditorProps) {
   return (
-    <div className="relative mx-auto w-full max-w-3xl rounded-2xl bg-[#f9f7f4] p-8 shadow-lg sm:p-12" style={{ minHeight: 600 }}>
-      {/* Center text - editable */}
-      <div className="relative z-10 mx-auto max-w-sm py-16 text-center sm:py-24">
-        <EditableText
-          value={gallery.titleLine1}
-          onChange={(v) => setGallery((g) => ({ ...g, titleLine1: v }))}
-          onSave={() => {}}
-          placeholder="Click to add title line 1"
-          className="text-2xl text-ink-500 sm:text-3xl"
-          style={{ fontFamily: "'Caveat', cursive" }}
-        />
-        <div className="mt-2">
+    <>
+      {/* Mobile View: Grid Layout */}
+      <div className="grid grid-cols-1 gap-6 sm:hidden bg-[#f9f7f4] p-6 rounded-2xl shadow border border-ink-100">
+        <div className="text-center py-4">
           <EditableText
-            value={gallery.titleLine2}
-            onChange={(v) => setGallery((g) => ({ ...g, titleLine2: v }))}
+            value={gallery.titleLine1}
+            onChange={(v) => setGallery((g) => ({ ...g, titleLine1: v }))}
             onSave={() => {}}
-            placeholder="Click to add title line 2"
-            className="text-4xl font-bold text-ink-900 sm:text-5xl"
+            placeholder="Click to add title line 1"
+            className="text-xl text-ink-500"
+            style={{ fontFamily: "'Caveat', cursive" }}
           />
-        </div>
-        <div className="mt-3">
-          <EditableText
-            value={gallery.subtitle}
-            onChange={(v) => setGallery((g) => ({ ...g, subtitle: v }))}
-            onSave={() => {}}
-            placeholder="Click to add description"
-            className="text-sm text-ink-500"
-          />
-        </div>
-      </div>
-
-      {/* Photo slots at exact positions */}
-      {BOHEMIAN_SLOTS.map((slot, i) => (
-        <div
-          key={i}
-          className="absolute shadow-[2px_3px_10px_rgba(0,0,0,0.12)] transition-all hover:z-50 focus-within:z-50 group"
-          draggable
-          onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            const fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
-            if (!isNaN(fromIdx) && fromIdx !== i) onSwap(fromIdx, i);
-          }}
-          style={{ ...slot.style, transform: `rotate(${slot.rotate})`, zIndex: 1 }}
-        >
-          <div className="bg-white p-1.5 pb-6">
-            <PhotoSlot
-              photo={photoMap.get(i)}
-              position={i}
-              galleryId={gallery.id}
-              aspectRatio="3/4"
-              captionFont="font-sans"
-              onPhotoAdded={onPhotoAdded}
-              onPhotoRemoved={onPhotoRemoved}
+          <div className="mt-1">
+            <EditableText
+              value={gallery.titleLine2}
+              onChange={(v) => setGallery((g) => ({ ...g, titleLine2: v }))}
+              onSave={() => {}}
+              placeholder="Click to add title line 2"
+              className="text-3xl font-bold text-ink-900"
+            />
+          </div>
+          <div className="mt-2">
+            <EditableText
+              value={gallery.subtitle}
+              onChange={(v) => setGallery((g) => ({ ...g, subtitle: v }))}
+              onSave={() => {}}
+              placeholder="Click to add description"
+              className="text-xs text-ink-500"
             />
           </div>
         </div>
-      ))}
-    </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          {BOHEMIAN_SLOTS.map((slot, i) => (
+            <div key={i} className="bg-white p-2 rounded-xl shadow-sm border border-ink-100">
+              <div className="text-[10px] font-semibold text-ink-400 mb-1 uppercase tracking-wider">{slot.label}</div>
+              <PhotoSlot
+                photo={photoMap.get(i)}
+                position={i}
+                galleryId={gallery.id}
+                aspectRatio="3/4"
+                captionFont="font-sans"
+                onPhotoAdded={onPhotoAdded}
+                onPhotoRemoved={onPhotoRemoved}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop View: Scattered Polaroids */}
+      <div className="relative mx-auto w-full max-w-3xl rounded-2xl bg-[#f9f7f4] p-8 shadow-lg sm:p-12 hidden sm:block" style={{ minHeight: 600 }}>
+        {/* Center text - editable */}
+        <div className="relative z-10 mx-auto max-w-sm py-16 text-center sm:py-24">
+          <EditableText
+            value={gallery.titleLine1}
+            onChange={(v) => setGallery((g) => ({ ...g, titleLine1: v }))}
+            onSave={() => {}}
+            placeholder="Click to add title line 1"
+            className="text-2xl text-ink-500 sm:text-3xl"
+            style={{ fontFamily: "'Caveat', cursive" }}
+          />
+          <div className="mt-2">
+            <EditableText
+              value={gallery.titleLine2}
+              onChange={(v) => setGallery((g) => ({ ...g, titleLine2: v }))}
+              onSave={() => {}}
+              placeholder="Click to add title line 2"
+              className="text-4xl font-bold text-ink-900 sm:text-5xl"
+            />
+          </div>
+          <div className="mt-3">
+            <EditableText
+              value={gallery.subtitle}
+              onChange={(v) => setGallery((g) => ({ ...g, subtitle: v }))}
+              onSave={() => {}}
+              placeholder="Click to add description"
+              className="text-sm text-ink-500"
+            />
+          </div>
+        </div>
+
+        {/* Photo slots at exact positions */}
+        {BOHEMIAN_SLOTS.map((slot, i) => (
+          <div
+            key={i}
+            className="absolute shadow-[2px_3px_10px_rgba(0,0,0,0.12)] transition-all hover:z-50 focus-within:z-50 group"
+            draggable
+            onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              const fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+              if (!isNaN(fromIdx) && fromIdx !== i) onSwap(fromIdx, i);
+            }}
+            style={{ ...slot.style, transform: `rotate(${slot.rotate})`, zIndex: 1 }}
+          >
+            <div className="bg-white p-1.5 pb-6">
+              <PhotoSlot
+                photo={photoMap.get(i)}
+                position={i}
+                galleryId={gallery.id}
+                aspectRatio="3/4"
+                captionFont="font-sans"
+                onPhotoAdded={onPhotoAdded}
+                onPhotoRemoved={onPhotoRemoved}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 

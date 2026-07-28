@@ -20,19 +20,14 @@ export default async function RegistrationsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <AdminHeader title="Registration Forms" description="Manage event registrations and generic forms." />
-        <Link
-          href="/adminahnuok/registrations/new"
-          className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-purple-700"
-        >
-          <PlusIcon className="h-4 w-4" />
-          New Form
-        </Link>
-      </div>
+      <AdminHeader
+        title="Registration Forms"
+        description="Manage event registrations and generic forms."
+        action={{ label: "New Form", href: "/adminahnuok/registrations/new" }}
+      />
 
-      <div className="rounded-2xl border border-ink-200 bg-white shadow-soft overflow-hidden">
-        <table className="w-full text-left text-sm text-ink-600">
+      <div className="rounded-2xl border border-ink-200 bg-white shadow-soft overflow-x-auto">
+        <table className="w-full text-left text-sm text-ink-600 min-w-[700px]">
           <thead className="bg-ink-50 text-xs font-semibold uppercase tracking-wider text-ink-500">
             <tr>
               <th className="px-6 py-4">Title</th>

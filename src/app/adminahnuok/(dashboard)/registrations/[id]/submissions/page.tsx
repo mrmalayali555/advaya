@@ -32,14 +32,14 @@ export default async function RegistrationSubmissionsPage({ params }: { params: 
           <ArrowLeftIcon className="h-4 w-4" />
           Back to Form Builder
         </Link>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <AdminHeader 
             title={`Submissions: ${form.title}`} 
             description={`${form.submissions.length} total entries.`} 
           />
           <a
             href={`/api/admin/registration/export?formId=${form.id}`}
-            className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-purple-700"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-purple-700 w-full sm:w-auto shrink-0 mb-8 sm:mb-0"
           >
             <DownloadIcon className="h-4 w-4" />
             Export CSV
