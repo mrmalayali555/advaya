@@ -7,7 +7,7 @@ import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
 import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
 import { getEvent } from "@/lib/queries";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
 const statusTone: Record<string, "info" | "success" | "danger"> = {
   upcoming: "info",
@@ -64,7 +64,7 @@ export default async function EventDetail({
               <div>
                 <h3 className="font-bold text-purple-900 text-lg">Registration Open</h3>
                 <p className="text-purple-700 text-sm mt-1">
-                  {e.registrationForm.deadline ? `Closes on ${new Date(e.registrationForm.deadline).toLocaleDateString()}` : "Register now to secure your spot"}
+                  {e.registrationForm.deadline ? `Closes on ${formatDateTime(e.registrationForm.deadline)}` : "Register now to secure your spot"}
                 </p>
               </div>
               <a 

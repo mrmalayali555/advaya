@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeftIcon, DownloadIcon, FileIcon } from "lucide-react";
+import { formatDateTime } from "@/lib/utils";
 
 export const metadata = {
   title: "Submissions | Admin",
@@ -68,7 +69,7 @@ export default async function RegistrationSubmissionsPage({ params }: { params: 
               return (
                 <tr key={sub.id} className="transition-colors hover:bg-ink-50/50">
                   <td className="px-6 py-4 text-xs text-ink-500">
-                    {new Date(sub.createdAt).toLocaleString()}
+                    {formatDateTime(sub.createdAt)}
                   </td>
                   {form.fields.map(f => (
                     <td key={f.id} className="px-6 py-4 max-w-[200px] truncate" title={String(data[f.id] || "")}>

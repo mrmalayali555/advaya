@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import RegistrationForm from "./registration-form";
 import { AlertCircleIcon } from "lucide-react";
 import { Metadata } from "next";
+import { formatDateTime } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -59,7 +60,7 @@ export default async function RegistrationPage({ params }: { params: Promise<{ s
             <p className="text-ink-600">
               {form.event?.status === "completed" 
                 ? "This event has already been completed, so registrations are now closed." 
-                : `The deadline for this registration was ${new Date(form.deadline!).toLocaleString()}. `
+                : `The deadline for this registration was ${formatDateTime(form.deadline!)}. `
               } 
               We are no longer accepting submissions.
             </p>
