@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowUpRight, Phone, Siren, Target, Eye, Heart } from "lucide-react";
+import { ArrowUpRight, Phone, Siren, Target, Eye, Quote } from "lucide-react";
 import { Hero } from "@/components/sections/hero";
 import { EventTicket } from "@/components/sections/event-ticket";
-import { HeartButton } from "@/components/ui/heart-button";
 import { Container, SectionHeading, Card } from "@/components/ui/primitives";
 import AppleInvites from "@/components/ui/apple-invites";
 import { FanEvents } from "@/components/ui/fan-events";
@@ -205,7 +204,7 @@ export default async function HomePage() {
             <Reveal>
               <SectionHeading
                 eyebrow="About ADVAYA"
-                title={<>More than a union — <span className="text-gradient">a family.</span></>}
+                title={<>More than a union — <span className="text-gradient">a student voice.</span></>}
                 description={aboutData.history}
               />
               <div className="mt-8 space-y-5">
@@ -218,18 +217,19 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={1}>
               <Card className="overflow-hidden">
-                <div className="relative flex flex-col items-center justify-center p-6 sm:p-10 text-center min-h-[340px] bg-mesh">
-                  <HeartButton />
-                  <p className="mt-5 max-w-sm text-base sm:text-lg font-medium leading-relaxed text-ink-700">
+                <div className="relative flex flex-col items-start justify-center p-8 sm:p-10 min-h-[340px] bg-gradient-to-br from-purple-50 to-white">
+                  <Quote className="h-10 w-10 text-purple-300 mb-4" />
+                  <p className="max-w-sm text-base sm:text-lg font-medium leading-relaxed text-ink-700 italic">
                     &ldquo;
                     <EditableText type="page" keyName="about" field="chairperson">
                       {aboutData.chairperson}
                     </EditableText>
                     &rdquo;
                   </p>
-                  <p className="mt-4 text-xs sm:text-sm font-semibold text-purple-700">
-                    — Message from the Chairperson
-                  </p>
+                  <div className="mt-6 flex items-center gap-3">
+                    <div className="h-px w-8 bg-purple-400" />
+                    <p className="text-sm font-semibold text-purple-700">Message from the Chairperson</p>
+                  </div>
                 </div>
               </Card>
             </Reveal>

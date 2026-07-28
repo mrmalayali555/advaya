@@ -6,7 +6,6 @@ import { LogoMark } from "@/components/ui/logo";
 import { Container } from "@/components/ui/primitives";
 import { Counter } from "@/components/ui/counter";
 import { CautionTape } from "@/components/layout/caution-tape";
-import { FlowerHeartsBG } from "@/components/sections/flower-hearts-bg";
 import { useVisualEdit, EditableText } from "@/components/admin/visual-editor";
 
 const EASE = [0.32, 0.72, 0, 1] as const;
@@ -34,9 +33,6 @@ export function Hero({
       <div className="pointer-events-none absolute -left-40 top-10 h-[450px] w-[450px] rounded-full bg-purple-300/15 blur-[120px]" />
       <div className="pointer-events-none absolute -right-32 top-40 h-80 w-80 rounded-full bg-purple-500/10 blur-[100px]" />
       <div className="pointer-events-none absolute left-1/2 bottom-0 h-64 w-64 -translate-x-1/2 rounded-full bg-amber-500/5 blur-[80px]" />
-
-      {/* Blooming flowers & heart bubbles ambient background */}
-      <FlowerHeartsBG />
 
       {/* Background grids */}
       <div
