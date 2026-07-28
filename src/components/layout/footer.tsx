@@ -119,7 +119,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="font-medium text-purple-300 transition-colors hover:text-purple-200"
             >
-              @justinkjames.xyz
+              JKJ
             </a>
           </p>
         </div>
