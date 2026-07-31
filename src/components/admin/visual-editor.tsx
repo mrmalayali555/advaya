@@ -34,15 +34,21 @@ const EditContext = createContext<EditContextType>({
 });
 
 export function VisualEditorProvider({ 
-  children, 
-  isAdmin 
+  children
 }: { 
-  children: React.ReactNode; 
-  isAdmin: boolean;
+  children: React.ReactNode;
 }) {
+  const [isAdminUser, setIsAdminUser] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
   const [history, setHistory] = useState<HistoryState[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+
+  useEffect(() => {
+    fetch("/api/admin/check")
+      .then(res => res.json())
+      .then(data => setIsAdminUser(data.isAdmin))
+      .catch(() => setIsAdminUser(false));
+  }, []);
 
   const [activePrompt, setActivePrompt] = useState<{
     type: "setting" | "page";
@@ -138,7 +144,7 @@ export function VisualEditorProvider({
     <EditContext.Provider value={{ 
       isEditMode, 
       setEditMode, 
-      isAdminUser: isAdmin, 
+      isAdminUser: isAdminUser, 
       saveField,
       undo,
       redo,
@@ -148,7 +154,7 @@ export function VisualEditorProvider({
       {children}
       
       {/* Floating Toolbar with Visual Edit Mode, Undo, and Redo */}
-      {isAdmin && (
+      {isAdminUser && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-ink-950/90 backdrop-blur-lg p-2 rounded-full border border-purple-500/30 shadow-2xl">
           <button
             onClick={() => setEditMode(!isEditMode)}
