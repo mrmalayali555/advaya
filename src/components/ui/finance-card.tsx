@@ -25,46 +25,46 @@ export function FinanceCard({ totalIncome, totalExpenditure, balance }: FinanceC
 
   return (
     <div className="flex justify-center items-center py-6 w-full px-2 sm:px-0">
-      <div className="group relative w-full max-w-lg overflow-hidden rounded-3xl border border-purple-100/50 bg-white/70 p-6 font-sans shadow-2xl backdrop-blur-xl transition-all duration-300 hover:shadow-purple-900/10">
+      <div className="group relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/10 glass-card p-6 font-sans shadow-2xl backdrop-blur-xl transition-all duration-300 hover:shadow-purple-900/20">
         
         {/* Soft decorative glow background matching light purple theme */}
-        <div className="absolute -top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-600/5 blur-3xl transition-all duration-700 group-hover:bg-purple-600/10"></div>
+        <div className="absolute -top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-purple-600/10 blur-3xl transition-all duration-700 group-hover:bg-purple-600/20"></div>
 
         <div className="relative flex flex-col gap-6">
           {/* Header */}
-          <div className="flex items-start justify-between border-b border-purple-100/40 pb-5">
+          <div className="flex items-start justify-between border-b border-white/10 pb-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600/10 text-purple-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
                 <Wallet className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">Union Balance</p>
-                <p className="text-2xl font-black text-purple-900 mt-0.5">{inr(balance)}</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Union Balance</p>
+                <p className="text-2xl font-black text-on-surface mt-0.5">{inr(balance)}</p>
               </div>
             </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200/50 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
               Active Session
             </span>
           </div>
 
           {/* Revenue vs Costs Column Summary (Responsive stacked on mobile) */}
-          <div className="flex flex-col sm:flex-row gap-4 divide-y sm:divide-y-0 sm:divide-x divide-purple-100/40">
+          <div className="flex flex-col sm:flex-row gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
             <div className="flex-1 pb-4 sm:pb-0 sm:pr-6">
-              <div className="flex items-center gap-1.5 text-ink-400">
-                <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
+              <div className="flex items-center gap-1.5 text-on-surface-variant">
+                <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
                 <span className="text-xs font-semibold">Total Income</span>
               </div>
-              <p className="text-xl font-bold text-ink-900 mt-1">{inr(totalIncome)}</p>
-              <p className="mt-1 text-[10px] font-bold text-emerald-600">+100% Recv</p>
+              <p className="text-xl font-bold text-on-surface mt-1">{inr(totalIncome)}</p>
+              <p className="mt-1 text-[10px] font-bold text-emerald-400">+100% Recv</p>
             </div>
             
             <div className="flex-1 pt-4 sm:pt-0 sm:pl-6">
-              <div className="flex items-center gap-1.5 text-ink-400">
-                <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+              <div className="flex items-center gap-1.5 text-on-surface-variant">
+                <TrendingDown className="h-3.5 w-3.5 text-red-400" />
                 <span className="text-xs font-semibold">Expenditure</span>
               </div>
-              <p className="text-xl font-bold text-ink-900 mt-1">{inr(totalExpenditure)}</p>
-              <p className="mt-1 text-[10px] font-bold text-red-500">-{expenditurePercentage}% Used</p>
+              <p className="text-xl font-bold text-on-surface mt-1">{inr(totalExpenditure)}</p>
+              <p className="mt-1 text-[10px] font-bold text-red-400">-{expenditurePercentage}% Used</p>
             </div>
           </div>
 
@@ -77,14 +77,14 @@ export function FinanceCard({ totalIncome, totalExpenditure, balance }: FinanceC
             >
               <defs>
                 <linearGradient id="purple-aurora-gradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#7e56a5" stopOpacity="0.25"></stop>
-                  <stop offset="100%" stopColor="#7e56a5" stopOpacity="0"></stop>
+                  <stop offset="0%" stopColor="#a855f7" stopOpacity="0.3"></stop>
+                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0"></stop>
                 </linearGradient>
               </defs>
               <path
                 d={pathD}
                 fill="none"
-                stroke="#7e56a5"
+                stroke="#a855f7"
                 strokeWidth="2.5"
                 strokeLinecap="round"
               ></path>
@@ -96,13 +96,13 @@ export function FinanceCard({ totalIncome, totalExpenditure, balance }: FinanceC
             
             {/* Glowing tracer node placed dynamically at the end of the wave line */}
             <div className="absolute right-[-1px] transition-all duration-500" style={{ top: `${endY}px` }}>
-              <div className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50"></div>
+              <div className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-400 shadow-lg shadow-purple-500/50"></div>
               <div className="absolute h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-400/20 animate-ping"></div>
             </div>
           </div>
 
           {/* Footer Info details */}
-          <div className="border-t border-purple-100/40 pt-4 flex items-center justify-between text-xs text-ink-500 font-medium">
+          <div className="border-t border-white/10 pt-4 flex items-center justify-between text-xs text-on-surface-variant font-medium">
             <span>Net Reserves: {balancePercentage}%</span>
             <span>Audited & Signed</span>
           </div>

@@ -35,16 +35,16 @@ export default async function SubcommitteePage() {
               {committees.map((committee) => (
                 <Reveal key={committee.id}>
                   <div>
-                    <h2 className="text-2xl font-bold text-ink-900">{committee.name}</h2>
+                    <h2 className="text-2xl font-bold text-on-surface">{committee.name}</h2>
                     {committee.description && (
-                      <p className="mt-2 max-w-2xl text-ink-500">{committee.description}</p>
+                      <p className="mt-2 max-w-2xl text-on-surface-variant">{committee.description}</p>
                     )}
                     {committee.members.length === 0 ? (
-                      <p className="mt-6 text-sm text-ink-400">Members will be listed soon.</p>
+                      <p className="mt-6 text-sm text-on-surface-variant">Members will be listed soon.</p>
                     ) : (
                       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         {committee.members.map((m) => (
-                          <Card key={m.id} interactive className="p-6 text-center">
+                          <Card key={m.id} interactive className="glass-card p-6 text-center">
                             <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-mesh">
                               {m.photo ? (
                                 <Image
@@ -60,14 +60,14 @@ export default async function SubcommitteePage() {
                                 </div>
                               )}
                             </div>
-                            <h3 className="mt-4 font-semibold text-ink-900">{m.name}</h3>
+                            <h3 className="mt-4 font-semibold text-on-surface">{m.name}</h3>
                             {m.position && (
-                              <p className="text-sm text-purple-600">{m.position}</p>
+                              <p className="text-sm text-purple-400">{m.position}</p>
                             )}
                             {m.contact && (
                               <a
                                 href={`tel:${m.contact}`}
-                                className="mt-2 inline-flex items-center gap-1 text-xs text-ink-400 hover:text-purple-600"
+                                className="mt-2 inline-flex items-center gap-1 text-xs text-on-surface-variant hover:text-purple-400"
                               >
                                 <Phone className="h-3 w-3" /> {m.contact}
                               </a>

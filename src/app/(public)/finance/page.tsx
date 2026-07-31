@@ -62,11 +62,11 @@ function SummaryCard({
   bg: string;
 }) {
   return (
-    <Card className="p-6">
+    <Card className="glass-card p-6">
       <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${bg} ${tone}`}>
         {icon}
       </div>
-      <div className="mt-5 text-sm font-medium text-ink-500">{label}</div>
+      <div className="mt-5 text-sm font-medium text-on-surface-variant">{label}</div>
       <div className={`mt-1 text-3xl font-bold ${tone}`}>{value}</div>
     </Card>
   );
@@ -90,29 +90,29 @@ function LedgerTable({
 }) {
   return (
     <Reveal>
-      <Card className="overflow-hidden">
-        <div className="border-b border-ink-100 px-6 py-4">
-          <h2 className="text-lg font-bold text-ink-900">{title}</h2>
+      <Card className="glass-card overflow-hidden">
+        <div className="border-b border-white/10 px-6 py-4">
+          <h2 className="text-lg font-bold text-on-surface">{title}</h2>
         </div>
         {entries.length === 0 ? (
-          <p className="px-6 py-10 text-center text-sm text-ink-400">
+          <p className="px-6 py-10 text-center text-sm text-on-surface-variant">
             No {title.toLowerCase()} recorded yet.
           </p>
         ) : (
-          <ul className="divide-y divide-ink-100">
+          <ul className="divide-y divide-white/10">
             {entries.map((e) => (
               <li key={e.id} className="flex items-center justify-between gap-4 px-6 py-4">
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold text-ink-800">{e.label}</div>
-                  <div className="mt-0.5 flex items-center gap-2 text-xs text-ink-400">
-                    <span className="rounded-full bg-ink-100 px-2 py-0.5">{e.category}</span>
+                  <div className="truncate text-sm font-semibold text-on-surface">{e.label}</div>
+                  <div className="mt-0.5 flex items-center gap-2 text-xs text-on-surface-variant">
+                    <span className="rounded-full bg-white/10 px-2 py-0.5">{e.category}</span>
                     <span>{formatDate(e.date)}</span>
                     {e.receiptUrl && (
                       <a
                         href={e.receiptUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-purple-600 hover:underline"
+                        className="inline-flex items-center gap-1 text-purple-400 hover:underline"
                       >
                         <FileText className="h-3 w-3" /> receipt
                       </a>
@@ -121,7 +121,7 @@ function LedgerTable({
                 </div>
                 <div
                   className={`shrink-0 text-sm font-bold ${
-                    accent === "emerald" ? "text-emerald-600" : "text-red-600"
+                    accent === "emerald" ? "text-emerald-400" : "text-red-400"
                   }`}
                 >
                   {accent === "emerald" ? "+" : "−"}₹{e.amount.toLocaleString("en-IN")}

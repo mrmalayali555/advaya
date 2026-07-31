@@ -48,7 +48,7 @@ export default async function EventsPage({
                     "rounded-full px-5 py-2.5 text-sm font-medium transition-all",
                     status === t.key
                       ? "bg-purple-600 text-white shadow-[0_8px_20px_-8px_rgba(91,42,134,0.6)]"
-                      : "border border-ink-200 bg-white text-ink-600 hover:border-purple-300 hover:text-purple-700"
+                      : "glass-card text-on-surface-variant hover:border-purple-300 hover:text-purple-300"
                   )}
                 >
                   {t.label}

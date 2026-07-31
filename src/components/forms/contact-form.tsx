@@ -38,11 +38,11 @@ export function ContactForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-10 text-center"
+        className="rounded-3xl border border-emerald-500/20 bg-emerald-900/30 p-10 text-center"
       >
-        <CheckCircle2 className="mx-auto h-14 w-14 text-emerald-500" strokeWidth={1.5} />
-        <h3 className="mt-4 text-xl font-bold text-ink-900">Message sent</h3>
-        <p className="mt-2 text-ink-500">Thanks for reaching out — we&apos;ll get back to you soon.</p>
+        <CheckCircle2 className="mx-auto h-14 w-14 text-emerald-400" strokeWidth={1.5} />
+        <h3 className="mt-4 text-xl font-bold text-on-surface">Message sent</h3>
+        <p className="mt-2 text-on-surface-variant">Thanks for reaching out — we&apos;ll get back to you soon.</p>
       </motion.div>
     );
   }
@@ -50,14 +50,14 @@ export function ContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-3xl border border-ink-100 bg-white p-6 shadow-[var(--shadow-card)] sm:p-8"
+      className="glass-card rounded-3xl p-6 shadow-[var(--shadow-card)] sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Name" name="name" placeholder="Your name" required />
         <Field label="Email" name="email" type="email" placeholder="you@example.com" required />
       </div>
       <div className="mt-4">
-        <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-ink-700">
+        <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-on-surface-variant">
           Message
         </label>
         <textarea
@@ -66,11 +66,11 @@ export function ContactForm() {
           required
           rows={5}
           placeholder="How can we help?"
-          className="w-full resize-y rounded-2xl border border-ink-200 bg-surface px-4 py-3 text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+          className="w-full resize-y rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
         />
       </div>
       {error && (
-        <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
+        <p className="mt-4 rounded-xl border border-red-500/20 bg-red-900/30 px-4 py-3 text-sm text-red-400">{error}</p>
       )}
       <Button type="submit" size="lg" className="mt-6 w-full" disabled={status === "submitting"}>
         {status === "submitting" ? (
@@ -100,7 +100,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink-700">
+      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-on-surface-variant">
         {label}
       </label>
       <input
@@ -109,7 +109,7 @@ function Field({
         type={type}
         required={required}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-ink-200 bg-surface px-4 py-3 text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
       />
     </div>
   );

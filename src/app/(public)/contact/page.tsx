@@ -59,7 +59,7 @@ export default async function ContactPage() {
                   <SocialLink href={SITE.socials.twitter}><XIcon className="h-4 w-4" /></SocialLink>
                 </div>
 
-                <div className="overflow-hidden rounded-3xl border border-ink-100">
+                <div className="overflow-hidden rounded-3xl border border-white/10">
                   <iframe
                     src="https://www.google.com/maps/embed?origin=mfe&pb=!1m4!2m1!1sGovt.+T.D.+Medical+College+Vandanam,+Alappuzha,+Kerala,+India!5e0!6i13"
                     width="100%"
@@ -95,13 +95,13 @@ function InfoCard({
   href?: string;
 }) {
   const inner = (
-    <Card interactive className="flex items-start gap-4 p-5">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+    <Card interactive className="glass-card flex items-start gap-4 p-5">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-900/30 text-purple-400">
         {icon}
       </div>
       <div>
-        <div className="text-xs uppercase tracking-wider text-ink-400">{label}</div>
-        <div className="mt-0.5 font-medium text-ink-800">{value}</div>
+        <div className="text-xs uppercase tracking-wider text-on-surface-variant">{label}</div>
+        <div className="mt-0.5 font-medium text-on-surface">{value}</div>
       </div>
     </Card>
   );
@@ -114,7 +114,7 @@ function SocialLink({ href, children }: { href: string; children: React.ReactNod
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-ink-200 text-ink-500 transition-all hover:-translate-y-0.5 hover:border-purple-300 hover:text-purple-600"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-all hover:-translate-y-0.5 hover:border-purple-300 hover:text-purple-400"
     >
       {children}
     </a>

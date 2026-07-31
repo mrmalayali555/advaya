@@ -26,14 +26,14 @@ export default async function PGPage() {
       <section className="py-14 sm:py-20">
         <Container size="narrow">
           <Reveal>
-            <Card className="p-8 text-center sm:p-12">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-purple-50 text-purple-600">
+            <Card className="glass-card p-8 text-center sm:p-12">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-purple-500/10 text-purple-400">
                 <Stethoscope className="h-8 w-8" strokeWidth={1.5} />
               </div>
-              <h2 className="mt-6 text-2xl font-bold text-ink-900">
+              <h2 className="mt-6 text-2xl font-bold text-on-surface">
                 For our PG residents
               </h2>
-              <p className="mx-auto mt-3 max-w-lg text-ink-500">
+              <p className="mx-auto mt-3 max-w-lg text-on-surface-variant">
                 <EditableText type="page" keyName="pg" field="intro">
                   {data.intro ||
                     "This section is being set up. Residency updates, duty schedules and PG union notices will appear here shortly."}

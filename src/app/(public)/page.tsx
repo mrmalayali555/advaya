@@ -175,25 +175,27 @@ export default async function HomePage() {
       </section>
 
       {/* Upcoming events */}
-      <section className="py-16 sm:py-24">
-        <Container>
-          <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <SectionHeading
-                eyebrow="What's Next"
-                title="Upcoming Events"
-                description="Mark your calendar — here's what's coming up."
-              />
-              <ButtonLink href="/events" variant="outline" size="sm" arrow>
-                View all
-              </ButtonLink>
-            </div>
-          </Reveal>
-          <Reveal className="mt-10">
-            <FanEvents events={events} />
-          </Reveal>
-        </Container>
-      </section>
+      {events.length > 0 && (
+        <section className="py-16 sm:py-24">
+          <Container>
+            <Reveal>
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <SectionHeading
+                  eyebrow="What's Next"
+                  title="Upcoming Events"
+                  description="Mark your calendar — here's what's coming up."
+                />
+                <ButtonLink href="/events" variant="outline" size="sm" arrow>
+                  View all
+                </ButtonLink>
+              </div>
+            </Reveal>
+            <Reveal className="mt-10">
+              <FanEvents events={events} />
+            </Reveal>
+          </Container>
+        </section>
+      )}
 
       {/* About preview */}
       <section className="py-16 sm:py-24">

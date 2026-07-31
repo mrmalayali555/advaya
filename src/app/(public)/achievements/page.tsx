@@ -49,7 +49,7 @@ export default async function AchievementsPage({
                     "rounded-full px-5 py-2.5 text-sm font-medium transition-all",
                     category === c.key
                       ? "bg-purple-600 text-white shadow-[0_8px_20px_-8px_rgba(91,42,134,0.6)]"
-                      : "border border-ink-200 bg-white text-ink-600 hover:border-purple-300 hover:text-purple-700"
+                      : "glass-card text-on-surface-variant hover:border-purple-300 hover:text-purple-300"
                   )}
                 >
                   {c.label}
@@ -77,9 +77,9 @@ export default async function AchievementsPage({
 
 function EmptyState() {
   return (
-    <div className="mt-12 rounded-3xl border border-dashed border-ink-200 bg-surface py-20 text-center">
-      <p className="text-lg font-medium text-ink-600">No achievements here yet.</p>
-      <p className="mt-1 text-sm text-ink-400">Check back soon — great things are coming.</p>
+    <div className="mt-12 glass-card rounded-3xl border-dashed py-20 text-center">
+      <p className="text-lg font-medium text-on-surface">No achievements here yet.</p>
+      <p className="mt-1 text-sm text-on-surface-variant">Check back soon — great things are coming.</p>
     </div>
   );
 }

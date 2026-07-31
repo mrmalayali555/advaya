@@ -41,18 +41,18 @@ export default async function EmergencyPage() {
             <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {contacts.map((c) => (
                 <RevealItem key={c.id}>
-                  <Card interactive className="p-6">
+                  <Card interactive className="glass-card p-6">
                     <div className="flex items-start justify-between">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-500">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-900/30 text-red-400">
                         {categoryIcon[c.category] ?? <Siren className="h-5 w-5" />}
                       </div>
-                      <span className="rounded-full bg-ink-100 px-3 py-1 text-xs font-medium text-ink-500">
+                      <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-medium text-on-surface-variant">
                         {c.category}
                       </span>
                     </div>
-                    <h3 className="mt-5 text-lg font-semibold text-ink-900">{c.name}</h3>
+                    <h3 className="mt-5 text-lg font-semibold text-on-surface">{c.name}</h3>
                     {c.description && (
-                      <p className="mt-1 text-sm text-ink-500">{c.description}</p>
+                      <p className="mt-1 text-sm text-on-surface-variant">{c.description}</p>
                     )}
                     <a
                       href={`tel:${c.phone}`}
