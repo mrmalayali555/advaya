@@ -14,7 +14,7 @@ async function getSetting<T>(key: string, fallback: T): Promise<T> {
 }
 
 export default async function AdminSettingsPage() {
-  const [hero, contact, stats, carouselInterval] = await Promise.all([
+  const [hero, contact, stats, carouselInterval, complaints] = await Promise.all([
     getSetting("hero", { badge: SITE.college, title: "The voice of every student.", subtitle: SITE.description }),
     getSetting("contact", { address: SITE.address, phone: SITE.phone, email: SITE.email }),
     getSetting("stats", { students: 1200, events: 48, achievements: 96, committees: 12 }),
