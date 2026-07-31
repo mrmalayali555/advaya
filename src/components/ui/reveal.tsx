@@ -1,49 +1,64 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
-const BRAND_EASE = [0.32, 0.72, 0, 1] as const;
+// ─── CSS-based reveal — no framer-motion needed for basic scroll reveals ───
+// Uses IntersectionObserver + CSS transitions. The same visual effect as the
+// framer-motion version but with zero JS bundle overhead for the animation lib.
+
+const BRAND_EASE = "cubic-bezier(0.32, 0.72, 0, 1)";
+
+function useReveal(ref: React.RefObject<HTMLElement | null>, delay = 0) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Respect reduced motion immediately
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      return;
+    }
+
+    el.style.opacity = "0";
+    el.style.transform = "translateY(24px)";
+    el.style.transition = `opacity 0.7s ${BRAND_EASE} ${delay}s, transform 0.7s ${BRAND_EASE} ${delay}s`;
+    el.style.willChange = "opacity, transform";
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+          // Clean up will-change after animation completes
+          setTimeout(() => { el.style.willChange = "auto"; }, (0.7 + delay) * 1000);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-80px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, delay]);
+}
 
 export function Reveal({
   children,
   delay = 0,
   className,
-  as = "div",
+  as: Tag = "div",
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
   as?: "div" | "section" | "li" | "article";
 }) {
-  const prefersReduced = useReducedMotion();
-  const MotionTag = motion[as];
-
-  const variants: Variants = {
-    hidden: { opacity: 0, y: prefersReduced ? 0 : 24 },
-    visible: (i: number = 0) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: prefersReduced ? 0.01 : 0.7,
-        ease: BRAND_EASE,
-        delay: prefersReduced ? 0 : i * 0.08,
-      },
-    }),
-  };
-
-  return (
-    <MotionTag
-      className={className}
-      variants={variants}
-      custom={delay}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-    >
-      {children}
-    </MotionTag>
-  );
+  const ref = useRef<HTMLElement>(null);
+  useReveal(ref, delay);
+  // @ts-expect-error dynamic tag
+  return <Tag ref={ref} className={className}>{children}</Tag>;
 }
 
 /** Stagger container — children using RevealItem animate in sequence. */
@@ -56,45 +71,57 @@ export function RevealGroup({
   className?: string;
   stagger?: number;
 }) {
-  return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren: stagger } },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const items = Array.from(container.querySelectorAll<HTMLElement>("[data-reveal-item]"));
+
+    if (prefersReduced) {
+      items.forEach((el) => { el.style.opacity = "1"; el.style.transform = "none"; });
+      return;
+    }
+
+    items.forEach((el, i) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = `opacity 0.6s ${BRAND_EASE} ${i * stagger}s, transform 0.6s ${BRAND_EASE} ${i * stagger}s`;
+      el.style.willChange = "opacity, transform";
+    });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          items.forEach((el, i) => {
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+            setTimeout(() => { el.style.willChange = "auto"; }, (0.6 + i * stagger) * 1000);
+          });
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-60px" }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [stagger]);
+
+  return <div ref={ref} className={className}>{children}</div>;
 }
 
 export function RevealItem({
   children,
   className,
-  as = "div",
+  as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   as?: "div" | "li" | "article";
 }) {
-  const MotionTag = motion[as];
-  return (
-    <MotionTag
-      className={className}
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.6, ease: BRAND_EASE },
-        },
-      }}
-    >
-      {children}
-    </MotionTag>
-  );
+  // @ts-expect-error dynamic tag
+  return <Tag data-reveal-item className={className}>{children}</Tag>;
 }

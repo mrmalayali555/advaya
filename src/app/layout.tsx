@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Sora, Plus_Jakarta_Sans } from "next/font/google";
+import { Sora, Plus_Jakarta_Sans, Unbounded } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SITE } from "@/lib/site";
@@ -7,8 +7,9 @@ import { SITE } from "@/lib/site";
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
+  preload: true,
 });
 
 const jakarta = Plus_Jakarta_Sans({
@@ -16,6 +17,15 @@ const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: true,
+});
+
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
+  subsets: ["latin"],
+  weight: ["800", "900"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -108,11 +118,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sora.variable} ${jakarta.variable} h-full antialiased`}
+      className={`${sora.variable} ${jakarta.variable} ${unbounded.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
         <NextTopLoader color="#5b2a86" showSpinner={false} />
+        {/* Gallery-only fonts — load non-blocking after page paint */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@400;700&family=Cedarville+Cursive&family=Playfair+Display:wght@700&display=swap"
+          media="print"
+          // @ts-expect-error onload trick for non-blocking font load
+          onLoad="this.media='all'"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

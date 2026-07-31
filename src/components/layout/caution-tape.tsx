@@ -91,7 +91,7 @@ export function CautionTape({
         }
 
         .caution-tape-text {
-          font-family: 'Unbounded', 'Syne', system-ui, sans-serif !important;
+          font-family: var(--font-unbounded), var(--font-display), system-ui, sans-serif !important;
           font-size: 12px;
           font-weight: 900 !important;
           letter-spacing: 0.14em !important;
