@@ -8,6 +8,7 @@ type EventData = {
   title: string;
   description: string;
   date: Date;
+  endDate: Date | null;
   time: string | null;
   venue: string | null;
   poster: string | null;
@@ -36,22 +37,29 @@ export function EventForm({
             <Field label="Title" name="title" defaultValue={event?.title} required placeholder="ADVAYA Union Day 2026" />
             <TextArea label="Description" name="description" defaultValue={event?.description} required rows={5} placeholder="What's this event about?" />
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Date" name="date" type="date" defaultValue={event ? toDateInput(event.date) : ""} required />
-              <Field label="Time" name="time" defaultValue={event?.time ?? ""} placeholder="5:00 PM" />
-            </div>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Venue" name="venue" defaultValue={event?.venue ?? ""} placeholder="Main Auditorium" />
-              <Select
-                label="Status"
-                name="status"
-                defaultValue={event?.status ?? "upcoming"}
-                options={[
-                  { value: "upcoming", label: "Upcoming" },
-                  { value: "completed", label: "Completed" },
-                  { value: "cancelled", label: "Cancelled" },
-                ]}
+              <Field label="Start Date" name="date" type="date" defaultValue={event ? toDateInput(event.date) : ""} required />
+              <Field
+                label="End Date (optional)"
+                name="endDate"
+                type="date"
+                defaultValue={event?.endDate ? toDateInput(event.endDate) : ""}
+                hint="Leave blank for single-day events"
               />
             </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field label="Time" name="time" defaultValue={event?.time ?? ""} placeholder="5:00 PM" />
+              <Field label="Venue" name="venue" defaultValue={event?.venue ?? ""} placeholder="Main Auditorium" />
+            </div>
+            <Select
+              label="Status"
+              name="status"
+              defaultValue={event?.status ?? "upcoming"}
+              options={[
+                { value: "upcoming", label: "Upcoming" },
+                { value: "completed", label: "Completed" },
+                { value: "cancelled", label: "Cancelled" },
+              ]}
+            />
             <UploadField label="Poster" name="poster" defaultUrl={event?.poster} accept="image/*" hint="JPG, PNG, WebP up to 8MB" />
             <Toggle label="Published" name="published" defaultChecked={event?.published ?? true} hint="Show on the public site" />
           </div>

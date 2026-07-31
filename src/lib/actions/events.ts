@@ -20,10 +20,12 @@ async function uniqueSlug(base: string, ignoreId?: string): Promise<string> {
 }
 
 function parse(formData: FormData) {
+  const endDateRaw = String(formData.get("endDate") || "").trim();
   return {
     title: String(formData.get("title") || "").trim(),
     description: String(formData.get("description") || "").trim(),
     date: new Date(String(formData.get("date") || Date.now())),
+    endDate: endDateRaw ? new Date(endDateRaw) : null,
     time: String(formData.get("time") || "").trim() || null,
     venue: String(formData.get("venue") || "").trim() || null,
     poster: String(formData.get("poster") || "").trim() || null,

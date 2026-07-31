@@ -18,6 +18,42 @@ export function formatDate(input: string | Date): string {
   });
 }
 
+/**
+ * Format a date range.
+ * - Same day → "15 Oct 2026"
+ * - Same month & year → "20–28 Feb 2028"
+ * - Same year, different months → "20 Feb – 5 Mar 2028"
+ * - Different years → "28 Dec 2027 – 3 Jan 2028"
+ */
+export function formatDateRange(
+  start: string | Date,
+  end?: string | Date | null,
+): string {
+  const s = typeof start === "string" ? new Date(start) : start;
+  if (!end) return formatDate(s);
+  const e = typeof end === "string" ? new Date(end) : end;
+  if (Number.isNaN(e.getTime())) return formatDate(s);
+
+  const opts: Intl.DateTimeFormatOptions = { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", year: "numeric" };
+  const startYear = s.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", year: "numeric" });
+  const endYear   = e.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", year: "numeric" });
+  const startMonth = s.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", month: "short" });
+  const endMonth   = e.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", month: "short" });
+  const startDay   = s.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit" });
+  const endDay     = e.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "2-digit" });
+
+  if (startYear === endYear && startMonth === endMonth) {
+    // e.g. "20–28 Feb 2028"
+    return `${startDay}–${endDay} ${endMonth} ${endYear}`;
+  }
+  if (startYear === endYear) {
+    // e.g. "20 Feb – 5 Mar 2028"
+    return `${startDay} ${startMonth} – ${endDay} ${endMonth} ${endYear}`;
+  }
+  // e.g. "28 Dec 2027 – 3 Jan 2028"
+  return `${s.toLocaleDateString("en-IN", opts)} – ${e.toLocaleDateString("en-IN", opts)}`;
+}
+
 /** Format a date and time as e.g. "15 Oct 2026, 02:30 PM". */
 export function formatDateTime(input: string | Date): string {
   const d = typeof input === "string" ? new Date(input) : input;

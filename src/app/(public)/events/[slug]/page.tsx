@@ -7,7 +7,7 @@ import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
 import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
 import { getEvent } from "@/lib/queries";
-import { formatDate, formatDateTime } from "@/lib/utils";
+import { formatDateRange, formatDateTime } from "@/lib/utils";
 
 const statusTone: Record<string, "info" | "success" | "danger"> = {
   upcoming: "info",
@@ -78,7 +78,11 @@ export default async function EventDetail({
           )}
 
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <MetaTile icon={<CalendarDays className="h-5 w-5" />} label="Date" value={formatDate(e.date)} />
+            <MetaTile
+              icon={<CalendarDays className="h-5 w-5" />}
+              label={e.endDate ? "Dates" : "Date"}
+              value={formatDateRange(e.date, e.endDate)}
+            />
             {e.time && <MetaTile icon={<Clock className="h-5 w-5" />} label="Time" value={e.time} />}
             {e.venue && <MetaTile icon={<MapPin className="h-5 w-5" />} label="Venue" value={e.venue} />}
           </div>

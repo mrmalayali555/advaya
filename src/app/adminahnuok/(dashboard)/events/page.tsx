@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { AdminHeader, EmptyRow, StatusPill } from "@/components/admin/admin-ui";
 import { db } from "@/lib/db";
-import { formatDate } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 
 export default async function AdminEventsPage() {
   const events = await db.event.findMany({ orderBy: { date: "desc" } });
@@ -37,7 +37,7 @@ export default async function AdminEventsPage() {
                       {e.title}
                     </Link>
                   </td>
-                  <td className="hidden px-5 py-3.5 text-ink-500 sm:table-cell">{formatDate(e.date)}</td>
+                  <td className="hidden px-5 py-3.5 text-ink-500 sm:table-cell">{formatDateRange(e.date, e.endDate)}</td>
                   <td className="px-5 py-3.5"><StatusPill status={e.status} /></td>
                   <td className="hidden px-5 py-3.5 md:table-cell">
                     <StatusPill status={e.published ? "published" : "draft"} />

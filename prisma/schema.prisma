@@ -81,6 +81,7 @@ model Event {
   slug        String            @unique
   description String
   date        DateTime
+  endDate     DateTime? // null = single-day event
   time        String?
   venue       String?
   poster      String?
