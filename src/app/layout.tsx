@@ -121,15 +121,7 @@ export default function RootLayout({
       className={`dark ${anybody.variable} ${hanken.variable} ${brush.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
     >
       <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
-        {/* Global Ambient Background */}
-        <div className="pointer-events-none fixed inset-0 z-[-1] bg-mesh opacity-20" />
-        <div className="noise-bg fixed inset-0 z-[-1]" />
-        <div
-          className="pointer-events-none fixed left-1/2 top-0 z-[-1] -translate-x-1/2 h-[800px] w-[800px] rounded-full opacity-30 blur-[100px]"
-          style={{
-            background: "radial-gradient(circle, rgba(120, 0, 255, 0.4) 0%, transparent 70%)",
-          }}
-        />
+
         <NextTopLoader color="#5b2a86" showSpinner={false} />
         {/* Gallery-only fonts — load non-blocking after page paint */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
