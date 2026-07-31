@@ -19,8 +19,8 @@ export function CautionTape({
 
   const items = Array.from({ length: 8 }).map((_, i) => (
     <span key={`t-${i}`} className="caution-tape-item">
-      <span className="caution-tape-diamond">◆</span>
-      <span className="caution-tape-text font-marquee">{text}</span>
+      <span className="caution-tape-diamond text-black font-black">◆</span>
+      <span className="caution-tape-text font-marquee text-black font-black">{text}</span>
       {buttonText && buttonUrl && (
         <Link href={buttonUrl} className="caution-tape-btn font-sans group">
           <span>{buttonText}</span>
