@@ -114,8 +114,6 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
         <div className="noise-bg" />
-        <NuqsAdapter>{children}</NuqsAdapter>
-        <Toaster />
         <NextTopLoader color="#5b2a86" showSpinner={false} />
         {/* Gallery-only fonts — load non-blocking after page paint */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
