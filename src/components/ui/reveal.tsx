@@ -57,7 +57,6 @@ export function Reveal({
 }) {
   const ref = useRef<HTMLElement>(null);
   useReveal(ref, delay);
-  // @ts-expect-error dynamic tag
   return <Tag ref={ref} className={className}>{children}</Tag>;
 }
 
@@ -122,6 +121,5 @@ export function RevealItem({
   className?: string;
   as?: "div" | "li" | "article";
 }) {
-  // @ts-expect-error dynamic tag
   return <Tag data-reveal-item className={className}>{children}</Tag>;
 }
