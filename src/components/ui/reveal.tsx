@@ -24,15 +24,12 @@ function useReveal(ref: React.RefObject<HTMLElement | null>, delay = 0) {
     el.style.opacity = "0";
     el.style.transform = "translateY(24px)";
     el.style.transition = `opacity 0.7s ${BRAND_EASE} ${delay}s, transform 0.7s ${BRAND_EASE} ${delay}s`;
-    el.style.willChange = "opacity, transform";
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           el.style.opacity = "1";
           el.style.transform = "translateY(0)";
-          // Clean up will-change after animation completes
-          setTimeout(() => { el.style.willChange = "auto"; }, (0.7 + delay) * 1000);
           observer.disconnect();
         }
       },
@@ -88,7 +85,6 @@ export function RevealGroup({
       el.style.opacity = "0";
       el.style.transform = "translateY(20px)";
       el.style.transition = `opacity 0.6s ${BRAND_EASE} ${i * stagger}s, transform 0.6s ${BRAND_EASE} ${i * stagger}s`;
-      el.style.willChange = "opacity, transform";
     });
 
     const observer = new IntersectionObserver(
@@ -97,7 +93,6 @@ export function RevealGroup({
           items.forEach((el, i) => {
             el.style.opacity = "1";
             el.style.transform = "translateY(0)";
-            setTimeout(() => { el.style.willChange = "auto"; }, (0.6 + i * stagger) * 1000);
           });
           observer.disconnect();
         }
