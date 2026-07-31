@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
 
   // Tree-shake large icon/animation packages so only used exports are bundled.
   experimental: {
+    cpus: 2, // Limit build workers to prevent Prisma connection pool exhaustion during SSG
     optimizePackageImports: ["lucide-react", "framer-motion"],
     // Aggressive client-side route caching (30 min stale, 5 min revalidate)
     staleTimes: {

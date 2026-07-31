@@ -57,7 +57,7 @@ export function Reveal({
 }) {
   const ref = useRef<HTMLElement>(null);
   useReveal(ref, delay);
-  return <Tag ref={ref} className={className}>{children}</Tag>;
+  return <Tag ref={ref as any} className={className}>{children}</Tag>;
 }
 
 /** Stagger container — children using RevealItem animate in sequence. */
