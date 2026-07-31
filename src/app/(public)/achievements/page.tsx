@@ -49,7 +49,7 @@ export default async function AchievementsPage({
                     "rounded-full px-5 py-2.5 text-sm font-medium transition-all",
                     category === c.key
                       ? "bg-purple-600 text-white shadow-[0_8px_20px_-8px_rgba(91,42,134,0.6)]"
-                      : "glass-card text-on-surface-variant hover:border-purple-300 hover:text-purple-300"
+                      : "glass-card text-white/70 hover:border-purple-400 hover:text-purple-300"
                   )}
                 >
                   {c.label}

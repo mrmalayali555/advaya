@@ -26,16 +26,9 @@ export function Hero({
   const { isEditMode } = useVisualEdit();
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36 bg-[#050208]">
+    <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36">
       
-      {/* === High-End Subtle Ambient Glow === */}
-      <div className="pointer-events-none absolute inset-0 bg-mesh opacity-20" />
-      <div
-        className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[800px] w-[800px] rounded-full opacity-30 blur-[100px]"
-        style={{
-          background: "radial-gradient(circle, rgba(120, 0, 255, 0.4) 0%, transparent 70%)",
-        }}
-      />
+      {/* Global background is applied in layout */}
 
       {/* Content */}
       <div className="relative w-full">

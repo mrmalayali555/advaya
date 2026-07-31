@@ -60,11 +60,11 @@ export function FinanceCard({ totalIncome, totalExpenditure, balance }: FinanceC
             
             <div className="flex-1 pt-4 sm:pt-0 sm:pl-6">
               <div className="flex items-center gap-1.5 text-on-surface-variant">
-                <TrendingDown className="h-3.5 w-3.5 text-red-400" />
+                <TrendingDown className="h-3.5 w-3.5 text-rose-400" />
                 <span className="text-xs font-semibold">Expenditure</span>
               </div>
               <p className="text-xl font-bold text-on-surface mt-1">{inr(totalExpenditure)}</p>
-              <p className="mt-1 text-[10px] font-bold text-red-400">-{expenditurePercentage}% Used</p>
+              <p className="mt-1 text-[10px] font-bold text-rose-400">-{expenditurePercentage}% Used</p>
             </div>
           </div>
 
@@ -102,7 +102,7 @@ export function FinanceCard({ totalIncome, totalExpenditure, balance }: FinanceC
           </div>
 
           {/* Footer Info details */}
-          <div className="border-t border-white/10 pt-4 flex items-center justify-between text-xs text-on-surface-variant font-medium">
+          <div className="border-t border-white/10 pt-4 flex items-center justify-between text-xs text-white/60 font-medium">
             <span>Net Reserves: {balancePercentage}%</span>
             <span>Audited & Signed</span>
           </div>

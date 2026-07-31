@@ -45,7 +45,7 @@ export default async function SubcommitteePage() {
                       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         {committee.members.map((m) => (
                           <Card key={m.id} interactive className="glass-card p-6 text-center">
-                            <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-mesh">
+                            <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                               {m.photo ? (
                                 <Image
                                   src={m.photo}
@@ -55,21 +55,21 @@ export default async function SubcommitteePage() {
                                   className="h-full w-full object-cover"
                                 />
                               ) : (
-                                <div className="flex h-full w-full items-center justify-center text-xl font-bold text-purple-400">
+                                <div className="flex h-full w-full items-center justify-center text-xl font-bold text-white/60">
                                   {m.name.slice(0, 1)}
                                 </div>
                               )}
                             </div>
-                            <h3 className="mt-4 font-semibold text-on-surface">{m.name}</h3>
+                            <h3 className="mt-4 font-semibold text-white">{m.name}</h3>
                             {m.position && (
-                              <p className="text-sm text-purple-400">{m.position}</p>
+                              <p className="text-sm text-purple-300">{m.position}</p>
                             )}
                             {m.contact && (
                               <a
                                 href={`tel:${m.contact}`}
-                                className="mt-2 inline-flex items-center gap-1 text-xs text-on-surface-variant hover:text-purple-400"
+                                className="mt-2 inline-flex items-center justify-center gap-1.5 text-xs text-white/60 hover:text-purple-300"
                               >
-                                <Phone className="h-3 w-3" /> {m.contact}
+                                <Phone className="h-3.5 w-3.5" /> {m.contact}
                               </a>
                             )}
                           </Card>

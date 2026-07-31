@@ -66,7 +66,7 @@ export function ContactForm() {
           required
           rows={5}
           placeholder="How can we help?"
-          className="w-full resize-y rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
+          className="w-full resize-y rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-on-surface outline-none transition-colors placeholder:text-white/40 focus:border-purple-400 focus:bg-white/15 focus:ring-2 focus:ring-purple-500/30"
         />
       </div>
       {error && (
@@ -109,7 +109,7 @@ function Field({
         type={type}
         required={required}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
+        className="w-full rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-on-surface outline-none transition-colors placeholder:text-white/40 focus:border-purple-400 focus:bg-white/15 focus:ring-2 focus:ring-purple-500/30"
       />
     </div>
   );

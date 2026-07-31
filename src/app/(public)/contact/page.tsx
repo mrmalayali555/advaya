@@ -69,6 +69,7 @@ export default async function ContactPage() {
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Alappuzha Medical College location"
+                    className="invert-[.9] hue-rotate-180"
                   />
                 </div>
               </div>
@@ -114,7 +115,7 @@ function SocialLink({ href, children }: { href: string; children: React.ReactNod
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-on-surface-variant transition-all hover:-translate-y-0.5 hover:border-purple-300 hover:text-purple-400"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/60 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-purple-300"
     >
       {children}
     </a>
