@@ -26,12 +26,25 @@ export function Hero({
   const { isEditMode } = useVisualEdit();
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36" style={{ background: 'linear-gradient(180deg, #1b0a2b 0%, #3a1a54 40%, #121415 100%)' }}>
+    <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36 bg-[#050208]">
       
-      {/* Dark elegant decorative glows */}
-      <div className="pointer-events-none absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-[#5b2a86]/20 blur-[150px]" />
-      <div className="pointer-events-none absolute -right-20 top-20 h-[500px] w-[500px] rounded-full bg-[#7105c2]/15 blur-[120px]" />
-      <div className="pointer-events-none absolute left-1/2 bottom-20 h-64 w-64 -translate-x-1/2 rounded-full bg-[#b76dff]/10 blur-[100px]" />
+      {/* === Purple Aurora / Light-ray effect === */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: [
+            'radial-gradient(ellipse 40% 70% at 30% 20%, rgba(120, 0, 255, 0.55) 0%, transparent 70%)',
+            'radial-gradient(ellipse 35% 80% at 75% 15%, rgba(180, 0, 255, 0.50) 0%, transparent 65%)',
+            'radial-gradient(ellipse 50% 50% at 60% 50%, rgba(100, 0, 200, 0.30) 0%, transparent 70%)',
+            'radial-gradient(ellipse 30% 90% at 85% 40%, rgba(200, 0, 255, 0.45) 0%, transparent 60%)',
+            'radial-gradient(ellipse 25% 60% at 15% 60%, rgba(80, 0, 160, 0.35) 0%, transparent 70%)',
+            'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(150, 50, 255, 0.40) 0%, transparent 70%)',
+          ].join(', '),
+        }}
+      />
+      {/* Extra bright accent streaks */}
+      <div className="pointer-events-none absolute top-0 right-[15%] h-full w-[200px] rotate-[-8deg] bg-gradient-to-b from-[#a020f0]/40 via-[#7b00cc]/20 to-transparent blur-[60px]" />
+      <div className="pointer-events-none absolute top-0 left-[20%] h-[80%] w-[150px] rotate-[5deg] bg-gradient-to-b from-[#9000e0]/30 via-[#5a00a0]/15 to-transparent blur-[50px]" />
 
       {/* Content */}
       <div className="relative w-full">

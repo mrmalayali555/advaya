@@ -164,6 +164,7 @@
   70%,
   100% {
     transform: rotate(-270deg);
+  }
 }
 
 @theme {
@@ -178,19 +179,19 @@
   --color-secondary-container: #7105c2;
   --color-on-secondary: #490080;
 
-  --color-surface: #121415;
-  --color-surface-dim: #121415;
-  --color-surface-bright: #38393a;
-  --color-surface-container-lowest: #0c0e0f;
-  --color-surface-container-low: #1a1c1d;
-  --color-surface-container: #1e2021;
-  --color-surface-container-high: #282a2b;
-  --color-surface-container-highest: #333536;
-  --color-on-surface: #e2e2e3;
-  --color-on-surface-variant: #cfc2d6;
+  --color-surface: #050208;
+  --color-surface-dim: #050208;
+  --color-surface-bright: #2a2030;
+  --color-surface-container-lowest: #030106;
+  --color-surface-container-low: #110d16;
+  --color-surface-container: #16111d;
+  --color-surface-container-high: #1e1726;
+  --color-surface-container-highest: #28202f;
+  --color-on-surface: #e8e0ef;
+  --color-on-surface-variant: #c9bdd3;
   
-  --color-background: #121415;
-  --color-on-background: #e2e2e3;
+  --color-background: #050208;
+  --color-on-background: #e8e0ef;
   
   --font-body-md: var(--font-hanken), sans-serif;
   --font-body-lg: var(--font-hanken), sans-serif;
@@ -230,11 +231,11 @@
 }
 
 .glass-card {
-    background-color: #1a1c1d;
-    border: 1px solid #282a2b;
+    background-color: rgba(20, 10, 35, 0.8);
+    border: 1px solid rgba(120, 0, 255, 0.15);
     transition: all 0.3s ease;
 }
 .glass-card:hover {
-    background-color: #1e2021;
-    border-color: #333536;
+    background-color: rgba(30, 15, 50, 0.9);
+    border-color: rgba(160, 0, 255, 0.25);
 }

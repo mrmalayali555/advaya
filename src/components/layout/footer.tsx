@@ -13,8 +13,8 @@ import { SITE, NAV_LINKS } from "@/lib/site";
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative mt-24 overflow-hidden bg-ink-900 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-mesh opacity-40" />
+    <footer className="relative mt-24 overflow-hidden bg-[#050208] text-white border-t border-[#7800ff]/10">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a0015]/50 to-transparent" />
 
 
       <Container className="relative py-16">

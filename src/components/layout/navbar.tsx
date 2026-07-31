@@ -54,8 +54,8 @@ export function Navbar() {
           className={cn(
             "flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-500 ease-brand border shadow-[var(--shadow-soft)]",
             scrolled
-              ? "bg-surface-container/90 backdrop-blur-md border-primary/20 shadow-[0_4px_30px_rgba(221,183,255,0.1)]"
-              : "bg-surface/70 backdrop-blur-md border-transparent"
+              ? "bg-[#0a0510]/90 backdrop-blur-xl border-[#7800ff]/15 shadow-[0_4px_30px_rgba(120,0,255,0.08)]"
+              : "bg-transparent backdrop-blur-sm border-transparent"
           )}
         >
           <Link href="/" className="shrink-0" aria-label="ADVAYA home">
