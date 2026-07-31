@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anybody, Hanken_Grotesk } from "next/font/google";
+import { Anybody, Hanken_Grotesk, Permanent_Marker } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SITE } from "@/lib/site";
@@ -16,6 +16,14 @@ const hanken = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: true,
+});
+
+const brush = Permanent_Marker({
+  variable: "--font-brush",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
   preload: true,
 });
@@ -110,7 +118,7 @@ export default function RootLayout({
   return (
     <html 
       lang="en" 
-      className={`dark ${anybody.variable} ${hanken.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
+      className={`dark ${anybody.variable} ${hanken.variable} ${brush.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
     >
       <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
         <div className="noise-bg" />

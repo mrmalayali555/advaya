@@ -51,8 +51,8 @@ export function Hero({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.12 }}
-              className="mt-6 font-black leading-[1.05] tracking-tight text-balance text-on-surface"
-              style={{ fontSize: "clamp(2rem, 7vw, 6rem)" }}
+              className="mt-4 font-brush leading-tight whitespace-nowrap text-on-surface"
+              style={{ fontSize: "clamp(1.2rem, 4.5vw, 6rem)" }}
             >
               {isEditMode ? (
                 <EditableText type="setting" keyName="hero" field="title">

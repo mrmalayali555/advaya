@@ -124,6 +124,11 @@
   letter-spacing: 0.14em !important;
 }
 
+/* Custom brush script font utility */
+.font-brush {
+  font-family: var(--font-brush), cursive !important;
+}
+
 /* Gradient text — used in hero heading and 404 page */
 .text-gradient {
   background: linear-gradient(135deg, #7c3aed 0%, #5b2a86 45%, #9d4edd 100%);
