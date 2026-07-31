@@ -121,7 +121,7 @@ export default function RootLayout({
       className={`dark ${anybody.variable} ${hanken.variable} ${brush.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
     >
       <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
-        <div className="noise-bg" />
+
         <NextTopLoader color="#5b2a86" showSpinner={false} />
         {/* Gallery-only fonts — load non-blocking after page paint */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}

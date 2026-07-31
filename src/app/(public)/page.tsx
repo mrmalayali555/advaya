@@ -154,25 +154,27 @@ export default async function HomePage() {
       </section>
 
       {/* Achievements */}
-      <section className="bg-surface py-16 sm:py-24">
-        <Container>
-          <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <SectionHeading
-                eyebrow="Proud Moments"
-                title="Recent Achievements"
-                description="Our students, shining across sports, arts and academics."
-              />
-              <ButtonLink href="/achievements" variant="outline" size="sm" arrow>
-                View all
-              </ButtonLink>
-            </div>
-          </Reveal>
-          <Reveal className="mt-10">
-            <AppleInvites achievements={achievements} interval={carouselInterval.value} />
-          </Reveal>
-        </Container>
-      </section>
+      {achievements.length > 0 && (
+        <section className="bg-surface py-16 sm:py-24">
+          <Container>
+            <Reveal>
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <SectionHeading
+                  eyebrow="Proud Moments"
+                  title="Recent Achievements"
+                  description="Our students, shining across sports, arts and academics."
+                />
+                <ButtonLink href="/achievements" variant="outline" size="sm" arrow>
+                  View all
+                </ButtonLink>
+              </div>
+            </Reveal>
+            <Reveal className="mt-10">
+              <AppleInvites achievements={achievements} interval={carouselInterval.value} />
+            </Reveal>
+          </Container>
+        </section>
+      )}
 
       {/* Upcoming events */}
       {events.length > 0 && (
