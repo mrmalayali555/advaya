@@ -66,12 +66,22 @@ export async function saveSettingsForm(formData: FormData) {
   const carouselInterval = {
     value: Math.max(1, Number(formData.get("carousel_interval") || 4)) * 1000
   };
+  const complaints = {
+    showIcons: formData.get("complaints_show_icons") === "on",
+    f1_title: String(formData.get("c_f1_title") || "").trim(),
+    f1_text: String(formData.get("c_f1_text") || "").trim(),
+    f2_title: String(formData.get("c_f2_title") || "").trim(),
+    f2_text: String(formData.get("c_f2_text") || "").trim(),
+    f3_title: String(formData.get("c_f3_title") || "").trim(),
+    f3_text: String(formData.get("c_f3_text") || "").trim(),
+  };
 
   await Promise.all([
     saveSetting("hero", hero),
     saveSetting("contact", contact),
     saveSetting("stats", stats),
     saveSetting("carousel_interval", carouselInterval),
+    saveSetting("complaints", complaints),
   ]);
 }
 

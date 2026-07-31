@@ -19,6 +19,15 @@ export default async function AdminSettingsPage() {
     getSetting("contact", { address: SITE.address, phone: SITE.phone, email: SITE.email }),
     getSetting("stats", { students: 1200, events: 48, achievements: 96, committees: 12 }),
     getSetting("carousel_interval", { value: 4000 }),
+    getSetting("complaints", {
+      showIcons: true,
+      f1_title: "Anonymous by default",
+      f1_text: "Speak freely. If you choose anonymous, we never store your name or email.",
+      f2_title: "Seen by the union",
+      f2_text: "Complaints go straight to the union office bearers for review and action.",
+      f3_title: "No issue too small",
+      f3_text: "Academics, facilities, ragging, safety — whatever it is, we want to know.",
+    }),
   ]);
 
   return (
@@ -53,6 +62,28 @@ export default async function AdminSettingsPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Phone" name="contact_phone" defaultValue={contact.phone} />
               <Field label="Email" name="contact_email" defaultValue={contact.email} />
+            </div>
+          </div>
+        </AdminCard>
+
+        <AdminCard>
+          <h3 className="mb-4 font-semibold text-ink-900">Complaints Page Features</h3>
+          <div className="mb-6 flex items-center gap-3">
+            <input type="checkbox" id="show_icons" name="complaints_show_icons" defaultChecked={complaints.showIcons} className="h-5 w-5 rounded border-purple-200 text-purple-600 focus:ring-purple-600" />
+            <label htmlFor="show_icons" className="text-sm font-medium text-ink-900">Show icons next to features</label>
+          </div>
+          <div className="grid gap-6">
+            <div className="space-y-3 p-4 bg-ink-50 rounded-xl">
+              <Field label="Feature 1 Title" name="c_f1_title" defaultValue={complaints.f1_title} />
+              <TextArea label="Feature 1 Text" name="c_f1_text" defaultValue={complaints.f1_text} rows={2} />
+            </div>
+            <div className="space-y-3 p-4 bg-ink-50 rounded-xl">
+              <Field label="Feature 2 Title" name="c_f2_title" defaultValue={complaints.f2_title} />
+              <TextArea label="Feature 2 Text" name="c_f2_text" defaultValue={complaints.f2_text} rows={2} />
+            </div>
+            <div className="space-y-3 p-4 bg-ink-50 rounded-xl">
+              <Field label="Feature 3 Title" name="c_f3_title" defaultValue={complaints.f3_title} />
+              <TextArea label="Feature 3 Text" name="c_f3_text" defaultValue={complaints.f3_text} rows={2} />
             </div>
           </div>
         </AdminCard>
