@@ -19,17 +19,17 @@ export function PdfViewerModal({ title, pdfUrl, onClose }: PdfViewerModalProps) 
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/80 p-3 sm:p-6 backdrop-blur-md">
-      <div className="flex h-full max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-6 backdrop-blur-md">
+      <div className="glass-card flex h-full max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#140a23]/95 shadow-2xl backdrop-blur-xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4 bg-ink-50/50">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 bg-white/5">
           <div className="flex items-center gap-3 min-w-0 pr-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-700">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-900/40 text-purple-300 border border-purple-500/20">
               <FileText className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <h3 className="truncate text-base font-bold text-ink-900">{title}</h3>
-              <p className="text-xs text-ink-500">Official Document Attachment</p>
+              <h3 className="truncate text-base font-bold text-on-surface">{title}</h3>
+              <p className="text-xs text-on-surface-variant">Official Document Attachment</p>
             </div>
           </div>
 
@@ -47,13 +47,13 @@ export function PdfViewerModal({ title, pdfUrl, onClose }: PdfViewerModalProps) 
               href={pdfUrl}
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:inline-flex items-center gap-1 rounded-full border border-ink-200 px-3.5 py-2 text-xs font-medium text-ink-700 hover:bg-ink-100"
+              className="hidden sm:inline-flex items-center gap-1 rounded-full border border-white/10 px-3.5 py-2 text-xs font-medium text-white/70 hover:bg-white/10 hover:text-white"
             >
               <ExternalLink className="h-3.5 w-3.5" /> Open tab
             </a>
             <button
               onClick={onClose}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-ink-400 hover:bg-ink-100 hover:text-ink-800"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-white/40 hover:bg-white/10 hover:text-white"
               aria-label="Close PDF preview"
             >
               <X className="h-5 w-5" />
@@ -62,7 +62,7 @@ export function PdfViewerModal({ title, pdfUrl, onClose }: PdfViewerModalProps) 
         </div>
 
         {/* Content iframe */}
-        <div className="relative flex-1 bg-ink-950/5">
+        <div className="relative flex-1 bg-black/40">
           <iframe
             src={`${pdfUrl}#toolbar=0`}
             title={title}

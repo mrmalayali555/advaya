@@ -54,18 +54,18 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search representations, official letters, requests…"
-            className="w-full rounded-full border border-ink-200 bg-white pl-10 pr-4 py-2.5 text-sm text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+            className="w-full rounded-full border border-white/15 bg-white/10 pl-10 pr-4 py-2.5 text-sm text-on-surface outline-none transition-colors placeholder:text-white/40 focus:border-purple-400 focus:bg-white/15 focus:ring-2 focus:ring-purple-500/30 backdrop-blur-md"
           />
           {search && (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
@@ -80,8 +80,8 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
               onClick={() => setActiveCategory(cat)}
               className={`rounded-full px-4 py-2 text-xs font-semibold capitalize transition-all ${
                 activeCategory === cat
-                  ? "bg-purple-600 text-white shadow-sm"
-                  : "border border-ink-200 bg-white text-ink-600 hover:border-purple-300 hover:text-purple-700"
+                  ? "bg-purple-600 text-white shadow-[0_8px_20px_-8px_rgba(91,42,134,0.6)]"
+                  : "glass-card text-on-surface-variant hover:border-purple-400 hover:text-purple-300"
               }`}
             >
               {cat}
@@ -92,10 +92,10 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
 
       {/* Grid of Intervention Cards */}
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-ink-100 bg-white p-12 text-center shadow-[var(--shadow-card)]">
-          <FileText className="mx-auto h-12 w-12 text-ink-300" strokeWidth={1.5} />
-          <h3 className="mt-4 text-base font-bold text-ink-800">No interventions found</h3>
-          <p className="mt-1 text-sm text-ink-500">
+        <div className="glass-card rounded-3xl border border-white/10 py-12 text-center shadow-2xl">
+          <FileText className="mx-auto h-12 w-12 text-white/30" strokeWidth={1.5} />
+          <h3 className="mt-4 text-base font-bold text-on-surface">No interventions found</h3>
+          <p className="mt-1 text-sm text-on-surface-variant">
             {search ? `No results for “${search}”` : "No official interventions published yet."}
           </p>
         </div>
@@ -106,7 +106,7 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
             return (
               <div
                 key={item.id}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+                className="glass-card group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_8px_32px_rgba(120,0,255,0.15)]"
               >
                 {/* Pinned badge */}
                 {item.pinned && (
@@ -129,7 +129,7 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
                   </div>
                 ) : (
-                  <div className="relative flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-purple-500/10 via-purple-600/5 to-purple-800/10 p-6 text-purple-700">
+                  <div className="relative flex aspect-[16/9] w-full items-center justify-center bg-purple-950/40 border-b border-white/5 p-6 text-purple-300">
                     <FileText className="h-16 w-16 opacity-30" strokeWidth={1.2} />
                   </div>
                 )}
@@ -137,15 +137,15 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                 {/* Card Content */}
                 <div className="flex flex-1 flex-col p-6">
                   {/* Category & Date Header */}
-                  <div className="mb-3 flex items-center gap-2 text-xs text-ink-400">
+                  <div className="mb-3 flex items-center gap-2 text-xs text-white/50">
                     <span className="flex items-center gap-1">
-                      <Calendar className="h-3.5 w-3.5 text-purple-500" />
+                      <Calendar className="h-3.5 w-3.5 text-purple-400" />
                       {formattedDate}
                     </span>
                     {item.category && (
                       <>
                         <span>•</span>
-                        <span className="inline-flex items-center gap-0.5 rounded-md bg-purple-50 px-2 py-0.5 font-medium text-purple-700">
+                        <span className="inline-flex items-center gap-0.5 rounded-md bg-purple-900/30 border border-purple-500/20 px-2 py-0.5 font-medium text-purple-300">
                           <Tag className="h-3 w-3" />
                           {item.category}
                         </span>
@@ -154,33 +154,33 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                   </div>
 
                   {/* Title */}
-                  <h3 className="mb-2 text-lg font-bold leading-snug text-ink-900 transition-colors group-hover:text-purple-700">
+                  <h3 className="mb-2 text-lg font-bold leading-snug text-on-surface transition-colors group-hover:text-purple-300">
                     {item.title}
                   </h3>
 
                   {/* Short Description */}
-                  <p className="line-clamp-3 mb-6 text-sm leading-relaxed text-ink-500">
+                  <p className="line-clamp-3 mb-6 text-sm leading-relaxed text-on-surface-variant">
                     {item.description}
                   </p>
 
                   {/* Actions Footer */}
-                  <div className="mt-auto flex items-center justify-between gap-2 border-t border-ink-100 pt-4">
+                  <div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4">
                     {/* PDF button */}
                     {item.pdfUrl ? (
                       <button
                         onClick={() => setActivePdf({ title: item.title, pdfUrl: item.pdfUrl! })}
-                        className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 px-3.5 py-1.5 text-xs font-semibold text-purple-700 transition-colors hover:bg-purple-100"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-purple-900/30 border border-purple-500/20 px-3.5 py-1.5 text-xs font-semibold text-purple-300 transition-colors hover:bg-purple-900/50"
                       >
                         <Eye className="h-3.5 w-3.5" /> View PDF
                       </button>
                     ) : (
-                      <span className="text-xs text-ink-400">Official Release</span>
+                      <span className="text-xs text-white/40">Official Release</span>
                     )}
 
                     {/* Read More button */}
                     <button
                       onClick={() => setReadingItem(item)}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-purple-600 hover:text-purple-800"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-purple-400 hover:text-purple-300"
                     >
                       Read More <ArrowRight className="h-3.5 w-3.5" />
                     </button>
@@ -203,26 +203,26 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
 
       {/* Read More Modal */}
       {readingItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/70 p-4 backdrop-blur-sm">
-          <div className="flex h-full max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-ink-100 bg-white p-6 shadow-2xl sm:p-8">
-            <div className="flex items-center justify-between pb-4 border-b border-ink-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="glass-card flex h-full max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#140a23]/95 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div>
-                <span className="text-xs font-medium text-purple-600">
+                <span className="text-xs font-medium text-purple-400">
                   {formatDate(readingItem.date)}
                 </span>
-                <h3 className="text-xl font-bold text-ink-900 mt-1">{readingItem.title}</h3>
+                <h3 className="text-xl font-bold text-on-surface mt-1">{readingItem.title}</h3>
               </div>
               <button
                 onClick={() => setReadingItem(null)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-400 hover:bg-ink-100 hover:text-ink-800"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-6 space-y-4 text-sm leading-relaxed text-ink-700 whitespace-pre-wrap">
+            <div className="flex-1 overflow-y-auto py-6 space-y-4 text-sm leading-relaxed text-on-surface-variant whitespace-pre-wrap">
               {readingItem.image && (
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-ink-50 mb-4">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white/5 mb-4">
                   <Image
                     src={readingItem.image}
                     alt={readingItem.title}
@@ -234,7 +234,7 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
               <p>{readingItem.description}</p>
             </div>
 
-            <div className="flex items-center justify-between border-t border-ink-100 pt-4">
+            <div className="flex items-center justify-between border-t border-white/10 pt-4">
               {readingItem.pdfUrl ? (
                 <button
                   onClick={() => {
@@ -242,16 +242,16 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                     setReadingItem(null);
                     setActivePdf(pdf);
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2 text-xs font-semibold text-white hover:bg-purple-700"
+                  className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2 text-xs font-semibold text-white hover:bg-purple-500"
                 >
                   <FileText className="h-4 w-4" /> Open Official PDF
                 </button>
               ) : (
-                <span className="text-xs text-ink-400">No PDF attached</span>
+                <span className="text-xs text-white/40">No PDF attached</span>
               )}
               <button
                 onClick={() => setReadingItem(null)}
-                className="rounded-full border border-ink-200 px-5 py-2 text-xs font-semibold text-ink-600 hover:bg-ink-50"
+                className="rounded-full border border-white/10 px-5 py-2 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white"
               >
                 Close
               </button>
