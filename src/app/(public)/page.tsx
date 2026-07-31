@@ -64,25 +64,23 @@ export default async function HomePage() {
       <section className="py-16 sm:py-20">
         <Container>
           <Reveal>
-            <SectionHeading
-              eyebrow="Quick Access"
-              title="Everything, one tap away"
-              description="Jump straight to what students need most."
-            />
+            <h2 className="text-3xl font-bold text-on-surface mb-8">Quick Access</h2>
           </Reveal>
-          <RevealGroup className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <RevealGroup className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {QUICK_LINKS.map((q) => (
               <RevealItem key={q.href}>
                 <Link
                   href={q.href}
-                  className="group flex h-full flex-col justify-between rounded-3xl border border-ink-100 bg-white p-6 shadow-[var(--shadow-soft)] transition-all duration-500 ease-brand hover:-translate-y-1 hover:border-purple-200 hover:shadow-[var(--shadow-card)]"
+                  className="glass-card group flex h-full flex-col justify-between rounded-3xl p-6 transition-all duration-500 ease-brand hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_8px_30px_rgba(221,183,255,0.15)]"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white">
-                    <Icon name={q.icon} className="h-6 w-6" />
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-10 w-10 items-center justify-center text-secondary">
+                      <Icon name={q.icon} className="h-6 w-6" />
+                    </div>
+                    <ArrowUpRight className="h-5 w-5 text-on-surface-variant transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-primary" />
                   </div>
-                  <div className="mt-8 flex items-center justify-between">
-                    <span className="font-semibold text-ink-900">{q.label}</span>
-                    <ArrowUpRight className="h-4 w-4 text-ink-300 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-purple-600" />
+                  <div className="mt-8">
+                    <span className="font-semibold text-on-surface">{q.label}</span>
                   </div>
                 </Link>
               </RevealItem>

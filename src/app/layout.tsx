@@ -1,29 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Sora, Plus_Jakarta_Sans, Unbounded } from "next/font/google";
+import { Anybody, Hanken_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 
-const sora = Sora({
-  variable: "--font-sora",
+const anybody = Anybody({
+  variable: "--font-anybody",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
   preload: true,
 });
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  display: "swap",
-  preload: true,
-});
-
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
-  subsets: ["latin"],
-  weight: ["800", "900"],
   display: "swap",
   preload: true,
 });
@@ -116,12 +108,14 @@ export default function RootLayout({
   };
 
   return (
-    <html
-      lang="en"
-      className={`${sora.variable} ${jakarta.variable} ${unbounded.variable} h-full antialiased`}
-      suppressHydrationWarning
+    <html 
+      lang="en" 
+      className={`dark ${anybody.variable} ${hanken.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
     >
-      <body className="min-h-full bg-background text-foreground">
+      <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
+        <div className="noise-bg" />
+        <NuqsAdapter>{children}</NuqsAdapter>
+        <Toaster />
         <NextTopLoader color="#5b2a86" showSpinner={false} />
         {/* Gallery-only fonts — load non-blocking after page paint */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}

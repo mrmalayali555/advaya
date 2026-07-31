@@ -166,3 +166,65 @@
     transform: rotate(-270deg);
   }
 }
+
+@theme {
+  /* Vivid Nocturne Redesign Theme */
+  --color-primary: #ddb7ff;
+  --color-primary-fixed: #f0dbff;
+  --color-primary-container: #b76dff;
+  --color-on-primary: #490080;
+  
+  --color-secondary: #ddb8ff;
+  --color-secondary-fixed: #f0dbff;
+  --color-secondary-container: #7105c2;
+  --color-on-secondary: #490080;
+
+  --color-surface: #121415;
+  --color-surface-dim: #121415;
+  --color-surface-bright: #38393a;
+  --color-surface-container-lowest: #0c0e0f;
+  --color-surface-container-low: #1a1c1d;
+  --color-surface-container: #1e2021;
+  --color-surface-container-high: #282a2b;
+  --color-surface-container-highest: #333536;
+  --color-on-surface: #e2e2e3;
+  --color-on-surface-variant: #cfc2d6;
+  
+  --color-background: #121415;
+  --color-on-background: #e2e2e3;
+  
+  --font-body-md: var(--font-hanken), sans-serif;
+  --font-body-lg: var(--font-hanken), sans-serif;
+  --font-display-md: var(--font-anybody), sans-serif;
+  --font-display-lg: var(--font-anybody), sans-serif;
+  --font-headline-lg: var(--font-anybody), sans-serif;
+  --font-headline-lg-mobile: var(--font-anybody), sans-serif;
+}
+
+/* Vivid Nocturne Custom Classes */
+.noise-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.glow-button {
+    transition: box-shadow 0.3s ease;
+}
+.glow-button:hover {
+    box-shadow: 0 0 15px var(--color-primary);
+}
+
+.glass-card {
+    background-color: rgba(26, 28, 29, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(221, 183, 255, 0.1);
+    border-left: 1px solid rgba(221, 183, 255, 0.1);
+}

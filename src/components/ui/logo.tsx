@@ -53,7 +53,7 @@ export function LogoMark({
 export function Logo({
   className,
   showWordmark = true,
-  variant = "light",
+  variant = "dark",
 }: {
   className?: string;
   showWordmark?: boolean;
