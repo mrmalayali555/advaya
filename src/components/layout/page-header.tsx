@@ -42,7 +42,6 @@ export function PageHeader({
               ))}
             </nav>
           )}
-          {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
           <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-on-surface sm:text-5xl">
             <EditableText type="page" keyName={pageKey} field="title">
               {title}

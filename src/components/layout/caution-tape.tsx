@@ -85,9 +85,9 @@ export function CautionTape({
         }
 
         .caution-tape-diamond {
-          color: #1a1a1a;
+          color: #000000 !important;
           font-size: 9px;
-          opacity: 0.7;
+          opacity: 0.9;
         }
 
         .caution-tape-text {
@@ -96,7 +96,7 @@ export function CautionTape({
           font-weight: 900 !important;
           letter-spacing: 0.14em !important;
           text-transform: uppercase !important;
-          color: #1a1a1a !important;
+          color: #000000 !important;
         }
 
         :global(.caution-tape-btn) {
