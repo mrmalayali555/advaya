@@ -26,12 +26,12 @@ export function Hero({
   const { isEditMode } = useVisualEdit();
 
   return (
-    <section className="relative overflow-hidden bg-background pt-28 pb-0 sm:pt-36">
+    <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36" style={{ background: 'linear-gradient(180deg, #1b0a2b 0%, #3a1a54 40%, #121415 100%)' }}>
       
       {/* Dark elegant decorative glows */}
-      <div className="pointer-events-none absolute -left-40 top-10 h-[450px] w-[450px] rounded-full bg-primary/20 blur-[150px]" />
-      <div className="pointer-events-none absolute -right-32 top-40 h-80 w-80 rounded-full bg-secondary-container/20 blur-[120px]" />
-      <div className="pointer-events-none absolute left-1/2 bottom-0 h-64 w-64 -translate-x-1/2 rounded-full bg-primary-container/10 blur-[100px]" />
+      <div className="pointer-events-none absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-[#5b2a86]/20 blur-[150px]" />
+      <div className="pointer-events-none absolute -right-20 top-20 h-[500px] w-[500px] rounded-full bg-[#7105c2]/15 blur-[120px]" />
+      <div className="pointer-events-none absolute left-1/2 bottom-20 h-64 w-64 -translate-x-1/2 rounded-full bg-[#b76dff]/10 blur-[100px]" />
 
       {/* Content */}
       <div className="relative w-full">
@@ -47,8 +47,8 @@ export function Hero({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.12 }}
-              className="mt-6 font-black leading-[1.05] tracking-tight text-on-surface whitespace-nowrap drop-shadow-[0_0_20px_var(--color-primary)]"
-              style={{ fontSize: "clamp(1.5rem, 6.5vw, 4.5rem)" }}
+              className="mt-6 font-black leading-[1.05] tracking-tight whitespace-nowrap text-glow-intense"
+              style={{ fontSize: "clamp(2rem, 7vw, 6rem)" }}
             >
               {isEditMode ? (
                 <EditableText type="setting" keyName="hero" field="title">
@@ -91,7 +91,7 @@ export function Hero({
                 href="https://chat.whatsapp.com/HTnGS3oE7cIEzlG"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glow-button inline-flex h-12 items-center justify-center rounded-full border border-primary/30 bg-surface-container/50 px-8 text-sm font-semibold text-on-surface transition-all hover:bg-surface-container sm:w-auto"
+                className="glow-button inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-transparent px-8 text-sm font-semibold text-white transition-all hover:bg-white/5 sm:w-auto"
               >
                 Join Our Community
               </a>
@@ -104,35 +104,35 @@ export function Hero({
               transition={{ duration: 0.7, ease: EASE, delay: 0.36 }}
               className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6 w-full max-w-5xl mx-auto"
             >
-              <div className="glass-card rounded-2xl p-6 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-on-surface">
+              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
                   <Counter value={stats.students} suffix="+" />
                 </div>
-                <div className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-on-surface-variant">
+                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                   Medicos
                 </div>
               </div>
-              <div className="glass-card rounded-2xl p-6 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-on-surface">
+              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
                   <Counter value={stats.events} suffix="+" />
                 </div>
-                <div className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-on-surface-variant">
+                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                   Annual Events
                 </div>
               </div>
-              <div className="glass-card rounded-2xl p-6 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-on-surface">
+              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
                   <Counter value={stats.achievements} suffix="+" />
                 </div>
-                <div className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-on-surface-variant">
+                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                   Achievements
                 </div>
               </div>
-              <div className="glass-card rounded-2xl p-6 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-on-surface">
+              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
                   <Counter value={stats.committees} />
                 </div>
-                <div className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-on-surface-variant">
+                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                   Sub-Committees
                 </div>
               </div>
