@@ -77,13 +77,13 @@ function Feature({
   return (
     <div className="flex gap-4">
       {icon && (
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-900/30 text-purple-400">
           {icon}
         </div>
       )}
       <div>
-        <h3 className="font-semibold text-ink-900">{title}</h3>
-        <p className="mt-1 text-sm leading-relaxed text-ink-500">{text}</p>
+        <h3 className="font-semibold text-on-surface">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">{text}</p>
       </div>
     </div>
   );

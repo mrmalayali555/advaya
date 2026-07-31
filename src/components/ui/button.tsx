@@ -11,12 +11,12 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-purple-600 text-white shadow-[0_8px_24px_-8px_rgba(91,42,134,0.6)] hover:bg-purple-700 hover:shadow-[0_12px_32px_-8px_rgba(91,42,134,0.7)] hover:-translate-y-0.5",
+    "bg-purple-600 text-white shadow-[0_8px_24px_-8px_rgba(120,0,255,0.6)] hover:bg-purple-500 hover:shadow-[0_12px_32px_-8px_rgba(120,0,255,0.8)] hover:-translate-y-0.5",
   secondary:
-    "bg-ink-900 text-white hover:bg-ink-800 hover:-translate-y-0.5 shadow-[0_8px_24px_-10px_rgba(26,21,35,0.5)]",
+    "bg-surface-container border border-white/10 text-white hover:bg-white/10 hover:-translate-y-0.5 shadow-[0_8px_24px_-10px_rgba(0,0,0,0.5)]",
   outline:
-    "border border-ink-200 bg-white/60 text-ink-800 backdrop-blur hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700",
-  ghost: "text-ink-700 hover:bg-ink-100 hover:text-purple-700",
+    "border border-white/20 bg-transparent text-white hover:border-white/40 hover:bg-white/10",
+  ghost: "text-white/70 hover:bg-white/10 hover:text-white",
 };
 
 const sizes: Record<Size, string> = {

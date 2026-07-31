@@ -37,7 +37,7 @@ export function Eyebrow({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-purple-200/70 bg-purple-50/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-purple-700",
+        "inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-900/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-purple-300",
         className
       )}
     >
@@ -68,13 +68,13 @@ export function SectionHeading({
       )}
     >
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="text-3xl font-bold leading-[1.1] text-ink-900 sm:text-4xl md:text-[2.75rem]">
+      <h2 className="text-3xl font-bold leading-[1.1] text-on-surface sm:text-4xl md:text-[2.75rem]">
         {title}
       </h2>
       {description && (
         <p
           className={cn(
-            "max-w-2xl text-base leading-relaxed text-ink-500 sm:text-lg",
+            "max-w-2xl text-base leading-relaxed text-on-surface-variant sm:text-lg",
             align === "center" && "mx-auto"
           )}
         >
@@ -98,9 +98,9 @@ export function Card({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-[var(--shadow-card)] transition-all duration-500 ease-brand",
+        "group relative overflow-hidden rounded-[2rem] border border-white/5 bg-surface-container shadow-[var(--shadow-card)] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
         interactive &&
-          "hover:-translate-y-1 hover:border-purple-200 hover:shadow-[var(--shadow-lift)]",
+          "hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_8px_32px_rgba(120,0,255,0.15)]",
         className
       )}
     >
@@ -112,13 +112,13 @@ export function Card({
 type BadgeTone = "purple" | "silver" | "success" | "warning" | "danger" | "info" | "neutral";
 
 const badgeTones: Record<BadgeTone, string> = {
-  purple: "bg-purple-100 text-purple-700",
-  silver: "bg-silver-200 text-ink-600",
-  success: "bg-emerald-100 text-emerald-700",
-  warning: "bg-amber-100 text-amber-700",
-  danger: "bg-red-100 text-red-700",
-  info: "bg-blue-100 text-blue-700",
-  neutral: "bg-ink-100 text-ink-600",
+  purple: "bg-purple-900/30 text-purple-300 border border-purple-500/20",
+  silver: "bg-white/10 text-white/80 border border-white/10",
+  success: "bg-emerald-900/30 text-emerald-300 border border-emerald-500/20",
+  warning: "bg-amber-900/30 text-amber-300 border border-amber-500/20",
+  danger: "bg-red-900/30 text-red-300 border border-red-500/20",
+  info: "bg-blue-900/30 text-blue-300 border border-blue-500/20",
+  neutral: "bg-white/5 text-white/70 border border-white/10",
 };
 
 export function Badge({

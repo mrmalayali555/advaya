@@ -40,7 +40,7 @@ export function FanEvents({ events }: { events: EventItem[] }) {
               {/* Card Glow / Background lights */}
               <div className="absolute -inset-0.5 bg-gradient-to-tr from-purple-500/25 to-pink-500/25 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur" />
               
-              <div className="relative h-full w-full bg-white/70 border border-purple-100/50 backdrop-blur-lg rounded-2xl p-6 shadow-xl shadow-purple-900/5 flex flex-col justify-between overflow-hidden transition-all duration-300">
+              <div className="relative h-full w-full bg-surface-container/80 border border-white/10 backdrop-blur-xl rounded-[2rem] p-6 shadow-xl shadow-black/50 flex flex-col justify-between overflow-hidden transition-all duration-300">
                 
                 {/* Event Poster / Abstract Mesh Background */}
                 {event.poster ? (
@@ -54,36 +54,36 @@ export function FanEvents({ events }: { events: EventItem[] }) {
                 
                 {/* Status Badge */}
                 <div className="flex justify-between items-start z-10">
-                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${
+                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider border ${
                     event.status === "upcoming" 
-                      ? "bg-purple-100 text-purple-700" 
-                      : "bg-emerald-100 text-emerald-700"
+                      ? "bg-purple-900/50 text-purple-300 border-purple-500/20" 
+                      : "bg-emerald-900/50 text-emerald-300 border-emerald-500/20"
                   }`}>
                     {event.status}
                   </span>
-                  <div className="text-xs font-semibold text-purple-600/80 bg-purple-50 px-2 py-0.5 rounded-md">
+                  <div className="text-xs font-semibold text-white/70 bg-white/5 px-2 py-0.5 rounded-md">
                     {formatDate(event.date).split(" ")[0]} {formatDate(event.date).split(" ")[1]}
                   </div>
                 </div>
 
                 {/* Event Details */}
                 <div className="mt-8 flex-1 flex flex-col justify-end z-10">
-                  <h3 className="text-lg font-bold text-ink-900 line-clamp-2 leading-snug group-hover:text-purple-700 transition-colors">
+                  <h3 className="text-lg font-bold text-on-surface line-clamp-2 leading-snug group-hover:text-purple-300 transition-colors">
                     {event.title}
                   </h3>
-                  <p className="mt-2 text-xs text-ink-500 line-clamp-2 leading-relaxed">
+                  <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
                     {event.description}
                   </p>
                   
                   {/* Meta items */}
-                  <div className="mt-4 pt-3 border-t border-purple-50/50 space-y-1 text-xs text-ink-500">
+                  <div className="mt-4 pt-3 border-t border-white/10 space-y-1 text-xs text-white/50">
                     <div className="flex items-center gap-1.5">
-                      <CalendarDays className="h-3.5 w-3.5 text-purple-500" />
+                      <CalendarDays className="h-3.5 w-3.5 text-purple-400" />
                       <span>{formatDate(event.date)} {event.time ? ` · ${event.time}` : ""}</span>
                     </div>
                     {event.venue && (
                       <div className="flex items-center gap-1.5">
-                        <MapPin className="h-3.5 w-3.5 text-purple-500" />
+                        <MapPin className="h-3.5 w-3.5 text-purple-400" />
                         <span className="truncate">{event.venue}</span>
                       </div>
                     )}

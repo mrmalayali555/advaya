@@ -42,11 +42,11 @@ export function ComplaintForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="rounded-3xl border border-emerald-100 bg-emerald-50/60 p-10 text-center"
+        className="rounded-3xl border border-emerald-500/20 bg-emerald-900/20 p-10 text-center"
       >
-        <CheckCircle2 className="mx-auto h-14 w-14 text-emerald-500" strokeWidth={1.5} />
-        <h3 className="mt-4 text-xl font-bold text-ink-900">Suggestion submitted</h3>
-        <p className="mx-auto mt-2 max-w-md text-ink-500">
+        <CheckCircle2 className="mx-auto h-14 w-14 text-emerald-400" strokeWidth={1.5} />
+        <h3 className="mt-4 text-xl font-bold text-white">Suggestion submitted</h3>
+        <p className="mx-auto mt-2 max-w-md text-white/70">
           Thank you for speaking up. The union has received your suggestion and will
           look into it. {anonymous && "Your identity was not recorded."}
         </p>
@@ -61,15 +61,15 @@ export function ComplaintForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="rounded-3xl border border-ink-100 bg-white p-6 shadow-[var(--shadow-card)] sm:p-8">
+    <form onSubmit={onSubmit} className="rounded-3xl border border-white/10 bg-surface-container p-6 shadow-xl sm:p-8">
       {/* Toggle */}
-      <div className="flex rounded-full bg-ink-100 p-1">
+      <div className="flex rounded-full bg-white/5 p-1">
         <button
           type="button"
           onClick={() => setAnonymous(true)}
           className={cn(
             "flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-all",
-            anonymous ? "bg-white text-purple-700 shadow-sm" : "text-ink-500"
+            anonymous ? "bg-white/10 text-white shadow-sm" : "text-white/50 hover:text-white"
           )}
         >
           Anonymous
@@ -79,7 +79,7 @@ export function ComplaintForm() {
           onClick={() => setAnonymous(false)}
           className={cn(
             "flex-1 rounded-full px-4 py-2.5 text-sm font-medium transition-all",
-            !anonymous ? "bg-white text-purple-700 shadow-sm" : "text-ink-500"
+            !anonymous ? "bg-white/10 text-white shadow-sm" : "text-white/50 hover:text-white"
           )}
         >
           Named
@@ -87,7 +87,7 @@ export function ComplaintForm() {
       </div>
 
       {anonymous && (
-        <div className="mt-4 flex items-center gap-2 rounded-2xl bg-purple-50 px-4 py-3 text-sm text-purple-700">
+        <div className="mt-4 flex items-center gap-2 rounded-2xl bg-purple-900/30 border border-purple-500/20 px-4 py-3 text-sm text-purple-300">
           <ShieldCheck className="h-4 w-4 shrink-0" />
           Your name and email will not be stored. Fully anonymous.
         </div>
@@ -114,7 +114,7 @@ export function ComplaintForm() {
       </AnimatePresence>
 
       <div className="mt-5">
-        <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-ink-700">
+        <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-white/70">
           Your suggestion
         </label>
         <textarea
@@ -123,12 +123,12 @@ export function ComplaintForm() {
           required
           rows={6}
           placeholder="Share your suggestion or concern in detail…"
-          className="w-full resize-y rounded-2xl border border-ink-200 bg-surface px-4 py-3 text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+          className="w-full resize-y rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
         />
       </div>
 
       {error && (
-        <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
+        <p className="mt-4 rounded-xl bg-red-900/30 border border-red-500/20 px-4 py-3 text-sm text-red-400">{error}</p>
       )}
 
       <Button type="submit" size="lg" className="mt-6 w-full" disabled={status === "submitting"}>
@@ -157,7 +157,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink-700">
+      <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-white/70">
         {label}
       </label>
       <input
@@ -165,7 +165,7 @@ function Field({
         name={name}
         type={type}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-ink-200 bg-surface px-4 py-3 text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20"
       />
     </div>
   );

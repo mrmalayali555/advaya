@@ -28,23 +28,14 @@ export function Hero({
   return (
     <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36 bg-[#050208]">
       
-      {/* === Purple Aurora / Light-ray effect === */}
+      {/* === High-End Subtle Ambient Glow === */}
+      <div className="pointer-events-none absolute inset-0 bg-mesh opacity-20" />
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[800px] w-[800px] rounded-full opacity-30 blur-[100px]"
         style={{
-          background: [
-            'radial-gradient(ellipse 40% 70% at 30% 20%, rgba(120, 0, 255, 0.55) 0%, transparent 70%)',
-            'radial-gradient(ellipse 35% 80% at 75% 15%, rgba(180, 0, 255, 0.50) 0%, transparent 65%)',
-            'radial-gradient(ellipse 50% 50% at 60% 50%, rgba(100, 0, 200, 0.30) 0%, transparent 70%)',
-            'radial-gradient(ellipse 30% 90% at 85% 40%, rgba(200, 0, 255, 0.45) 0%, transparent 60%)',
-            'radial-gradient(ellipse 25% 60% at 15% 60%, rgba(80, 0, 160, 0.35) 0%, transparent 70%)',
-            'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(150, 50, 255, 0.40) 0%, transparent 70%)',
-          ].join(', '),
+          background: "radial-gradient(circle, rgba(120, 0, 255, 0.4) 0%, transparent 70%)",
         }}
       />
-      {/* Extra bright accent streaks */}
-      <div className="pointer-events-none absolute top-0 right-[15%] h-full w-[200px] rotate-[-8deg] bg-gradient-to-b from-[#a020f0]/40 via-[#7b00cc]/20 to-transparent blur-[60px]" />
-      <div className="pointer-events-none absolute top-0 left-[20%] h-[80%] w-[150px] rotate-[5deg] bg-gradient-to-b from-[#9000e0]/30 via-[#5a00a0]/15 to-transparent blur-[50px]" />
 
       {/* Content */}
       <div className="relative w-full">
@@ -60,7 +51,7 @@ export function Hero({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.12 }}
-              className="mt-6 font-black leading-[1.05] tracking-tight whitespace-nowrap text-glow-intense"
+              className="mt-6 font-black leading-[1.05] tracking-tight text-balance text-on-surface"
               style={{ fontSize: "clamp(2rem, 7vw, 6rem)" }}
             >
               {isEditMode ? (
@@ -110,47 +101,48 @@ export function Hero({
               </a>
             </motion.div>
 
-            {/* Dark glass bento stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: EASE, delay: 0.36 }}
-              className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6 w-full max-w-5xl mx-auto"
-            >
-              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
-                  <Counter value={stats.students} suffix="+" />
-                </div>
-                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
-                  Medicos
-                </div>
-              </div>
-              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
-                  <Counter value={stats.events} suffix="+" />
-                </div>
-                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
-                  Annual Events
-                </div>
-              </div>
-              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
-                  <Counter value={stats.achievements} suffix="+" />
-                </div>
-                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
-                  Achievements
-                </div>
-              </div>
-              <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
-                <div className="font-display-md text-primary font-black" style={{ fontSize: "3rem" }}>
-                  <Counter value={stats.committees} />
-                </div>
-                <div className="mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
-                  Sub-Committees
-                </div>
-              </div>
-            </motion.div>
           </div>
+
+          {/* Dark glass bento stats - Moved outside max-w-3xl to allow max-w-5xl width */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.36 }}
+            className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6 w-full max-w-5xl mx-auto"
+          >
+            <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+              <div className="font-display-md text-primary font-black text-4xl sm:text-[3rem] leading-none">
+                <Counter value={stats.students} suffix="+" />
+              </div>
+              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                Medicos
+              </div>
+            </div>
+            <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+              <div className="font-display-md text-primary font-black text-4xl sm:text-[3rem] leading-none">
+                <Counter value={stats.events} suffix="+" />
+              </div>
+              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                Annual Events
+              </div>
+            </div>
+            <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+              <div className="font-display-md text-primary font-black text-4xl sm:text-[3rem] leading-none">
+                <Counter value={stats.achievements} suffix="+" />
+              </div>
+              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                Achievements
+              </div>
+            </div>
+            <div className="glass-card rounded-2xl p-8 text-center shadow-lg transition-transform hover:-translate-y-1">
+              <div className="font-display-md text-primary font-black text-4xl sm:text-[3rem] leading-none">
+                <Counter value={stats.committees} />
+              </div>
+              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
+                Sub-Committees
+              </div>
+            </div>
+          </motion.div>
         </Container>
       </div>
 

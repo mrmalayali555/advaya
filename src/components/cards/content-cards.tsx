@@ -63,16 +63,16 @@ export function AchievementCard({
           </div>
         </div>
         <div className="flex flex-1 flex-col p-6">
-          <time className="text-xs font-medium text-ink-400">
+          <time className="text-xs font-medium text-white/50">
             {formatDate(achievement.date)}
           </time>
-          <h3 className="mt-2 line-clamp-2 text-lg font-semibold text-ink-900 transition-colors group-hover:text-purple-700">
+          <h3 className="mt-2 line-clamp-2 text-lg font-semibold text-on-surface transition-colors group-hover:text-purple-300">
             {achievement.title}
           </h3>
-          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-ink-500">
+          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-on-surface-variant">
             {achievement.description}
           </p>
-          <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-purple-600">
+          <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-purple-400">
             Read more
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </span>
@@ -107,21 +107,21 @@ export function EventCard({
           </div>
         </div>
         <div className="flex flex-1 flex-col p-6">
-          <h3 className="line-clamp-2 text-lg font-semibold text-ink-900 transition-colors group-hover:text-purple-700">
+          <h3 className="line-clamp-2 text-lg font-semibold text-on-surface transition-colors group-hover:text-purple-300">
             {event.title}
           </h3>
-          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-ink-500">
+          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-on-surface-variant">
             {event.description}
           </p>
-          <div className="mt-4 space-y-1.5 text-sm text-ink-500">
+          <div className="mt-4 space-y-1.5 text-sm text-on-surface-variant">
             <div className="flex items-center gap-2">
-              <CalendarDays className="h-4 w-4 text-purple-500" strokeWidth={1.75} />
+              <CalendarDays className="h-4 w-4 text-purple-400" strokeWidth={1.75} />
               {formatDateRange(event.date, event.endDate)}
               {event.time ? ` · ${event.time}` : ""}
             </div>
             {event.venue && (
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-purple-500" strokeWidth={1.75} />
+                <MapPin className="h-4 w-4 text-purple-400" strokeWidth={1.75} />
                 {event.venue}
               </div>
             )}
@@ -146,19 +146,19 @@ export function NotificationRow({
   return (
     <Card interactive className="p-5 sm:p-6">
       <div className="flex items-start gap-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-900/30 text-purple-400">
           <FileText className="h-5 w-5" strokeWidth={1.75} />
         </div>
         <div className="min-w-0 flex-1">
-          <time className="text-xs font-medium text-ink-400">
+          <time className="text-xs font-medium text-white/50">
             {formatDate(notification.date)}
           </time>
           <Link href={`/notifications/${notification.slug}`}>
-            <h3 className="mt-1 line-clamp-2 text-base font-semibold text-ink-900 transition-colors hover:text-purple-700">
+            <h3 className="mt-1 line-clamp-2 text-base font-semibold text-on-surface transition-colors hover:text-purple-300">
               {notification.title}
             </h3>
           </Link>
-          <p className="mt-1 line-clamp-2 text-sm text-ink-500">
+          <p className="mt-1 line-clamp-2 text-sm text-on-surface-variant">
             {notification.description}
           </p>
         </div>
@@ -167,7 +167,7 @@ export function NotificationRow({
             href={notification.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden shrink-0 items-center gap-1.5 rounded-full border border-ink-200 px-3 py-1.5 text-xs font-medium text-ink-600 transition-colors hover:border-purple-300 hover:text-purple-700 sm:inline-flex"
+            className="hidden shrink-0 items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-white/70 transition-colors hover:border-white/30 hover:text-white sm:inline-flex"
           >
             <Download className="h-3.5 w-3.5" /> PDF
           </a>
