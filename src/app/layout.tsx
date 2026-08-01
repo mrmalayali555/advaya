@@ -111,16 +111,29 @@ export default function RootLayout({
       SITE.socials.instagram,
       SITE.socials.facebook,
       SITE.socials.youtube,
-      SITE.socials.twitter,
-    ].filter(Boolean)
-  };
-
   return (
     <html 
       lang="en" 
       className={`dark ${anybody.variable} ${hanken.variable} ${brush.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
     >
       <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
+        <Script id="json-ld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "GovernmentBenefitsService",
+          "name": "ADVAYA College Union",
+          "provider": {
+            "@type": "EducationalOrganization",
+            "name": "Government TD Medical College Alappuzha",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Alappuzha",
+              "addressRegion": "Kerala",
+              "postalCode": "688005",
+              "addressCountry": "IN"
+            }
+          },
+          "url": "https://advaya.college"
+        }) }} />
 
         <NextTopLoader color="#5b2a86" showSpinner={false} />
         {/* Gallery-only fonts — load non-blocking after page paint */}

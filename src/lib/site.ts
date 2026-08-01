@@ -5,10 +5,10 @@
 export const SITE = {
   name: "ADVAYA",
   nameMalayalam: "അദ്വയ",
-  tagline: "Govt TD Medical College Alappuzha Union",
+  tagline: "Official Student Union Website - Govt TD Medical College Alappuzha",
   description:
-    "ADVAYA is the official union of Govt TD Medical College Alappuzha — achievements, events, notifications, and student services in one premium hub.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://advaya.example.com",
+    "Official portal for the ADVAYA College Union 2026-2027 at Government TD Medical College, Alappuzha. Access student notifications, event registrations, and union subcommittees.",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://advaya.college",
   college: "Govt TD Medical College Alappuzha",
   email: "advaya.union@example.com",
   phone: "+91 00000 00000",
