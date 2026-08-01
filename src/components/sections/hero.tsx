@@ -27,15 +27,17 @@ export function Hero({
 
   return (
     <section className="relative overflow-hidden pt-28 pb-0 sm:pt-36 bg-[#050208]">
+      {/* === Background Setup === */}
+      <div className="absolute inset-0 z-0 w-full h-full bg-[#08080a]"></div>
+      <div 
+        className="absolute inset-0 z-0 w-full h-full bg-cover bg-center opacity-40 mix-blend-screen pointer-events-none" 
+        style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzWjhG8eIy3GFm0oPbq85d-w-syMK3gN-qKV77kpCMohcX_OJwyyU8Zby6iFLe-Z1iU__jHwSFdpO72qNz05kURyCw56Qp2gDXnwqRpAL4xo4tGllb2iqsWOptinOMhiOOpdjjD87-_FIZuWkBcjiKhL6ZsI2dkn7YEZgFZ17gGWUAb5CJwEqp3SNQdwLJeIvqUY-wnIE-foGCgCBOvG37FEWl4E6I8s1viwb5ErqiXw6zcG21lXTMQw8dQAduxYLjCA')" }}
+      ></div>
+      {/* Procedural Noise Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')]"></div>
       
-      {/* === High-End Subtle Ambient Glow === */}
-      <div className="pointer-events-none absolute inset-0 bg-mesh opacity-20" />
-      <div
-        className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[800px] w-[800px] rounded-full opacity-30 blur-[100px]"
-        style={{
-          background: "radial-gradient(circle, rgba(120, 0, 255, 0.4) 0%, transparent 70%)",
-        }}
-      />
+      {/* Radial Glow behind text */}
+      <div className="absolute top-[10%] left-1/2 -translate-x-1/2 bg-purple-500/20 blur-[120px] rounded-full z-0 w-[800px] max-w-[90vw] h-[400px] pointer-events-none"></div>
       {/* Content */}
       <div className="relative z-10 w-full">
         <Container className="relative">
