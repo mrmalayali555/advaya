@@ -101,26 +101,18 @@ export function Hero({
               </a>
             </motion.div>
 
-          </div>
+          {/* Building Illustration Background (between CTAs and Stats) */}
+          <div 
+            className="w-full mx-auto max-w-4xl h-[200px] sm:h-[350px] mt-12 bg-no-repeat bg-contain bg-bottom mix-blend-screen opacity-50"
+            style={{
+              backgroundImage: "url('/hero-building.jpg')",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)"
+            }}
+          />
+        </div>
 
-          {/* Building Illustration Background */}
-          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[10px] sm:bottom-[-20px] w-[150vw] max-w-[1200px] z-[-1] flex justify-center mix-blend-screen opacity-40 md:opacity-50">
-            <div 
-              className="relative w-full"
-              style={{
-                maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-                WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)"
-              }}
-            >
-              <img 
-                src="/hero-building.jpg" 
-                alt="" 
-                className="w-full h-auto object-contain object-bottom" 
-              />
-            </div>
-          </div>
-
-          {/* Dark glass bento stats - Moved outside max-w-3xl to allow max-w-5xl width */}
+        {/* Dark glass bento stats - Moved outside max-w-3xl to allow max-w-5xl width */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
