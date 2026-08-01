@@ -37,23 +37,6 @@ export function Hero({
         }}
       />
 
-      {/* Building Illustration Layer */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 top-1/4 z-0 flex items-end justify-center mix-blend-screen opacity-40 md:opacity-60">
-        <div 
-          className="relative w-full max-w-[1400px] h-full"
-          style={{
-            maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)"
-          }}
-        >
-          <img 
-            src="/hero-building.jpg" 
-            alt="TDMC Building Illustration" 
-            className="w-full h-full object-contain object-bottom" 
-          />
-        </div>
-      </div>
-
       {/* Content */}
       <div className="relative z-10 w-full">
         <Container className="relative">
@@ -119,6 +102,24 @@ export function Hero({
             </motion.div>
 
           </div>
+
+          {/* Building Illustration (Inline) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.32 }}
+            className="mx-auto mt-16 max-w-xl px-4 sm:px-6 w-full mix-blend-screen"
+            style={{
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)"
+            }}
+          >
+            <img 
+              src="/hero-building.jpg" 
+              alt="TDMC Building Illustration" 
+              className="w-full h-auto object-contain opacity-70" 
+            />
+          </motion.div>
 
           {/* Dark glass bento stats - Moved outside max-w-3xl to allow max-w-5xl width */}
           <motion.div
