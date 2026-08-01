@@ -36,15 +36,6 @@ export function Hero({
           background: "radial-gradient(circle, rgba(120, 0, 255, 0.4) 0%, transparent 70%)",
         }}
       />
-      {/* Building Illustration Background (True Background) */}
-      <div 
-        className="pointer-events-none absolute inset-0 z-0 bg-no-repeat bg-[url('/hero-building.jpg')] bg-[length:100%_auto] sm:bg-contain bg-bottom mix-blend-screen opacity-40 md:opacity-60"
-        style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)"
-        }}
-      />
-
       {/* Content */}
       <div className="relative z-10 w-full">
         <Container className="relative">
