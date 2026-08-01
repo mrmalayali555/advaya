@@ -103,23 +103,22 @@ export function Hero({
 
           </div>
 
-          {/* Building Illustration (Inline) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.32 }}
-            className="mx-auto mt-16 max-w-xl px-4 sm:px-6 w-full mix-blend-screen"
-            style={{
-              maskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)"
-            }}
-          >
-            <img 
-              src="/hero-building.jpg" 
-              alt="TDMC Building Illustration" 
-              className="w-full h-auto object-contain opacity-70" 
-            />
-          </motion.div>
+          {/* Building Illustration Background */}
+          <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[10px] sm:bottom-[-20px] w-[150vw] max-w-[1200px] z-[-1] flex justify-center mix-blend-screen opacity-40 md:opacity-50">
+            <div 
+              className="relative w-full"
+              style={{
+                maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+                WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)"
+              }}
+            >
+              <img 
+                src="/hero-building.jpg" 
+                alt="" 
+                className="w-full h-auto object-contain object-bottom" 
+              />
+            </div>
+          </div>
 
           {/* Dark glass bento stats - Moved outside max-w-3xl to allow max-w-5xl width */}
           <motion.div
