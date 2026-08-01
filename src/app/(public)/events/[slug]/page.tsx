@@ -60,16 +60,16 @@ export default async function EventDetail({
           )}
 
           {e.registrationForm && e.registrationForm.published && (!e.registrationForm.deadline || new Date() <= new Date(e.registrationForm.deadline)) && (
-            <div className="mt-8 rounded-2xl bg-purple-50 p-6 border border-purple-100 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="mt-8 rounded-2xl bg-purple-500/10 p-6 border border-purple-500/20 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
-                <h3 className="font-bold text-purple-900 text-lg">Registration Open</h3>
-                <p className="text-purple-700 text-sm mt-1">
+                <h3 className="font-bold text-purple-100 text-lg">Registration Open</h3>
+                <p className="text-purple-200/70 text-sm mt-1">
                   {e.registrationForm.deadline ? `Closes on ${formatDateTime(e.registrationForm.deadline)}` : "Register now to secure your spot"}
                 </p>
               </div>
               <a 
                 href={`/registration/${e.registrationForm.slug}`} 
-                className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-purple-700 shrink-0"
+                className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-purple-500 shrink-0"
               >
                 <UserPlus className="h-4 w-4" />
                 Register Now
@@ -87,7 +87,7 @@ export default async function EventDetail({
             {e.venue && <MetaTile icon={<MapPin className="h-5 w-5" />} label="Venue" value={e.venue} />}
           </div>
 
-          <div className="mt-8 whitespace-pre-line text-lg leading-relaxed text-ink-600">
+          <div className="mt-8 whitespace-pre-line text-lg leading-relaxed text-on-surface-variant">
             {e.description}
           </div>
 
@@ -99,13 +99,13 @@ export default async function EventDetail({
                   href={att.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between rounded-2xl border border-ink-100 bg-white px-5 py-4 transition-colors hover:border-purple-200"
+                  className="flex items-center justify-between rounded-2xl glass-card px-5 py-4 transition-colors hover:border-purple-500/30"
                 >
-                  <span className="flex items-center gap-3 text-sm font-medium text-ink-700">
-                    <Paperclip className="h-4 w-4 text-purple-500" />
+                  <span className="flex items-center gap-3 text-sm font-medium text-on-surface">
+                    <Paperclip className="h-4 w-4 text-purple-400" />
                     {att.name}
                   </span>
-                  <Download className="h-4 w-4 text-ink-400" />
+                  <Download className="h-4 w-4 text-on-surface-variant" />
                 </a>
               ))}
             </div>
@@ -113,7 +113,7 @@ export default async function EventDetail({
 
           {e.media.length > 0 && (
             <div className="mt-12">
-              <h2 className="mb-6 text-2xl font-bold text-ink-900">Gallery</h2>
+              <h2 className="mb-6 text-2xl font-bold text-on-surface">Gallery</h2>
               <MediaGallery media={e.media} />
             </div>
           )}
@@ -137,13 +137,13 @@ function MetaTile({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-ink-100 bg-surface px-4 py-3.5">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+    <div className="flex items-center gap-3 rounded-2xl glass-card px-4 py-3.5">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/20 text-purple-300">
         {icon}
       </div>
       <div className="min-w-0">
-        <div className="text-xs uppercase tracking-wider text-ink-400">{label}</div>
-        <div className="truncate text-sm font-semibold text-ink-800">{value}</div>
+        <div className="text-xs uppercase tracking-wider text-on-surface-variant">{label}</div>
+        <div className="truncate text-sm font-semibold text-on-surface">{value}</div>
       </div>
     </div>
   );
