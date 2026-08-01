@@ -88,52 +88,28 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollegeOrUniversity",
-    name: SITE.college,
-    url: SITE.url,
-    logo: `${SITE.url}/icon.svg`,
-    description: SITE.description,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: SITE.address,
-      addressLocality: "Alappuzha",
-      addressRegion: "Kerala",
-      postalCode: "688005",
-      addressCountry: "IN"
+    "@type": "GovernmentBenefitsService",
+    "name": "ADVAYA College Union",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "Government TD Medical College Alappuzha",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Alappuzha",
+        "addressRegion": "Kerala",
+        "postalCode": "688005",
+        "addressCountry": "IN"
+      }
     },
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: SITE.phone,
-      email: SITE.email,
-      contactType: "Student Union"
-    },
-    sameAs: [
-      SITE.socials.instagram,
-      SITE.socials.facebook,
-      SITE.socials.youtube,
+    "url": "https://advaya.college"
+  };
+
   return (
     <html 
       lang="en" 
       className={`dark ${anybody.variable} ${hanken.variable} ${brush.variable} scroll-smooth antialiased selection:bg-purple-500/30 selection:text-purple-200`}
     >
       <body className="min-h-screen bg-background text-on-background font-body-md overflow-x-hidden">
-        <Script id="json-ld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "GovernmentBenefitsService",
-          "name": "ADVAYA College Union",
-          "provider": {
-            "@type": "EducationalOrganization",
-            "name": "Government TD Medical College Alappuzha",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Alappuzha",
-              "addressRegion": "Kerala",
-              "postalCode": "688005",
-              "addressCountry": "IN"
-            }
-          },
-          "url": "https://advaya.college"
-        }) }} />
 
         <NextTopLoader color="#5b2a86" showSpinner={false} />
         {/* Gallery-only fonts — load non-blocking after page paint */}
