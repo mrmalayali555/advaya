@@ -110,7 +110,6 @@ export function Hero({
             </motion.div>
 
           </div>
-        </div>
 
         {/* Dark glass bento stats - Moved outside max-w-3xl to allow max-w-5xl width */}
           <motion.div
