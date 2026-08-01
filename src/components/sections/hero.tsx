@@ -43,19 +43,15 @@ export function Hero({
       {/* Content */}
       <div className="relative z-10 w-full">
         <Container className="relative">
-          <div className="mx-auto max-w-3xl text-center">
-
-
-
-            {/* Logo Mark (Hidden in new design) */}
+          <div className="mx-auto max-w-5xl text-center">
 
             {/* Title */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.12 }}
-              className="mt-4 font-bold tracking-[0.15em] sm:tracking-[0.25em] leading-tight text-on-surface"
-              style={{ fontSize: "clamp(1.25rem, 6vw, 5.5rem)" }}
+              className="mt-4 font-bold tracking-[0.15em] sm:tracking-[0.25em] leading-tight text-on-surface sm:whitespace-nowrap"
+              style={{ fontSize: "clamp(1.25rem, 5vw, 5.5rem)" }}
             >
               {isEditMode ? (
                 <EditableText type="setting" keyName="hero" field="title">
