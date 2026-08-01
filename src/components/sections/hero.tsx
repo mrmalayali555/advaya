@@ -66,6 +66,16 @@ export function Hero({
               )}
             </motion.h1>
 
+            {/* College Name */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.16 }}
+              className="mt-2 font-sans text-sm tracking-widest text-primary/80 uppercase font-medium"
+            >
+              Gov TD Medical College Alappuzha
+            </motion.p>
+
             {/* Subtitle */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
