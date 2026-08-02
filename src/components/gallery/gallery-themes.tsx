@@ -378,7 +378,14 @@ export function NormalGallery({ gallery }: { gallery: GalleryData }) {
 /* ─── Renderer that picks the right theme ─── */
 export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
   const [showFullBlog, setShowFullBlog] = useState(false);
-  const [lightboxPhoto, setLightboxPhoto] = useState<{ url: string; caption: string | null } | null>(null);
+  const [lightboxPhoto, setLightboxPhoto] = useState<{
+    url: string;
+    caption: string | null;
+    zoom?: number;
+    offsetX?: number;
+    offsetY?: number;
+    rotation?: number;
+  } | null>(null);
 
   // Strip HTML for preview
   const plainText = gallery.blogText
@@ -460,7 +467,14 @@ function GalleryClickWrapper({
   gallery,
 }: {
   children: React.ReactNode;
-  onPhotoClick: (photo: { url: string; caption: string | null }) => void;
+  onPhotoClick: (photo: {
+    url: string;
+    caption: string | null;
+    zoom?: number;
+    offsetX?: number;
+    offsetY?: number;
+    rotation?: number;
+  }) => void;
   gallery: GalleryData;
 }) {
   function handleClick(e: React.MouseEvent) {
@@ -476,7 +490,14 @@ function GalleryClickWrapper({
     
     if (photo) {
       e.preventDefault();
-      onPhotoClick({ url: photo.url, caption: photo.caption || null });
+      onPhotoClick({
+        url: photo.url,
+        caption: photo.caption || null,
+        zoom: photo.zoom,
+        offsetX: photo.offsetX,
+        offsetY: photo.offsetY,
+        rotation: photo.rotation,
+      });
     } else if (img) {
       e.preventDefault();
       let src = img.src;

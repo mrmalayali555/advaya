@@ -10,6 +10,7 @@ interface GalleryPhotoImgProps {
   offsetX?: number;
   offsetY?: number;
   aspectRatio?: string; // Optional fixed aspect ratio (e.g., "3/4" or "1/1")
+  fitMode?: "cover" | "contain"; // cover for masonry grid, contain for lightbox
   className?: string;
   children?: React.ReactNode;
 }
@@ -22,6 +23,7 @@ export function GalleryPhotoImg({
   offsetX = 0,
   offsetY = 0,
   aspectRatio: fixedAspectRatio,
+  fitMode = "cover",
   className = "",
   children,
 }: GalleryPhotoImgProps) {
@@ -45,10 +47,10 @@ export function GalleryPhotoImg({
 
   return (
     <div
-      className={`relative w-full overflow-hidden bg-ink-100 flex items-center justify-center [container-type:size] ${className}`}
+      className={`relative overflow-hidden flex items-center justify-center [container-type:size] ${fitMode === "cover" ? "w-full bg-ink-100" : ""} ${className}`}
       style={{
         aspectRatio: computedAspectRatio,
-        minHeight: !computedAspectRatio ? "220px" : undefined,
+        minHeight: fitMode === "cover" && !computedAspectRatio ? "220px" : undefined,
       }}
     >
       <img
@@ -65,7 +67,7 @@ export function GalleryPhotoImg({
             h: e.currentTarget.naturalHeight,
           });
         }}
-        className="absolute object-cover transition-all duration-200"
+        className={`absolute transition-all duration-200 ${fitMode === "cover" ? "object-cover" : "object-contain"}`}
         style={{
           width: is90or270 ? "100cqh" : "100%",
           height: is90or270 ? "100cqw" : "100%",

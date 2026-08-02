@@ -3,8 +3,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { GalleryPhotoImg } from "@/components/ui/gallery-photo-img";
 
-type LightboxPhoto = { url: string; caption?: string | null };
+type LightboxPhoto = {
+  url: string;
+  caption?: string | null;
+  zoom?: number;
+  offsetX?: number;
+  offsetY?: number;
+  rotation?: number;
+};
 
 export function GalleryLightbox({
   photos,
@@ -125,11 +133,15 @@ export function GalleryLightbox({
             }}
             className="relative flex flex-col items-center justify-center rounded-xl bg-white p-2 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <GalleryPhotoImg
               src={photo.url}
               alt={photo.caption || "Gallery photo"}
-              className="max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] h-auto w-auto rounded-lg object-contain"
+              zoom={photo.zoom}
+              offsetX={photo.offsetX}
+              offsetY={photo.offsetY}
+              rotation={photo.rotation}
+              fitMode="contain"
+              className="max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] rounded-lg"
             />
             {photo.caption && (
               <p className="mt-3 text-center text-sm font-medium text-gray-700 pb-1 px-4">
