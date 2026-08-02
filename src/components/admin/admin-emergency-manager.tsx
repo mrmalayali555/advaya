@@ -118,64 +118,66 @@ export function AdminEmergencyManager({ items }: { items: EmergencyItem[] }) {
             return (
               <div
                 key={c.id}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-ink-100 bg-white p-3.5 shadow-[var(--shadow-soft)] transition-colors hover:border-purple-200"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-ink-100 bg-white p-3.5 shadow-[var(--shadow-soft)] transition-colors hover:border-purple-200"
               >
-                {/* Order adjustment buttons */}
-                <div className="flex flex-col items-center gap-0.5 shrink-0 border-r border-ink-100 pr-2">
-                  <form action={moveEmergency.bind(null, c.id, "up")}>
-                    <button
-                      type="submit"
-                      disabled={masterIndex === 0}
-                      title="Move Up (Show higher)"
-                      className="flex h-6 w-6 items-center justify-center rounded text-ink-400 hover:bg-purple-50 hover:text-purple-600 disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-ink-400"
-                    >
-                      <ArrowUp className="h-3.5 w-3.5" />
-                    </button>
-                  </form>
-                  <span className="inline-flex items-center gap-0.5 text-[11px] font-mono font-medium text-ink-400">
-                    <Hash className="h-2.5 w-2.5" />
-                    {c.order}
-                  </span>
-                  <form action={moveEmergency.bind(null, c.id, "down")}>
-                    <button
-                      type="submit"
-                      disabled={masterIndex === items.length - 1}
-                      title="Move Down (Show lower)"
-                      className="flex h-6 w-6 items-center justify-center rounded text-ink-400 hover:bg-purple-50 hover:text-purple-600 disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-ink-400"
-                    >
-                      <ArrowDown className="h-3.5 w-3.5" />
-                    </button>
-                  </form>
-                </div>
-
-                {/* Contact Info */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-semibold text-ink-900">{c.name}</span>
-                    {!c.active && <StatusPill status="draft" />}
-                    {c.showOnHomepage && (
-                      <span className="inline-flex items-center gap-1 rounded bg-purple-100 border border-purple-200 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700">
-                        <Home className="h-2.5 w-2.5" /> Homepage
-                      </span>
-                    )}
+                <div className="flex items-start sm:items-center gap-3 w-full sm:w-auto min-w-0">
+                  {/* Order adjustment buttons */}
+                  <div className="flex flex-col items-center gap-0.5 shrink-0 border-r border-ink-100 pr-2">
+                    <form action={moveEmergency.bind(null, c.id, "up")}>
+                      <button
+                        type="submit"
+                        disabled={masterIndex === 0}
+                        title="Move Up (Show higher)"
+                        className="flex h-6 w-6 items-center justify-center rounded text-ink-400 hover:bg-purple-50 hover:text-purple-600 disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-ink-400"
+                      >
+                        <ArrowUp className="h-3.5 w-3.5" />
+                      </button>
+                    </form>
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-mono font-medium text-ink-400">
+                      <Hash className="h-2.5 w-2.5" />
+                      {c.order}
+                    </span>
+                    <form action={moveEmergency.bind(null, c.id, "down")}>
+                      <button
+                        type="submit"
+                        disabled={masterIndex === items.length - 1}
+                        title="Move Down (Show lower)"
+                        className="flex h-6 w-6 items-center justify-center rounded text-ink-400 hover:bg-purple-50 hover:text-purple-600 disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-ink-400"
+                      >
+                        <ArrowDown className="h-3.5 w-3.5" />
+                      </button>
+                    </form>
                   </div>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-ink-500 flex-wrap">
-                    <span className="rounded-md bg-purple-50 border border-purple-100 px-2 py-0.5 font-medium text-purple-700">
-                      {c.category}
-                    </span>
-                    <span className="flex items-center gap-1 font-mono text-ink-700 font-medium">
-                      <Phone className="h-3 w-3 text-ink-400" /> {c.phone}
-                    </span>
-                    {c.description && (
-                      <span className="text-ink-400 truncate max-w-[200px]">
-                        • {c.description}
+
+                  {/* Contact Info */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-semibold text-ink-900 break-words">{c.name}</span>
+                      {!c.active && <StatusPill status="draft" />}
+                      {c.showOnHomepage && (
+                        <span className="inline-flex items-center gap-1 rounded bg-purple-100 border border-purple-200 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700">
+                          <Home className="h-2.5 w-2.5" /> Homepage
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1 flex items-center gap-2 text-xs text-ink-500 flex-wrap">
+                      <span className="rounded-md bg-purple-50 border border-purple-100 px-2 py-0.5 font-medium text-purple-700">
+                        {c.category}
                       </span>
-                    )}
+                      <span className="flex items-center gap-1 font-mono text-ink-700 font-medium break-all">
+                        <Phone className="h-3 w-3 text-ink-400 shrink-0" /> {c.phone}
+                      </span>
+                      {c.description && (
+                        <span className="text-ink-400 truncate max-w-full sm:max-w-[200px]">
+                          • {c.description}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 self-end sm:self-center border-t border-ink-100 pt-2 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end">
                   <form action={toggleShowOnHomepage.bind(null, c.id)}>
                     <button
                       type="submit"

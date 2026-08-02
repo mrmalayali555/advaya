@@ -19,7 +19,7 @@ export default async function AdminEventsPage() {
         <EmptyRow>No events yet. Create your first one.</EmptyRow>
       ) : (
       <div className="overflow-x-auto rounded-2xl border border-ink-100 bg-white shadow-[var(--shadow-soft)]">
-        <table className="w-full text-sm min-w-[500px]">
+        <table className="w-full text-sm">
             <thead className="border-b border-ink-100 bg-ink-50/60 text-left text-xs uppercase tracking-wider text-ink-400">
               <tr>
                 <th className="px-5 py-3 font-semibold">Title</th>

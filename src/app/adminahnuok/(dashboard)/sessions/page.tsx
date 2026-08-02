@@ -54,9 +54,9 @@ export default async function AdminSessionsPage() {
                         )}
                       </div>
 
-                      <div className="mt-2 flex items-center gap-4 text-xs text-ink-500">
-                        <span className="flex items-center gap-1.5">
-                          <Globe className="h-3.5 w-3.5 text-purple-400" />
+                      <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-ink-500">
+                        <span className="flex items-center gap-1.5 break-all">
+                          <Globe className="h-3.5 w-3.5 text-purple-400 shrink-0" />
                           {s.location || "Unknown location"} (IP: {s.ipAddress})
                         </span>
                         <span className="flex items-center gap-1.5">

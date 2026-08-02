@@ -32,7 +32,7 @@ export default async function AdminMediaPage() {
                     <span className="mt-2 px-2 text-center text-[10px]">{m.type.toUpperCase()}</span>
                   </div>
                 )}
-                <form action={deleteMedia.bind(null, m.id)} className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <form action={deleteMedia.bind(null, m.id)} className="absolute right-2 top-2 opacity-100 sm:opacity-0 transition-opacity sm:group-hover:opacity-100">
                   <IconDeleteBtn />
                 </form>
               </div>

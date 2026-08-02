@@ -52,16 +52,16 @@ export default async function AdminComplaintsPage({
               href={`/adminahnuok/complaints/${c.id}`}
               className="block rounded-2xl border border-ink-100 bg-white p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]"
             >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-ink-900">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-semibold text-ink-900 break-words">
                     {c.anonymous ? "Anonymous" : c.name || "Named"}
                   </span>
                   <StatusPill status={c.status} />
                 </div>
-                <span className="text-xs text-ink-400">{timeAgo(c.createdAt)}</span>
+                <span className="text-xs text-ink-400 shrink-0">{timeAgo(c.createdAt)}</span>
               </div>
-              <p className="mt-2 text-sm text-ink-600">{truncate(c.message, 160)}</p>
+              <p className="mt-2 text-sm text-ink-600 break-words">{truncate(c.message, 160)}</p>
             </Link>
           ))}
         </div>

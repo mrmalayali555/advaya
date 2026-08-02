@@ -36,18 +36,11 @@ export default async function AdminInterventionsPage({
 
   return (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <AdminHeader
-          title="Interventions"
-          description="Manage official letters, representations, and requests to authorities."
-        />
-        <Link
-          href="/adminahnuok/interventions/new"
-          className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-purple-700"
-        >
-          <Plus className="h-4 w-4" /> Add intervention
-        </Link>
-      </div>
+      <AdminHeader
+        title="Interventions"
+        description="Manage official letters, representations, and requests to authorities."
+        action={{ label: "Add intervention", href: "/adminahnuok/interventions/new" }}
+      />
 
       {/* Tabs */}
       <div className="mb-6 flex flex-wrap items-center gap-2">
@@ -120,7 +113,7 @@ export default async function AdminInterventionsPage({
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 border-t border-ink-100 pt-3 sm:border-t-0 sm:pt-0">
+                  <div className="flex flex-wrap items-center gap-2 border-t border-ink-100 pt-3 sm:border-t-0 sm:pt-0">
                     <form action={togglePinIntervention.bind(null, item.id, item.pinned)}>
                       <button
                         type="submit"

@@ -17,8 +17,8 @@ export default async function AdminLayout({
   return (
     <div className="min-h-[100dvh] bg-ink-50">
       <Sidebar admin={{ name: admin.name, email: admin.email }} />
-      <div className="lg:pl-64">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-10">{children}</div>
+      <div className="lg:pl-64 min-w-0 w-full overflow-x-hidden">
+        <div className="mx-auto max-w-6xl px-3 py-4 sm:px-6 sm:py-8 lg:px-8 lg:py-10 min-w-0 w-full">{children}</div>
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ export default async function RegistrationsPage() {
       />
 
       <div className="rounded-2xl border border-ink-200 bg-white shadow-soft overflow-x-auto">
-        <table className="w-full text-left text-sm text-ink-600 min-w-[700px]">
+        <table className="w-full text-left text-sm text-ink-600">
           <thead className="bg-ink-50 text-xs font-semibold uppercase tracking-wider text-ink-500">
             <tr>
               <th className="px-6 py-4">Title</th>

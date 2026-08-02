@@ -9,7 +9,7 @@ import { ImageCropperModal } from "./image-cropper-modal";
 import { CyberLoader } from "@/components/ui/cyber-loader";
 
 const inputCls =
-  "w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-base text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100";
+  "w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-base text-ink-800 outline-none transition-colors placeholder:text-ink-300 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 min-w-0 max-w-full";
 
 
 export function Field({
@@ -371,6 +371,21 @@ export function SubmitBtn({ children = "Save" }: { children?: React.ReactNode })
 
 export function DeleteBtn({ label = "Delete" }: { label?: string }) {
   const { pending } = useFormStatus();
+  if (label === "") {
+    return (
+      <button
+        type="submit"
+        disabled={pending}
+        onClick={(e) => {
+          if (!confirm("Are you sure? This cannot be undone.")) e.preventDefault();
+        }}
+        title="Delete"
+        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-red-200 text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60"
+      >
+        {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+      </button>
+    );
+  }
   return (
     <button
       type="submit"
@@ -378,7 +393,7 @@ export function DeleteBtn({ label = "Delete" }: { label?: string }) {
       onClick={(e) => {
         if (!confirm("Are you sure? This cannot be undone.")) e.preventDefault();
       }}
-      className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60 sm:w-auto"
+      className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60 sm:w-auto shrink-0"
     >
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
       {label}
