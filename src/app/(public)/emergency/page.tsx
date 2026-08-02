@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container } from "@/components/ui/primitives";
 import { EmergencyDirectory } from "@/components/emergency/emergency-directory";
-import { getEmergencyContacts, getEmergencyPdf } from "@/lib/queries";
+import { getEmergencyContacts, getEmergencyPdf, getSetting } from "@/lib/queries";
+import { DEFAULT_WATCHMEN_SCHEDULE, WatchmenScheduleData } from "@/lib/watchmen-schedule";
 
 export const metadata: Metadata = {
   title: "Emergency Registry",
@@ -11,9 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function EmergencyPage() {
-  const [contacts, pdfData] = await Promise.all([
+  const [contacts, pdfData, watchmenSchedule] = await Promise.all([
     getEmergencyContacts(),
     getEmergencyPdf(),
+    getSetting<WatchmenScheduleData>("watchmen_schedule", DEFAULT_WATCHMEN_SCHEDULE),
   ]);
 
   return (
@@ -26,7 +28,7 @@ export default async function EmergencyPage() {
       />
       <section className="py-10 sm:py-16">
         <Container>
-          <EmergencyDirectory contacts={contacts} pdfData={pdfData} />
+          <EmergencyDirectory contacts={contacts} pdfData={pdfData} watchmenSchedule={watchmenSchedule} />
         </Container>
       </section>
     </>

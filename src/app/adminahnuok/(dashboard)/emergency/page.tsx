@@ -3,9 +3,11 @@ import { Field, Toggle, SubmitBtn } from "@/components/admin/form-fields";
 import { AdminEmergencyManager } from "@/components/admin/admin-emergency-manager";
 import { EmergencyPdfUploader } from "@/components/admin/emergency-pdf-uploader";
 import { HomepageSectionToggle } from "@/components/admin/homepage-section-toggle";
+import { WatchmenRosterEditor } from "@/components/admin/watchmen-roster-editor";
 import { db } from "@/lib/db";
 import { createEmergency } from "@/lib/actions/emergency";
 import { getEmergencyPdf, getSetting } from "@/lib/queries";
+import { DEFAULT_WATCHMEN_SCHEDULE, WatchmenScheduleData } from "@/lib/watchmen-schedule";
 
 export default async function AdminEmergencyPage() {
   const items = await db.emergencyContact.findMany({
@@ -13,6 +15,7 @@ export default async function AdminEmergencyPage() {
   });
   const pdfData = await getEmergencyPdf();
   const sectionSetting = await getSetting("homepage_emergency_section", { enabled: true });
+  const watchmenSchedule = await getSetting<WatchmenScheduleData>("watchmen_schedule", DEFAULT_WATCHMEN_SCHEDULE);
 
   const nextOrder = items.length > 0 ? Math.max(...items.map((i) => i.order)) + 1 : 0;
   const homepageCount = items.filter((i) => i.showOnHomepage).length;
@@ -34,6 +37,9 @@ export default async function AdminEmergencyPage() {
 
         {/* PDF Registry Uploader */}
         <EmergencyPdfUploader initialPdf={pdfData} />
+
+        {/* Watchmen Duty Roster Editor */}
+        <WatchmenRosterEditor initialSchedule={watchmenSchedule} />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
           <AdminCard>

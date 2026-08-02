@@ -29,6 +29,8 @@ import {
 } from "lucide-react";
 
 
+import { WatchmenScheduleData } from "@/lib/watchmen-schedule";
+
 type EmergencyContact = {
   id: string;
   category: string;
@@ -43,17 +45,6 @@ interface PdfData {
   url: string;
   name: string;
 }
-
-const WATCHMEN_SCHEDULE = [
-  { day: "Monday", duty1: "Mr. Satheesh", phone1: "91422 29998", duty2: "Mr. Anandu", phone2: "98463 81767" },
-  { day: "Tuesday", duty1: "Mr. Krishnakumar", phone1: "99466 41956", duty2: "Mr. Harikrishnan", phone2: "80787 88043" },
-  { day: "Wednesday", duty1: "Mr. Sebastian", phone1: "96455 33771", duty2: "Mr. Sujith", phone2: "90741 94761" },
-  { day: "Thursday", duty1: "Mr. Satheesh", phone1: "91422 29998", duty2: "Mr. Renjith", phone2: "62829 97904" },
-  { day: "Friday", duty1: "Mr. Anandu", phone1: "98463 81767", duty2: "Mr. Saran", phone2: "79946 68518" },
-  { day: "Saturday", duty1: "Mr. Krishnakumar", phone1: "99466 41956", duty2: "Mr. Sebastian", phone2: "96455 33771" },
-  { day: "Sunday", duty1: "Mr. Harikrishnan", phone1: "80787 88043", duty2: "Mr. Sujith", phone2: "90741 94761" },
-];
-
 function getCategoryTheme(category: string) {
   const cat = category.toLowerCase();
   if (cat.includes("emergency") || cat.includes("ambulance") || cat.includes("fire")) {
@@ -123,9 +114,11 @@ function getCategoryTheme(category: string) {
 export function EmergencyDirectory({
   contacts,
   pdfData,
+  watchmenSchedule,
 }: {
   contacts: EmergencyContact[];
   pdfData?: PdfData | null;
+  watchmenSchedule: WatchmenScheduleData;
 }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedPreset, setSelectedPreset] = useState<string>("all");
@@ -522,9 +515,9 @@ export function EmergencyDirectory({
 
         {/* Expandable Schedule Grid */}
         {showSchedule && (
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-4 pt-4 border-t border-white/10 space-y-6">
             <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {WATCHMEN_SCHEDULE.map((item) => (
+              {watchmenSchedule.schedule.map((item) => (
                 <div
                   key={item.day}
                   className="rounded-xl border border-white/10 bg-surface-container-high/60 p-3 space-y-2"
@@ -535,29 +528,44 @@ export function EmergencyDirectory({
                     </span>
                     <Clock className="h-3 w-3 text-ink-400" />
                   </div>
-                  <div className="space-y-1.5 text-xs">
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-on-surface font-medium truncate text-xs">{item.duty1}</span>
-                      <a
-                        href={`tel:${item.phone1.replace(/\s+/g, "")}`}
-                        className="text-indigo-400 hover:underline font-mono text-[11px] shrink-0 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20"
-                      >
-                        {item.phone1}
-                      </a>
-                    </div>
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-on-surface font-medium truncate text-xs">{item.duty2}</span>
-                      <a
-                        href={`tel:${item.phone2.replace(/\s+/g, "")}`}
-                        className="text-indigo-400 hover:underline font-mono text-[11px] shrink-0 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20"
-                      >
-                        {item.phone2}
-                      </a>
-                    </div>
+                  <div className="space-y-2 text-xs">
+                    {item.shifts.map((shift, idx) => (
+                      <div key={idx} className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-semibold text-indigo-300">{shift.time}</span>
+                        <span className="text-on-surface font-medium leading-tight">{shift.names}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
+
+            {watchmenSchedule.contacts.length > 0 && (
+              <div className="pt-4 border-t border-white/10">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-3">
+                  Watchmen Contact Directory
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {watchmenSchedule.contacts.map((contact, idx) => (
+                    <div key={idx} className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-1.5">
+                      <span className="text-xs font-medium text-on-surface">{contact.name}</span>
+                      {contact.phone && (
+                        <>
+                          <span className="text-indigo-500/40">|</span>
+                          <a
+                            href={`tel:${contact.phone.replace(/\s+/g, "")}`}
+                            className="text-xs font-mono font-semibold text-indigo-300 hover:text-indigo-200 hover:underline flex items-center gap-1"
+                          >
+                            <Phone className="h-3 w-3" />
+                            {contact.phone}
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

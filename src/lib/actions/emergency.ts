@@ -138,3 +138,16 @@ export async function toggleShowOnHomepage(id: string) {
   revalidatePath("/");
 }
 
+export async function updateWatchmenSchedule(schedule: import("@/lib/watchmen-schedule").WatchmenScheduleData) {
+  await requireAdmin();
+  const value = JSON.stringify(schedule);
+  await db.setting.upsert({
+    where: { key: "watchmen_schedule" },
+    update: { value },
+    create: { key: "watchmen_schedule", value },
+  });
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/emergency");
+}
+
+
