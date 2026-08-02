@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { GalleryPhotoImg } from "@/components/ui/gallery-photo-img";
 
 type LightboxPhoto = {
   url: string;
@@ -133,15 +132,16 @@ export function GalleryLightbox({
             }}
             className="relative flex flex-col items-center justify-center rounded-xl bg-white p-2 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
-            <GalleryPhotoImg
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={photo.url}
               alt={photo.caption || "Gallery photo"}
-              zoom={photo.zoom}
-              offsetX={photo.offsetX}
-              offsetY={photo.offsetY}
-              rotation={photo.rotation}
-              fitMode="contain"
-              className="max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] rounded-lg"
+              className="max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] h-auto w-auto rounded-lg object-contain"
+              style={{
+                transform: (photo.rotation || photo.zoom)
+                  ? `rotate(${photo.rotation || 0}deg) scale(${photo.zoom || 1}) translate(${photo.offsetX || 0}%, ${photo.offsetY || 0}%)`
+                  : undefined,
+              }}
             />
             {photo.caption && (
               <p className="mt-3 text-center text-sm font-medium text-gray-700 pb-1 px-4">
