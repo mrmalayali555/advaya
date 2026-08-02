@@ -96,6 +96,7 @@ export function EventCard({
     poster: string | null;
     status: string;
     committee?: { name: string; slug: string } | null;
+    committees?: { name: string; slug: string }[];
   };
 }) {
   return (
@@ -106,14 +107,27 @@ export function EventCard({
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-1.5">
             <Badge tone={statusTone[event.status] ?? "info"}>{event.status}</Badge>
           </div>
-          {event.committee && (
-            <div className="absolute right-3 bottom-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 px-3 py-1 text-[11px] font-semibold text-white/90 shadow-sm">
-                <Users className="h-3 w-3 text-purple-300" />
-                {event.committee.name}
-              </span>
-            </div>
-          )}
+          {(() => {
+            const allCommittees = [
+              ...(event.committee ? [event.committee] : []),
+              ...(event.committees || []),
+            ].filter((c, i, arr) => arr.findIndex((x) => x.slug === c.slug) === i);
+
+            if (allCommittees.length === 0) return null;
+            return (
+              <div className="absolute right-3 bottom-3 flex flex-wrap gap-1.5 justify-end max-w-[85%]">
+                {allCommittees.map((c) => (
+                  <span
+                    key={c.slug}
+                    className="inline-flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 px-2.5 py-0.5 text-[11px] font-semibold text-white/90 shadow-sm truncate max-w-full"
+                  >
+                    <Users className="h-3 w-3 text-purple-300 shrink-0" />
+                    <span className="truncate">{c.name}</span>
+                  </span>
+                ))}
+              </div>
+            );
+          })()}
         </div>
         <div className="flex flex-1 flex-col p-6">
           <h3 className="line-clamp-2 text-lg font-semibold text-on-surface transition-colors group-hover:text-purple-300">

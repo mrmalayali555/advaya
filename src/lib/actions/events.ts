@@ -21,7 +21,22 @@ async function uniqueSlug(base: string, ignoreId?: string): Promise<string> {
 
 function parse(formData: FormData) {
   const endDateRaw = String(formData.get("endDate") || "").trim();
+  let committeeIds: string[] = [];
+  try {
+    const rawIds = formData.get("committeeIds") as string;
+    if (rawIds) {
+      const parsed = JSON.parse(rawIds);
+      if (Array.isArray(parsed)) {
+        committeeIds = parsed.filter((id) => typeof id === "string" && id.trim().length > 0);
+      }
+    }
+  } catch (e) {}
+
   const committeeIdRaw = String(formData.get("committeeId") || "").trim();
+  if (committeeIds.length === 0 && committeeIdRaw) {
+    committeeIds = [committeeIdRaw];
+  }
+
   return {
     title: String(formData.get("title") || "").trim(),
     description: String(formData.get("description") || "").trim(),
@@ -32,16 +47,25 @@ function parse(formData: FormData) {
     poster: String(formData.get("poster") || "").trim() || null,
     status: String(formData.get("status") || "upcoming"),
     published: formData.get("published") ? true : false,
-    committeeId: committeeIdRaw || null,
+    committeeId: committeeIds.length > 0 ? committeeIds[0] : null,
+    committeeIds,
   };
 }
 
 export async function createEvent(formData: FormData) {
   await requireAdmin();
-  const data = parse(formData);
+  const { committeeIds, ...data } = parse(formData);
   if (!data.title) return;
   const slug = await uniqueSlug(data.title);
-  await db.event.create({ data: { ...data, slug } });
+  await db.event.create({
+    data: {
+      ...data,
+      slug,
+      committees: {
+        connect: committeeIds.map((id) => ({ id })),
+      },
+    },
+  });
   revalidatePath("/adminahnuok/events");
   revalidatePath("/events");
   revalidatePath("/");
@@ -50,9 +74,18 @@ export async function createEvent(formData: FormData) {
 
 export async function updateEvent(id: string, formData: FormData) {
   await requireAdmin();
-  const data = parse(formData);
+  const { committeeIds, ...data } = parse(formData);
   const slug = await uniqueSlug(data.title, id);
-  await db.event.update({ where: { id }, data: { ...data, slug } });
+  await db.event.update({
+    where: { id },
+    data: {
+      ...data,
+      slug,
+      committees: {
+        set: committeeIds.map((id) => ({ id })),
+      },
+    },
+  });
   revalidatePath("/adminahnuok/events");
   revalidatePath("/events");
   revalidatePath(`/events/${slug}`);

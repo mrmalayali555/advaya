@@ -14,7 +14,10 @@ export default async function EditEventPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const event = await db.event.findUnique({ where: { id } });
+  const event = await db.event.findUnique({
+    where: { id },
+    include: { committees: { select: { id: true, name: true } } },
+  });
   if (!event) notFound();
 
   const gallery = await db.eventGallery.findUnique({ where: { eventId: id } });

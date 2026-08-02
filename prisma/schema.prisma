@@ -89,6 +89,7 @@ model Event {
   published   Boolean           @default(true)
   committee   Committee?        @relation(fields: [committeeId], references: [id], onDelete: SetNull)
   committeeId String?
+  committees  Committee[]       @relation("EventCommittees")
   media       EventMedia[]
   attachments EventAttachment[]
   gallery     EventGallery?
@@ -245,6 +246,7 @@ model Committee {
   order       Int               @default(0)
   members     CommitteeMember[]
   events      Event[]
+  coEvents    Event[]           @relation("EventCommittees")
   createdAt   DateTime          @default(now())
 }
 

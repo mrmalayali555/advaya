@@ -48,15 +48,23 @@ export default async function EventDetail({
         <Container size="narrow">
           <div className="flex flex-wrap items-center gap-2.5">
             <Badge tone={statusTone[e.status] ?? "info"}>{e.status}</Badge>
-            {e.committee && (
-              <Link
-                href={`/subcommittee/${e.committee.slug}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-purple-900/30 border border-purple-500/20 px-3.5 py-1 text-xs font-semibold text-purple-300 hover:bg-purple-900/50 transition-colors"
-              >
-                <Users className="h-3.5 w-3.5" />
-                {e.committee.name}
-              </Link>
-            )}
+            {(() => {
+              const allCommittees = [
+                ...(e.committee ? [e.committee] : []),
+                ...((e as { committees?: { name: string; slug: string }[] }).committees || []),
+              ].filter((c, i, arr) => arr.findIndex((x) => x.slug === c.slug) === i);
+
+              return allCommittees.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/subcommittee/${c.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-purple-900/30 border border-purple-500/20 px-3.5 py-1 text-xs font-semibold text-purple-300 hover:bg-purple-900/50 transition-colors"
+                >
+                  <Users className="h-3.5 w-3.5" />
+                  {c.name}
+                </Link>
+              ));
+            })()}
           </div>
 
           {e.poster && (

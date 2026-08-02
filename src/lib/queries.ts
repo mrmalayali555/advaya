@@ -65,7 +65,12 @@ export async function getEvents(opts?: { status?: string; take?: number }) {
     },
     orderBy: { date: opts?.status === "completed" ? "desc" : "asc" },
     take: opts?.take,
-    include: { media: { orderBy: { order: "asc" } }, attachments: true, committee: { select: { id: true, name: true, slug: true } } },
+    include: {
+      media: { orderBy: { order: "asc" } },
+      attachments: true,
+      committee: { select: { id: true, name: true, slug: true } },
+      committees: { select: { id: true, name: true, slug: true } },
+    },
   });
 }
 
@@ -74,14 +79,25 @@ export async function getUpcomingEvents(take = 3) {
     where: { published: true, status: "upcoming" },
     orderBy: { date: "asc" },
     take,
-    include: { media: true, committee: { select: { id: true, name: true, slug: true } } },
+    include: {
+      media: true,
+      committee: { select: { id: true, name: true, slug: true } },
+      committees: { select: { id: true, name: true, slug: true } },
+    },
   });
 }
 
 export async function getEvent(slug: string) {
   return db.event.findUnique({
     where: { slug },
-    include: { media: { orderBy: { order: "asc" } }, attachments: true, gallery: { include: { photos: { orderBy: { position: "asc" } } } }, registrationForm: true, committee: { select: { id: true, name: true, slug: true } } },
+    include: {
+      media: { orderBy: { order: "asc" } },
+      attachments: true,
+      gallery: { include: { photos: { orderBy: { position: "asc" } } } },
+      registrationForm: true,
+      committee: { select: { id: true, name: true, slug: true } },
+      committees: { select: { id: true, name: true, slug: true } },
+    },
   });
 }
 
@@ -219,9 +235,20 @@ export async function getCommittee(slug: string) {
 
 export async function getCommitteeEvents(committeeId: string) {
   return db.event.findMany({
-    where: { published: true, committeeId },
+    where: {
+      published: true,
+      OR: [
+        { committeeId },
+        { committees: { some: { id: committeeId } } },
+      ],
+    },
     orderBy: { date: "desc" },
-    include: { media: { orderBy: { order: "asc" } }, attachments: true, committee: { select: { id: true, name: true, slug: true } } },
+    include: {
+      media: { orderBy: { order: "asc" } },
+      attachments: true,
+      committee: { select: { id: true, name: true, slug: true } },
+      committees: { select: { id: true, name: true, slug: true } },
+    },
   });
 }
 
