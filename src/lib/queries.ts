@@ -258,29 +258,190 @@ export async function getCommitteesList() {
   });
 }
 
+const STATIC_PAGES = [
+  {
+    title: "Advaya Annual Fest — Homepage",
+    href: "/",
+    description: "Alappuzha Medical College (TDMC) Union Annual Arts & Cultural Fest 2026.",
+    keywords: "advaya fest annual college tdmc alappuzha union arts cultural home main index 2026 website portal medical",
+  },
+  {
+    title: "About Advaya & TDMC",
+    href: "/about",
+    description: "Learn about the history, heritage, College Union, and leadership of TDMC Alappuzha.",
+    keywords: "about history college medical tdmc alappuzha principal union heritage executive leadership team campus information",
+  },
+  {
+    title: "Events & Competitions",
+    href: "/events",
+    description: "Browse all cultural, technical, and sports events, schedules, and delegate registrations.",
+    keywords: "events competitions dance music cultural sports register schedule rules prizes guidelines fest arts programs",
+  },
+  {
+    title: "Emergency Registry & Directory",
+    href: "/emergency",
+    description: "24x7 emergency contacts, ambulance, hospital helpdesk, police, fire force, and blood bank.",
+    keywords: "emergency directory ambulance police hospital 112 100 108 blood bank watchman sergeant help safety security contacts doctor medical numbers helpline",
+  },
+  {
+    title: "Social Interventions",
+    href: "/interventions",
+    description: "Social welfare campaigns, community healthcare initiatives, and student outreach programs.",
+    keywords: "interventions social welfare campaigns community healthcare outreach donation awareness projects blood donation camps charity help support",
+  },
+  {
+    title: "Subcommittees & Organizing Teams",
+    href: "/subcommittee",
+    description: "Explore all organizing committees, stage managers, coordinators, and student teams.",
+    keywords: "subcommittees committees organizing teams coordinators members volunteers crew leaders management event team student council",
+  },
+  {
+    title: "Submit a Complaint / Grievance",
+    href: "/complaints",
+    description: "Confidential student helpdesk and grievance redressal system for campus complaints.",
+    keywords: "complaints grievance report issue helpdesk confidential ragging harassment feedback problem dispute resolution redressal help",
+  },
+  {
+    title: "Contact Us",
+    href: "/contact",
+    description: "Get in touch with the Advaya College Union, address details, phone numbers, and email.",
+    keywords: "contact email phone reach address location tdmc alappuzha map directions queries help union office support",
+  },
+  {
+    title: "Student Achievements",
+    href: "/achievements",
+    description: "Celebrating academic, cultural, and sports triumphs of TDMC Alappuzha students.",
+    keywords: "achievements awards winners champions honors glory students sports cultural medals competition results records",
+  },
+  {
+    title: "Announcements & Notifications",
+    href: "/notifications",
+    description: "Official notices, circulars, schedule updates, and breaking news from Advaya.",
+    keywords: "notifications announcements notices circulars updates news breaking alerts schedule bulletins general information",
+  },
+  {
+    title: "UG Delegate Registrations",
+    href: "/ug",
+    description: "Undergraduate delegate passes and registration portal for Advaya events.",
+    keywords: "ug undergraduate mbbs students delegates registration pass ticket entry general cultural sports fest form",
+  },
+  {
+    title: "PG Delegate Registrations",
+    href: "/pg",
+    description: "Postgraduate doctor and delegate passes for Advaya medical fest.",
+    keywords: "pg postgraduate doctors residents delegates registration pass ticket entry medical fest form",
+  },
+  {
+    title: "Union Public Finance",
+    href: "/finance",
+    description: "Transparent budget breakdown, income, and expenditures of the TDMC College Union.",
+    keywords: "finance budget expenditure income transparency money accounting treasury union audit balance sheet expenses",
+  },
+];
+
 // --- Global search ---
 export async function searchAll(q: string) {
   const query = q.trim();
-  if (!query) return { achievements: [], events: [], notifications: [] };
-  const contains = { contains: query };
-  const [achievements, events, notifications] = await Promise.all([
+  if (!query) {
+    return {
+      pages: [],
+      achievements: [],
+      events: [],
+      notifications: [],
+      interventions: [],
+      emergencyContacts: [],
+      subcommittees: [],
+    };
+  }
+
+  const contains = { contains: query, mode: "insensitive" as const };
+  const lowerQ = query.toLowerCase();
+  const qWords = lowerQ.split(/\s+/).filter(Boolean);
+  const pages = STATIC_PAGES.filter((p) => {
+    const text = `${p.title} ${p.description} ${p.keywords}`.toLowerCase();
+    return qWords.every((word) => text.includes(word)) || text.includes(lowerQ);
+  });
+
+  const [
+    achievements,
+    events,
+    notifications,
+    interventions,
+    emergencyContacts,
+    subcommittees,
+  ] = await Promise.all([
     db.achievement.findMany({
-      where: { published: true, OR: [{ title: contains }, { description: contains }] },
-      take: 8,
+      where: {
+        published: true,
+        OR: [{ title: contains }, { description: contains }],
+      },
+      take: 10,
       orderBy: { date: "desc" },
     }),
     db.event.findMany({
-      where: { published: true, OR: [{ title: contains }, { description: contains }] },
-      take: 8,
+      where: {
+        published: true,
+        OR: [
+          { title: contains },
+          { description: contains },
+          { venue: contains },
+          { status: contains },
+        ],
+      },
+      take: 10,
       orderBy: { date: "desc" },
     }),
     db.notification.findMany({
-      where: { published: true, OR: [{ title: contains }, { description: contains }] },
-      take: 8,
+      where: {
+        published: true,
+        OR: [{ title: contains }, { description: contains }],
+      },
+      take: 10,
       orderBy: { date: "desc" },
     }),
+    db.intervention.findMany({
+      where: {
+        published: true,
+        OR: [
+          { title: contains },
+          { description: contains },
+          { category: contains },
+        ],
+      },
+      take: 10,
+      orderBy: { date: "desc" },
+    }),
+    db.emergencyContact.findMany({
+      where: {
+        active: true,
+        OR: [
+          { name: contains },
+          { category: contains },
+          { phone: contains },
+          { description: contains },
+        ],
+      },
+      take: 10,
+      orderBy: { order: "asc" },
+    }),
+    db.committee.findMany({
+      where: {
+        OR: [{ name: contains }, { description: contains }],
+      },
+      take: 10,
+      orderBy: { order: "asc" },
+    }),
   ]);
-  return { achievements, events, notifications };
+
+  return {
+    pages,
+    achievements,
+    events,
+    notifications,
+    interventions,
+    emergencyContacts,
+    subcommittees,
+  };
 }
 
 // --- Dashboard stats ---

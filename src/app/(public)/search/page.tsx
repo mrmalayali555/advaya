@@ -1,6 +1,15 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Trophy, CalendarDays, Bell, ArrowUpRight } from "lucide-react";
+import {
+  Trophy,
+  CalendarDays,
+  Bell,
+  ArrowUpRight,
+  Globe,
+  HeartHandshake,
+  Phone,
+  Users,
+} from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container, Card } from "@/components/ui/primitives";
 import { SearchBox } from "@/components/forms/search-box";
@@ -21,7 +30,13 @@ export default async function SearchPage({
   const { q = "" } = await searchParams;
   const results = q ? await searchAll(q) : null;
   const total = results
-    ? results.achievements.length + results.events.length + results.notifications.length
+    ? results.pages.length +
+      results.events.length +
+      results.interventions.length +
+      results.emergencyContacts.length +
+      results.subcommittees.length +
+      results.achievements.length +
+      results.notifications.length
     : 0;
 
   return (
@@ -48,14 +63,14 @@ export default async function SearchPage({
 
           {results && total > 0 && (
             <div className="mt-8 space-y-3">
-              {results.achievements.map((a) => (
+              {results.pages.map((p) => (
                 <ResultRow
-                  key={a.id}
-                  href={`/achievements/${a.slug}`}
-                  icon={<Trophy className="h-4 w-4" />}
-                  kind="Achievement"
-                  title={a.title}
-                  meta={formatDate(a.date)}
+                  key={p.href}
+                  href={p.href}
+                  icon={<Globe className="h-4 w-4" />}
+                  kind="Website Page"
+                  title={p.title}
+                  meta={p.description}
                 />
               ))}
               {results.events.map((e) => (
@@ -66,6 +81,46 @@ export default async function SearchPage({
                   kind="Event"
                   title={e.title}
                   meta={formatDateRange(e.date, e.endDate)}
+                />
+              ))}
+              {results.interventions.map((i) => (
+                <ResultRow
+                  key={i.id}
+                  href={`/interventions/${i.slug}`}
+                  icon={<HeartHandshake className="h-4 w-4" />}
+                  kind="Social Intervention"
+                  title={i.title}
+                  meta={formatDate(i.date)}
+                />
+              ))}
+              {results.emergencyContacts.map((c) => (
+                <ResultRow
+                  key={c.id}
+                  href="/emergency"
+                  icon={<Phone className="h-4 w-4" />}
+                  kind={c.category || "Emergency Directory"}
+                  title={c.name}
+                  meta={c.phone}
+                />
+              ))}
+              {results.subcommittees.map((s) => (
+                <ResultRow
+                  key={s.id}
+                  href={`/subcommittee/${s.slug}`}
+                  icon={<Users className="h-4 w-4" />}
+                  kind="Subcommittee"
+                  title={s.name}
+                  meta="Organizing Committee"
+                />
+              ))}
+              {results.achievements.map((a) => (
+                <ResultRow
+                  key={a.id}
+                  href={`/achievements/${a.slug}`}
+                  icon={<Trophy className="h-4 w-4" />}
+                  kind="Achievement"
+                  title={a.title}
+                  meta={formatDate(a.date)}
                 />
               ))}
               {results.notifications.map((n) => (
