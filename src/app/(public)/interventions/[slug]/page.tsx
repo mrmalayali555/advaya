@@ -2,9 +2,10 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Download, FileText, Calendar, Tag, Pin } from "lucide-react";
+import { ArrowLeft, Calendar, Tag, Pin } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container } from "@/components/ui/primitives";
+import { PdfPreviewButton } from "@/components/ui/pdf-preview-button";
 import { getIntervention } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 
@@ -97,28 +98,13 @@ export default async function InterventionDetailPage({
 
               {/* PDF Attachment Banner */}
               {item.pdfUrl && (
-                <div className="mt-8 flex flex-col items-start justify-between gap-4 rounded-2xl border border-purple-500/20 bg-purple-900/20 p-5 sm:flex-row sm:items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white shadow">
-                      <FileText className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-on-surface">Official Document PDF</h4>
-                      <p className="text-xs text-on-surface-variant">
-                        View or download the official letter / representation document.
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={item.pdfUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    download
-                    className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-purple-700"
-                  >
-                    <Download className="h-4 w-4" /> Download PDF
-                  </a>
+                <div className="mt-8">
+                  <PdfPreviewButton
+                    title={item.title}
+                    pdfUrl={item.pdfUrl}
+                    label="View Official Document (PDF)"
+                    variant="card"
+                  />
                 </div>
               )}
             </div>

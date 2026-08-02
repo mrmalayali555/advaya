@@ -16,7 +16,7 @@ import {
   ArrowRight,
   X,
 } from "lucide-react";
-import { PdfViewerModal } from "./pdf-viewer-modal";
+import { PdfViewerModal } from "@/components/ui/pdf-viewer-modal";
 
 interface InterventionItem {
   id: string;

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Download, FileText } from "lucide-react";
+import { PdfPreviewButton } from "@/components/ui/pdf-preview-button";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container } from "@/components/ui/primitives";
 import { getNotification } from "@/lib/queries";
@@ -59,16 +59,14 @@ export default async function NotificationDetail({
           </div>
 
           {n.pdfUrl && (
-            <a
-              href={n.pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-purple-600 px-6 py-4 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-purple-700"
-            >
-              <FileText className="h-5 w-5" />
-              Download attached PDF
-              <Download className="h-4 w-4" />
-            </a>
+            <div className="mt-8">
+              <PdfPreviewButton
+                title={n.title}
+                pdfUrl={n.pdfUrl}
+                label="View Attached Circular (PDF)"
+                variant="card"
+              />
+            </div>
           )}
         </Container>
       </section>

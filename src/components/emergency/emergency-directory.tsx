@@ -25,7 +25,10 @@ import {
   FileText,
   Download,
   ExternalLink,
+  Eye,
 } from "lucide-react";
+import { PdfViewerModal } from "@/components/ui/pdf-viewer-modal";
+
 
 type EmergencyContact = {
   id: string;
@@ -133,6 +136,7 @@ export function EmergencyDirectory({
   const [viewMode, setViewMode] = useState<"grid" | "grouped" | "compact">("grid");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showSchedule, setShowSchedule] = useState<boolean>(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState<boolean>(false);
 
   // Extract available unique categories
   const categories = useMemo(() => {
@@ -294,19 +298,18 @@ export function EmergencyDirectory({
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-              <a
-                href={pdfData.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-semibold text-white hover:bg-white/20 transition-all shadow-sm"
+              <button
+                type="button"
+                onClick={() => setIsPdfModalOpen(true)}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-semibold text-white hover:bg-white/20 transition-all shadow-sm active:scale-95"
               >
-                <ExternalLink className="h-3.5 w-3.5" />
-                <span>View PDF</span>
-              </a>
+                <Eye className="h-3.5 w-3.5" />
+                <span>View in App</span>
+              </button>
               <a
                 href={pdfData.url}
                 download={pdfData.name}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-purple-600 px-3.5 py-2 text-xs font-semibold text-white hover:opacity-90 transition-all shadow-md shadow-red-950/40"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-purple-600 px-3.5 py-2 text-xs font-semibold text-white hover:opacity-90 transition-all shadow-md shadow-red-950/40 active:scale-95"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Download PDF</span>
@@ -315,6 +318,17 @@ export function EmergencyDirectory({
           </div>
         </div>
       )}
+
+      {/* Built-in PDF Viewer Modal */}
+      {isPdfModalOpen && pdfData && (
+        <PdfViewerModal
+          title="Emergency Registry — GEC Wayanad"
+          pdfUrl={pdfData.url}
+          filename={pdfData.name}
+          onClose={() => setIsPdfModalOpen(false)}
+        />
+      )}
+
 
       {/* Quick Category Chips - Edge-to-edge scroll on mobile */}
       <div className="space-y-2.5">
