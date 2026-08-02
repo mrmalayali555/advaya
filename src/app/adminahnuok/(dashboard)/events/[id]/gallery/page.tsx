@@ -25,6 +25,15 @@ export default async function GalleryThemeSelectionPage({
 
   const themes = [
     {
+      id: "normal",
+      name: "Normal (Grid)",
+      description:
+        "Clean, responsive masonry grid for unlimited photos. Standard photo upload without frames or themes.",
+      color: "bg-[#f3f4f6]",
+      accent: "border-[#d1d5db]",
+      preview: "🖼️",
+    },
+    {
       id: "bohemian",
       name: "Bohemian",
       description:
@@ -60,7 +69,7 @@ export default async function GalleryThemeSelectionPage({
         description="Select a theme for this event's photo gallery."
       />
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {themes.map((theme) => (
           <div
             key={theme.id}
@@ -70,16 +79,32 @@ export default async function GalleryThemeSelectionPage({
             <div
               className={`flex h-36 items-center justify-center ${theme.color} relative overflow-hidden p-4`}
             >
-              {/* Fake polaroid previews */}
-              <div className="absolute left-4 top-4 h-16 w-12 rotate-[-8deg] rounded-sm bg-white p-1 shadow-md">
-                <div className={`h-9 w-full ${theme.color === "bg-[#8B6914]" ? "bg-amber-200" : "bg-ink-200"}`} />
-              </div>
-              <div className="absolute right-6 top-6 h-16 w-12 rotate-[5deg] rounded-sm bg-white p-1 shadow-md">
-                <div className={`h-9 w-full ${theme.color === "bg-[#8B6914]" ? "bg-amber-300" : "bg-ink-300"}`} />
-              </div>
-              <div className="absolute bottom-4 left-1/2 h-16 w-12 -translate-x-1/2 rotate-[-3deg] rounded-sm bg-white p-1 shadow-md">
-                <div className={`h-9 w-full ${theme.color === "bg-[#8B6914]" ? "bg-amber-100" : "bg-ink-100"}`} />
-              </div>
+              {theme.id === "normal" ? (
+                <>
+                  <div className="absolute left-6 top-6 h-16 w-14 rounded-md bg-white p-1.5 shadow-sm border border-gray-200">
+                    <div className="h-full w-full rounded-sm bg-purple-100" />
+                  </div>
+                  <div className="absolute right-6 top-8 h-20 w-16 rounded-md bg-white p-1.5 shadow-sm border border-gray-200">
+                    <div className="h-full w-full rounded-sm bg-blue-100" />
+                  </div>
+                  <div className="absolute bottom-3 left-1/2 h-14 w-16 -translate-x-1/2 rounded-md bg-white p-1.5 shadow-sm border border-gray-200">
+                    <div className="h-full w-full rounded-sm bg-green-100" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Fake polaroid previews */}
+                  <div className="absolute left-4 top-4 h-16 w-12 rotate-[-8deg] rounded-sm bg-white p-1 shadow-md">
+                    <div className={`h-9 w-full ${theme.color === "bg-[#8B6914]" ? "bg-amber-200" : "bg-ink-200"}`} />
+                  </div>
+                  <div className="absolute right-6 top-6 h-16 w-12 rotate-[5deg] rounded-sm bg-white p-1 shadow-md">
+                    <div className={`h-9 w-full ${theme.color === "bg-[#8B6914]" ? "bg-amber-300" : "bg-ink-300"}`} />
+                  </div>
+                  <div className="absolute bottom-4 left-1/2 h-16 w-12 -translate-x-1/2 rotate-[-3deg] rounded-sm bg-white p-1 shadow-md">
+                    <div className={`h-9 w-full ${theme.color === "bg-[#8B6914]" ? "bg-amber-100" : "bg-ink-100"}`} />
+                  </div>
+                </>
+              )}
               <span className="relative z-10 text-4xl">{theme.preview}</span>
             </div>
 

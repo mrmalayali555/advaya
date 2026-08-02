@@ -400,10 +400,10 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           onChange={(e) => setGallery(g => ({ ...g, theme: e.target.value }))}
           className="rounded-xl border border-ink-200 bg-ink-50 px-4 py-2 text-sm font-medium text-ink-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
         >
+          <option value="normal">Normal (Grid - Unlimited)</option>
           <option value="bohemian">Bohemian (7 slots)</option>
           <option value="scrapbook">Scrapbook (8 slots)</option>
           <option value="corkboard">Corkboard (11 slots)</option>
-          <option value="normal">Normal (Unlimited)</option>
         </select>
       </div>
 
