@@ -116,7 +116,7 @@ export function Navbar() {
             <Link
               href="/search"
               aria-label="Search"
-              className="hidden touch-target items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white sm:flex"
+              className="flex touch-target items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
             >
               <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </Link>
@@ -170,7 +170,13 @@ export function Navbar() {
                         {link.label}
                       </div>,
                       ...link.children.map((c) => (
-                        <MobileLink key={c.href} href={c.href} label={c.label} active={isActive(c.href)} />
+                        <MobileLink
+                          key={c.href}
+                          href={c.href}
+                          label={c.label}
+                          active={isActive(c.href)}
+                          onClick={() => setOpen(false)}
+                        />
                       )),
                     ]
                   : [
@@ -179,11 +185,21 @@ export function Navbar() {
                         href={link.href}
                         label={link.label}
                         active={isActive(link.href)}
+                        onClick={() => setOpen(false)}
                       />,
                     ]
               )}
               <Link
+                href="/search"
+                onClick={() => setOpen(false)}
+                className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <Search className="h-4 w-4 text-purple-400" />
+                <span>Search anything...</span>
+              </Link>
+              <Link
                 href="/complaints"
+                onClick={() => setOpen(false)}
                 className="mt-2 block rounded-2xl bg-purple-600 px-4 py-3.5 text-center text-sm font-semibold text-white"
               >
                 Drop Suggestion
@@ -200,14 +216,17 @@ function MobileLink({
   href,
   label,
   active,
+  onClick,
 }: {
   href: string;
   label: string;
   active: boolean;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         "block rounded-2xl px-4 py-3 text-[15px] font-medium transition-colors",
         active ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
