@@ -5,7 +5,7 @@ import { useState } from "react";
 import { GalleryLightbox } from "./gallery-lightbox";
 
 /* ─── Types ─── */
-type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number; };
+type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number; rotation?: number; };
 type GalleryData = {
   id: string;
   theme: string;
@@ -313,6 +313,66 @@ export function CorkBoardGallery({ gallery }: { gallery: GalleryData }) {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEME 4 — NORMAL
+   Responsive masonry-like grid using CSS columns. Natural aspect ratios.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+export function NormalGallery({ gallery }: { gallery: GalleryData }) {
+  return (
+    <div className="mx-auto my-12 w-full max-w-6xl px-4 sm:px-6">
+      {/* Title */}
+      {(gallery.titleLine1 || gallery.titleLine2 || gallery.subtitle) && (
+        <div className="mb-8 text-center">
+          {gallery.titleLine1 && (
+            <p className="text-xl text-on-surface-variant font-medium">
+              {gallery.titleLine1}
+            </p>
+          )}
+          {gallery.titleLine2 && (
+            <h2 className="mt-1 text-3xl font-bold text-on-surface sm:text-4xl">
+              {gallery.titleLine2}
+            </h2>
+          )}
+          {gallery.subtitle && (
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-on-surface-variant">
+              {gallery.subtitle}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Masonry Grid */}
+      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+        {gallery.photos.map((photo) => (
+          <figure
+            key={photo.id}
+            data-photo-id={photo.id}
+            className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-outline-variant/30 bg-surface/50 p-2 shadow-sm transition-all duration-300 hover:shadow-md hover:border-outline-variant glass-card group"
+          >
+            <div className="relative w-full overflow-hidden rounded-lg bg-black/5">
+              <img
+                src={photo.url}
+                alt={photo.caption || "Gallery photo"}
+                className="w-full h-auto object-cover transition-transform"
+                style={{
+                  transform: `scale(${photo.zoom || 1}) translate(${photo.offsetX || 0}%, ${photo.offsetY || 0}%) rotate(${photo.rotation || 0}deg)`,
+                }}
+                loading="lazy"
+              />
+            </div>
+            {photo.caption && (
+              <figcaption className="mt-2 px-1 text-sm text-on-surface-variant text-center">
+                {photo.caption}
+              </figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Renderer that picks the right theme ─── */
 export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
   const [showFullBlog, setShowFullBlog] = useState(false);
@@ -341,6 +401,7 @@ export function EventGalleryRenderer({ gallery }: { gallery: GalleryData }) {
         {gallery.theme === "bohemian" && <BohemianGallery gallery={gallery} />}
         {gallery.theme === "scrapbook" && <ScrapbookGallery gallery={gallery} />}
         {gallery.theme === "corkboard" && <CorkBoardGallery gallery={gallery} />}
+        {gallery.theme === "normal" && <NormalGallery gallery={gallery} />}
       </GalleryClickWrapper>
 
       {/* Lightbox */}

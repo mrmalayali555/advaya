@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import {
   Upload, X, Pencil, Save, Loader2, Trash2,
   ZoomIn, ZoomOut, Move, Bold, Italic, Underline,
-  Heading1, Heading2, Palette, Type,
+  Heading1, Heading2, Palette, Type, RotateCw,
 } from "lucide-react";
 import { CyberLoader } from "@/components/ui/cyber-loader";
 
 /* ─── Types ─── */
-type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number };
+type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number; rotation?: number };
 type GalleryData = {
   id: string;
   theme: string;
@@ -79,7 +79,7 @@ function PhotoSlot({
       const fd = new FormData();
       fd.append("file", file);
 
-      const data: any = await new Promise((resolve, reject) => {
+      const data: { url: string; error?: string } = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", (e) => {
           if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
@@ -384,7 +384,8 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
 
   const slotCount =
     gallery.theme === "bohemian" ? 7 :
-    gallery.theme === "corkboard" ? 11 : 8;
+    gallery.theme === "corkboard" ? 11 : 
+    gallery.theme === "normal" ? 0 : 8;
 
   return (
     <div className="space-y-8">
@@ -402,6 +403,7 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           <option value="bohemian">Bohemian (7 slots)</option>
           <option value="scrapbook">Scrapbook (8 slots)</option>
           <option value="corkboard">Corkboard (11 slots)</option>
+          <option value="normal">Normal (Unlimited)</option>
         </select>
       </div>
 
@@ -433,6 +435,16 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           setGallery={setGallery}
           photoMap={photoMap}
           slotCount={slotCount}
+          onPhotoAdded={handlePhotoAdded}
+          onPhotoRemoved={handlePhotoRemoved}
+          onSwap={handleSwap}
+        />
+      )}
+      {gallery.theme === "normal" && (
+        <NormalEditor
+          gallery={gallery}
+          setGallery={setGallery}
+          photoMap={photoMap}
           onPhotoAdded={handlePhotoAdded}
           onPhotoRemoved={handlePhotoRemoved}
           onSwap={handleSwap}
@@ -742,6 +754,236 @@ function CorkBoardEditor({ gallery, setGallery, photoMap, slotCount = 11, onPhot
         </div>
       </div>
     </div>
+  );
+}
+
+function NormalEditor({ gallery, setGallery, onPhotoAdded, onPhotoRemoved }: EditorProps) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  
+  // Sort photos by position to ensure predictable order
+  const photos = [...gallery.photos].sort((a, b) => a.position - b.position);
+
+  async function handleUpload(file: File) {
+    setUploading(true);
+    setProgress(0);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+
+      const data: { url: string; error?: string } = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", (e) => {
+          if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
+        });
+        xhr.addEventListener("load", () => {
+          try {
+            const d = JSON.parse(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300) resolve(d);
+            else reject(new Error(d.error || "Upload failed"));
+          } catch { reject(new Error("Upload failed")); }
+        });
+        xhr.addEventListener("error", () => reject(new Error("Network error")));
+        xhr.open("POST", "/api/admin/upload");
+        xhr.send(fd);
+      });
+
+      // Calculate next position
+      const nextPos = photos.length > 0 ? Math.max(...photos.map(p => p.position)) + 1 : 0;
+
+      // Save to gallery
+      const res = await fetch("/api/admin/gallery-photo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ galleryId: gallery.id, position: nextPos, url: data.url, caption: "" }),
+      });
+      if (res.ok) {
+        const result = await res.json();
+        const newPhoto: Photo = {
+          id: result.photo?.id || `temp-${Date.now()}`,
+          url: data.url,
+          caption: "",
+          position: nextPos,
+        };
+        onPhotoAdded(nextPos, newPhoto);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUploading(false);
+      setProgress(0);
+    }
+  }
+
+  return (
+    <div className="mx-auto my-6 w-full max-w-6xl rounded-2xl bg-[#f9f7f4] p-6 shadow-sm border border-ink-100">
+      {/* Title */}
+      <div className="mb-6 text-center">
+        <EditableText
+          value={gallery.titleLine1}
+          onChange={(v) => setGallery((g) => ({ ...g, titleLine1: v }))}
+          onSave={() => {}}
+          placeholder="Click to add title line 1"
+          className="text-xl text-ink-500 font-medium"
+        />
+        <div className="mt-1">
+          <EditableText
+            value={gallery.titleLine2}
+            onChange={(v) => setGallery((g) => ({ ...g, titleLine2: v }))}
+            onSave={() => {}}
+            placeholder="Click to add title line 2"
+            className="text-3xl font-bold text-ink-900 sm:text-4xl"
+          />
+        </div>
+        <div className="mt-2">
+          <EditableText
+            value={gallery.subtitle}
+            onChange={(v) => setGallery((g) => ({ ...g, subtitle: v }))}
+            onSave={() => {}}
+            placeholder="Click to add description"
+            className="text-sm text-ink-500"
+          />
+        </div>
+      </div>
+
+      <div className="mb-6 flex justify-end">
+        <button
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          className="inline-flex items-center gap-2 rounded-lg bg-purple-100 px-4 py-2 text-sm font-semibold text-purple-700 hover:bg-purple-200 disabled:opacity-50"
+        >
+          {uploading ? <CyberLoader progress={progress} /> : <><Upload className="h-4 w-4" /> Add Photo</>}
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) { handleUpload(f); e.target.value = ""; }
+          }}
+        />
+      </div>
+
+      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+        {photos.map(photo => (
+          <NormalEditorPhotoCard 
+            key={photo.id} 
+            photo={photo} 
+            onPhotoRemoved={onPhotoRemoved}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function NormalEditorPhotoCard({ photo, onPhotoRemoved }: { photo: Photo, onPhotoRemoved: (pos: number, id: string) => void }) {
+  const [zoom, setZoom] = useState(photo.zoom || 1);
+  const [offsetX, setOffsetX] = useState(photo.offsetX || 0);
+  const [offsetY, setOffsetY] = useState(photo.offsetY || 0);
+  const [rotation, setRotation] = useState(photo.rotation || 0);
+  const [caption, setCaption] = useState(photo.caption || "");
+  const [editingCaption, setEditingCaption] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  async function handleRemove() {
+    await fetch("/api/admin/gallery-photo", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photoId: photo.id }),
+    });
+    onPhotoRemoved(photo.position, photo.id);
+  }
+
+  async function saveChanges() {
+    setSaving(true);
+    await fetch("/api/admin/gallery-photo", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photoId: photo.id, caption, zoom, offsetX, offsetY, rotation }),
+    });
+    setSaving(false);
+    setShowControls(false);
+    setEditingCaption(false);
+  }
+
+  return (
+    <figure className="mb-4 break-inside-avoid overflow-visible rounded-xl border border-ink-200 bg-white p-2 shadow-sm relative group">
+      <div className="relative w-full overflow-hidden rounded-lg bg-black/5">
+        <img
+          src={photo.url}
+          alt=""
+          className="w-full h-auto object-cover transition-transform"
+          style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%) rotate(${rotation}deg)` }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100 z-10">
+          <button onClick={() => setShowControls(v => !v)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow" title="Adjust">
+            <ZoomIn className="h-4 w-4" />
+          </button>
+          <button onClick={() => { setRotation(r => (r + 90) % 360); setShowControls(true); }} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-blue-600 shadow" title="Rotate 90°">
+            <RotateCw className="h-4 w-4" />
+          </button>
+          <button onClick={handleRemove} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-600 shadow" title="Remove">
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      
+      {showControls && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-11/12 max-w-sm rounded-lg bg-black/90 p-3 shadow-xl">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <ZoomOut className="h-4 w-4 text-white" />
+              <input type="range" min="1" max="3" step="0.05" value={zoom} onChange={e => setZoom(parseFloat(e.target.value))} className="flex-1 accent-purple-400" />
+              <ZoomIn className="h-4 w-4 text-white" />
+            </div>
+            <div className="flex items-center gap-2">
+              <RotateCw className="h-4 w-4 text-white" />
+              <input type="range" min="-30" max="30" step="1" value={rotation > 180 ? rotation - 360 : rotation} onChange={e => setRotation(parseFloat(e.target.value))} className="flex-1 accent-blue-400" />
+              <span className="text-xs text-white w-6 text-right">{rotation}°</span>
+            </div>
+            <div className="flex items-center justify-between text-white">
+              <div className="flex gap-1">
+                <button onClick={() => setOffsetX(x => x - 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">←</button>
+                <button onClick={() => setOffsetX(x => x + 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">→</button>
+                <button onClick={() => setOffsetY(y => y - 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">↑</button>
+                <button onClick={() => setOffsetY(y => y + 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">↓</button>
+              </div>
+              <button onClick={saveChanges} disabled={saving} className="text-sm font-bold text-purple-400 hover:text-purple-300">
+                {saving ? "..." : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingCaption ? (
+        <div className="mt-2 flex gap-1 px-1">
+          <input
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            className="w-full rounded border border-ink-200 px-2 py-1 text-sm"
+            autoFocus
+            onKeyDown={(e) => e.key === "Enter" && saveChanges()}
+          />
+          <button onClick={saveChanges} disabled={saving} className="text-purple-600 p-1">
+            <Save className="h-4 w-4" />
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setEditingCaption(true)}
+          className="mt-2 block w-full text-center text-sm text-ink-500 hover:text-purple-600 px-1"
+        >
+          {photo.caption || "Add caption..."}
+          <Pencil className="ml-1.5 inline h-3.5 w-3.5" />
+        </button>
+      )}
+    </figure>
   );
 }
 
