@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
 import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
+import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getEvent } from "@/lib/queries";
 import { formatDateRange, formatDateTime } from "@/lib/utils";
 
@@ -59,13 +60,13 @@ export default async function EventDetail({
           </div>
 
           {e.poster && (
-            <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-3xl border border-ink-100">
-              <Image
+            <div className="mt-6">
+              <ExpandableImage
                 src={e.poster}
                 alt={e.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
+                caption={e.title}
+                aspectRatio="aspect-[16/9]"
+                objectFit="contain"
                 priority
               />
             </div>

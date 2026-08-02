@@ -4,6 +4,7 @@ import Image from "next/image";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
+import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getAchievement } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 
@@ -49,13 +50,13 @@ export default async function AchievementDetail({
           </div>
 
           {a.coverImage && (
-            <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-3xl border border-ink-100">
-              <Image
+            <div className="mt-6">
+              <ExpandableImage
                 src={a.coverImage}
                 alt={a.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
+                caption={a.title}
+                aspectRatio="aspect-[16/9]"
+                objectFit="contain"
                 priority
               />
             </div>

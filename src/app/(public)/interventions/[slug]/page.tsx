@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Tag, Pin } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container } from "@/components/ui/primitives";
 import { PdfPreviewButton } from "@/components/ui/pdf-preview-button";
+import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getIntervention } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 
@@ -78,15 +79,16 @@ export default async function InterventionDetailPage({
                 )}
               </div>
 
-              {/* Cover Image */}
+              {/* Cover Image with Lightbox Zoom */}
               {item.image && (
-                <div className="relative mb-6 sm:mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black/40 border border-white/10">
-                  <Image
+                <div className="mb-6 sm:mb-8">
+                  <ExpandableImage
                     src={item.image}
                     alt={item.title}
-                    fill
+                    caption={item.title}
                     priority
-                    className="object-contain"
+                    aspectRatio="aspect-[16/9]"
+                    objectFit="contain"
                   />
                 </div>
               )}

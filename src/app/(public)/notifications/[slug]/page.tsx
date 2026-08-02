@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { PdfPreviewButton } from "@/components/ui/pdf-preview-button";
+import { ExpandableImage } from "@/components/ui/expandable-image";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container } from "@/components/ui/primitives";
 import { getNotification } from "@/lib/queries";
@@ -42,13 +43,13 @@ export default async function NotificationDetail({
           <time className="text-sm text-ink-400">{formatDate(n.date)}</time>
 
           {n.image && (
-            <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-3xl border border-ink-100">
-              <Image
+            <div className="mt-6">
+              <ExpandableImage
                 src={n.image}
                 alt={n.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
+                caption={n.title}
+                aspectRatio="aspect-[16/9]"
+                objectFit="contain"
                 priority
               />
             </div>
