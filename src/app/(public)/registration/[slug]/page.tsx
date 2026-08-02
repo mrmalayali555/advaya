@@ -4,19 +4,50 @@ import RegistrationForm from "./registration-form";
 import { AlertCircleIcon } from "lucide-react";
 import { Metadata } from "next";
 import { formatDateTime } from "@/lib/utils";
+import { SITE } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const form = await db.registrationForm.findUnique({
     where: { slug },
-    select: { title: true, description: true }
+    select: { title: true, description: true },
   });
 
   if (!form) return { title: "Not Found" };
 
+  const title = `${form.title} — Registration | ADVAYA TDMC Alappuzha`;
+  const description = form.description?.slice(0, 160) || `Register online for ${form.title} at ADVAYA — Government TD Medical College Alappuzha.`;
+  const url = `${SITE.url}/registration/${slug}`;
+
   return {
-    title: `${form.title} - Registration | ADVAYA`,
-    description: form.description || "Register for this event.",
+    title,
+    description,
+    keywords: [
+      form.title,
+      `${form.title} registration`,
+      "Advaya Fest",
+      "Advaya Registration",
+      "ADVAYA TDMC Alappuzha",
+      "Government TD Medical College Alappuzha",
+      "TDMC Alappuzha Events",
+    ],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE.name,
+      type: "website",
+      images: [{ url: "/og.png" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og.png"],
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
 

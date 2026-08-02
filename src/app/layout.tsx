@@ -38,15 +38,26 @@ export const metadata: Metadata = {
   applicationName: SITE.name,
   keywords: [
     "Advaya",
-    "Alappuzha Medical College",
-    "College Union",
+    "Advaya Fest",
+    "Advaya TDMC",
+    "Advaya Alappuzha",
+    "TDMC Alappuzha",
+    "TD Medical College Alappuzha",
+    "Government TD Medical College Alappuzha",
+    "TDMC College Union",
+    "Alappuzha Medical College Union",
     "Medical College Union",
     "student union",
-    "achievements",
-    "events",
-    "notifications",
+    "TDMC Arts Fest",
+    "TDMC Sports Fest",
+    "Kerala Medical College Union",
+    "Kerala Medical College Fest",
+    "advaya college",
+    "advaya tdmc alappuzha",
+    "college union events",
+    "medical college fests kerala",
   ],
-  authors: [{ name: SITE.name }],
+  authors: [{ name: SITE.name, url: SITE.url }],
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -54,7 +65,7 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: SITE.name }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: `${SITE.name} — TDMC Alappuzha` }],
   },
   twitter: {
     card: "summary_large_image",
@@ -62,7 +73,17 @@ export const metadata: Metadata = {
     description: SITE.description,
     images: ["/og.png"],
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   alternates: { canonical: SITE.url },
   icons: { icon: "/icon.svg" },
   generator: "Next.js",
@@ -80,7 +101,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-
 import NextTopLoader from "nextjs-toploader";
 
 export default function RootLayout({
@@ -88,20 +108,48 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "GovernmentBenefitsService",
-    "name": "ADVAYA College Union",
-    "provider": {
-      "@type": "EducationalOrganization",
-      "name": "Government TD Medical College Alappuzha",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Alappuzha",
-        "addressRegion": "Kerala",
-        "postalCode": "688005",
-        "addressCountry": "IN"
+    "@graph": [
+      {
+        "@type": "CollegeOrUniversity",
+        "@id": "https://advaya.college/#college",
+        "name": "Government TD Medical College Alappuzha",
+        "alternateName": "TDMC Alappuzha",
+        "url": "https://advaya.college",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Alappuzha",
+          "addressRegion": "Kerala",
+          "postalCode": "688005",
+          "addressCountry": "IN"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://advaya.college/#organization",
+        "name": "ADVAYA College Union",
+        "alternateName": "ADVAYA — TDMC Alappuzha College Union",
+        "url": "https://advaya.college",
+        "logo": "https://advaya.college/icon.svg",
+        "parentOrganization": {
+          "@id": "https://advaya.college/#college"
+        },
+        "description": "Official student union of Government TD Medical College Alappuzha, organising fests, cultural events, sports tournaments, and student advocacy."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://advaya.college/#website",
+        "url": "https://advaya.college",
+        "name": "ADVAYA College Union — TDMC Alappuzha",
+        "publisher": {
+          "@id": "https://advaya.college/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://advaya.college/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
       }
-    },
-    "url": "https://advaya.college"
+    ]
   };
 
   return (

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, Phone, Siren, Target, Eye, Quote } from "lucide-react";
 import { Hero } from "@/components/sections/hero";
@@ -24,6 +25,30 @@ import {
   getPage,
   getMarquee,
 } from "@/lib/queries";
+
+export const metadata: Metadata = {
+  title: "ADVAYA · College Union — Government TD Medical College Alappuzha",
+  description:
+    "Official student union website of Government TD Medical College Alappuzha. Discover college fests, cultural events, sports tournaments, student support, and academic achievements.",
+  keywords: [
+    "Advaya",
+    "Advaya Fest",
+    "Advaya TDMC",
+    "Advaya Alappuzha",
+    "TDMC Alappuzha",
+    "TD Medical College Alappuzha",
+    "Government TD Medical College Alappuzha",
+    "TDMC College Union",
+    "Alappuzha Medical College Union",
+    "TDMC Arts Fest",
+    "TDMC Sports Fest",
+    "Kerala Medical College Union",
+    "advaya.college",
+  ],
+  alternates: {
+    canonical: SITE.url,
+  },
+};
 
 export default async function HomePage() {
   const [hero, stats, notifications, achievements, events, emergency, about, marquee, carouselInterval] =

@@ -9,6 +9,7 @@ import { PdfPreviewButton } from "@/components/ui/pdf-preview-button";
 import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getIntervention } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
+import { SITE } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -18,11 +19,43 @@ export async function generateMetadata({
   const { slug } = await params;
   const item = await getIntervention(slug);
   if (!item) return { title: "Intervention Not Found" };
+
+  const title = `${item.title} · ADVAYA TDMC Alappuzha`;
+  const description = item.description.slice(0, 160);
+  const url = `${SITE.url}/interventions/${slug}`;
+  const images = item.image ? [{ url: item.image }] : [{ url: "/og.png" }];
+
   return {
-    title: item.title,
-    description: item.description,
+    title,
+    description,
+    keywords: [
+      item.title,
+      "Advaya Interventions",
+      "ADVAYA TDMC Alappuzha",
+      "Government TD Medical College Alappuzha",
+      "TDMC Alappuzha Union",
+      item.category || "Student Representation",
+    ],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE.name,
+      type: "article",
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: item.image ? [item.image] : ["/og.png"],
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
+
 
 export default async function InterventionDetailPage({
   params,

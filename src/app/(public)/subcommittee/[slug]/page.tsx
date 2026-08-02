@@ -9,6 +9,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { EventCard } from "@/components/cards/content-cards";
 import { EmptyState } from "@/components/ui/empty-state";
 import { getCommittee, getCommitteeEvents } from "@/lib/queries";
+import { SITE } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -18,9 +19,44 @@ export async function generateMetadata({
   const { slug } = await params;
   const committee = await getCommittee(slug);
   if (!committee) return { title: "Committee Not Found" };
+
+  const title = `${committee.name} · ADVAYA Fest & Subcommittee — TDMC Alappuzha`;
+  const description =
+    committee.description?.slice(0, 160) ||
+    `${committee.name} subcommittee of ADVAYA College Union — Government TD Medical College Alappuzha.`;
+  const url = `${SITE.url}/subcommittee/${slug}`;
+
   return {
-    title: `${committee.name} — Subcommittee`,
-    description: committee.description || `${committee.name} subcommittee of ADVAYA union.`,
+    title,
+    description,
+    keywords: [
+      committee.name,
+      `${committee.name} TDMC`,
+      `${committee.name} Alappuzha`,
+      "Advaya Fest",
+      "Advaya",
+      "ADVAYA TDMC Alappuzha",
+      "Government TD Medical College Alappuzha",
+      "TDMC Alappuzha Subcommittees",
+      "medical college union kerala",
+    ],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE.name,
+      type: "website",
+      images: [{ url: "/og.png" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og.png"],
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
 
@@ -35,8 +71,53 @@ export default async function SubcommitteeDetailPage({
 
   const events = await getCommitteeEvents(committee.id);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE.url}/subcommittee/${slug}#org`,
+        "name": committee.name,
+        "description": committee.description || `${committee.name} of ADVAYA College Union TDMC Alappuzha`,
+        "url": `${SITE.url}/subcommittee/${slug}`,
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "ADVAYA College Union — TDMC Alappuzha",
+          "url": SITE.url,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "ADVAYA Home",
+            "item": SITE.url,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Subcommittees",
+            "item": `${SITE.url}/subcommittee`,
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": committee.name,
+            "item": `${SITE.url}/subcommittee/${slug}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PageHeader
         eyebrow="Subcommittee"
         title={committee.name}

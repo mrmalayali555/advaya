@@ -10,6 +10,7 @@ import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
 import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getEvent } from "@/lib/queries";
 import { formatDateRange, formatDateTime } from "@/lib/utils";
+import { SITE } from "@/lib/site";
 
 const statusTone: Record<string, "info" | "success" | "danger"> = {
   upcoming: "info",
@@ -25,7 +26,44 @@ export async function generateMetadata({
   const { slug } = await params;
   const e = await getEvent(slug);
   if (!e) return { title: "Event not found" };
-  return { title: e.title, description: e.description.slice(0, 160) };
+
+  const title = `${e.title} · ADVAYA Fest & Event — TDMC Alappuzha`;
+  const description = e.description.slice(0, 160);
+  const url = `${SITE.url}/events/${slug}`;
+  const images = e.poster ? [{ url: e.poster }] : [{ url: "/og.png" }];
+
+  return {
+    title,
+    description,
+    keywords: [
+      e.title,
+      "Advaya Fest",
+      "Advaya",
+      "ADVAYA TDMC Alappuzha",
+      "Government TD Medical College Alappuzha",
+      "TDMC Alappuzha Events",
+      e.venue || "Alappuzha",
+      "college fest kerala",
+      "medical college fest",
+    ],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE.name,
+      type: "article",
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: e.poster ? [e.poster] : ["/og.png"],
+    },
+    alternates: {
+      canonical: url,
+    },
+  };
 }
 
 export default async function EventDetail({
@@ -37,8 +75,78 @@ export default async function EventDetail({
   const e = await getEvent(slug);
   if (!e) notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Event",
+        "@id": `${SITE.url}/events/${slug}#event`,
+        "name": e.title,
+        "description": e.description,
+        "startDate": e.date ? new Date(e.date).toISOString() : undefined,
+        "endDate": e.endDate ? new Date(e.endDate).toISOString() : undefined,
+        "eventStatus":
+          e.status === "cancelled"
+            ? "https://schema.org/EventCancelled"
+            : "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {
+          "@type": "Place",
+          "name": e.venue || "Government TD Medical College Alappuzha",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Alappuzha",
+            "addressRegion": "Kerala",
+            "postalCode": "688005",
+            "addressCountry": "IN",
+          },
+        },
+        "image": e.poster ? [e.poster] : [`${SITE.url}/og.png`],
+        "organizer": {
+          "@type": "Organization",
+          "name": e.committee ? e.committee.name : "ADVAYA College Union TDMC Alappuzha",
+          "url": SITE.url,
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": `${SITE.url}/events/${slug}`,
+          "price": "0",
+          "priceCurrency": "INR",
+          "availability": "https://schema.org/InStock",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "ADVAYA Home",
+            "item": SITE.url,
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Events & Fests",
+            "item": `${SITE.url}/events`,
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": e.title,
+            "item": `${SITE.url}/events/${slug}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PageHeader
         eyebrow="Event"
         title={e.title}

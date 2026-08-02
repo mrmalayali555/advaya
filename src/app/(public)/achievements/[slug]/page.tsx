@@ -7,6 +7,7 @@ import { MediaGallery } from "@/components/cards/media-gallery";
 import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getAchievement } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
+import { SITE } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -16,12 +17,43 @@ export async function generateMetadata({
   const { slug } = await params;
   const a = await getAchievement(slug);
   if (!a) return { title: "Achievement not found" };
+
+  const title = `${a.title} · ADVAYA TDMC Alappuzha`;
+  const description = a.description.slice(0, 160);
+  const url = `${SITE.url}/achievements/${slug}`;
+  const images = a.coverImage ? [{ url: a.coverImage }] : [{ url: "/og.png" }];
+
   return {
-    title: a.title,
-    description: a.description.slice(0, 160),
-    openGraph: a.coverImage ? { images: [a.coverImage] } : undefined,
+    title,
+    description,
+    keywords: [
+      a.title,
+      "Advaya Achievements",
+      "ADVAYA TDMC Alappuzha",
+      "Government TD Medical College Alappuzha",
+      "TDMC Alappuzha Union",
+      a.category || "Student Achievement",
+    ],
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE.name,
+      type: "article",
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: a.coverImage ? [a.coverImage] : ["/og.png"],
+    },
+    alternates: {
+      canonical: url,
+    },
   };
 }
+
 
 export default async function AchievementDetail({
   params,
