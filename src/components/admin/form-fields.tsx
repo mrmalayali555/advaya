@@ -20,6 +20,7 @@ export function Field({
   type = "text",
   required,
   hint,
+  list,
 }: {
   label: string;
   name: string;
@@ -28,6 +29,7 @@ export function Field({
   type?: string;
   required?: boolean;
   hint?: string;
+  list?: string;
 }) {
   return (
     <div>
@@ -41,6 +43,7 @@ export function Field({
         defaultValue={defaultValue}
         placeholder={placeholder}
         required={required}
+        list={list}
         step={type === "number" ? "any" : undefined}
         className={inputCls}
       />

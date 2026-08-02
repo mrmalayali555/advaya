@@ -33,10 +33,61 @@ export async function updateEmergency(id: string, formData: FormData) {
   redirect("/adminahnuok/emergency");
 }
 
+export async function moveEmergency(id: string, direction: "up" | "down") {
+  await requireAdmin();
+  const contacts = await db.emergencyContact.findMany({
+    orderBy: [{ order: "asc" }, { id: "asc" }],
+  });
+  const index = contacts.findIndex((c) => c.id === id);
+  if (index === -1) return;
+
+  const targetIndex = direction === "up" ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= contacts.length) return;
+
+  const current = contacts[index];
+  const target = contacts[targetIndex];
+
+  // If their orders are equal or close, normalize sequential order then swap
+  let currentNewOrder = target.order;
+  let targetNewOrder = current.order;
+
+  if (currentNewOrder === targetNewOrder) {
+    if (direction === "up") {
+      currentNewOrder = Math.max(0, target.order - 1);
+    } else {
+      currentNewOrder = target.order + 1;
+    }
+  }
+
+  await db.emergencyContact.update({
+    where: { id: current.id },
+    data: { order: currentNewOrder },
+  });
+  await db.emergencyContact.update({
+    where: { id: target.id },
+    data: { order: targetNewOrder },
+  });
+
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/emergency");
+}
+
+export async function setEmergencyOrder(id: string, order: number) {
+  await requireAdmin();
+  await db.emergencyContact.update({
+    where: { id },
+    data: { order },
+  });
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/emergency");
+}
+
 export async function deleteEmergency(id: string) {
   await requireAdmin();
   await db.emergencyContact.delete({ where: { id } });
   revalidatePath("/adminahnuok/emergency");
   revalidatePath("/emergency");
 }
+
+
 

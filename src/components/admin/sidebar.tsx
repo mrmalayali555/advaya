@@ -44,9 +44,8 @@ const NAV = [
   {
     section: "Modules",
     items: [
-      { href: "/adminahnuok/finance", label: "Finance", icon: Wallet },
-      { href: "/adminahnuok/complaints", label: "Suggestions", icon: MessageSquareWarning },
       { href: "/adminahnuok/emergency", label: "Emergency", icon: Siren },
+      { href: "/adminahnuok/complaints", label: "Suggestions", icon: MessageSquareWarning },
       { href: "/adminahnuok/committees", label: "Subcommittees", icon: Users },
       { href: "/adminahnuok/pages", label: "Pages (About/UG/PG)", icon: GraduationCap },
     ],

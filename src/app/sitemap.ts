@@ -8,7 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/achievements',
     '/events',
     '/notifications',
-    '/finance',
     '/subcommittee',
     '/emergency',
     '/contact',

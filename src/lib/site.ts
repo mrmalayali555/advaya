@@ -31,7 +31,6 @@ export const NAV_LINKS = [
   { label: "Achievements", href: "/achievements" },
   { label: "Events", href: "/events" },
   { label: "Notifications", href: "/notifications" },
-  { label: "Finance", href: "/finance" },
   { label: "Subcommittee", href: "/subcommittee" },
   {
     label: "Academics",
@@ -53,7 +52,6 @@ export const QUICK_LINKS = [
   { label: "Events", href: "/events", icon: "CalendarDays" },
   { label: "Achievements", href: "/achievements", icon: "Trophy" },
   { label: "Drop Suggestion", href: "/complaints", icon: "MessageSquareWarning" },
-  { label: "Finance", href: "/finance", icon: "Wallet" },
   { label: "Emergency", href: "/emergency", icon: "Siren" },
   { label: "Subcommittee", href: "/subcommittee", icon: "Users" },
   { label: "Contact", href: "/contact", icon: "Mail" },
