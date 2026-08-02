@@ -178,14 +178,13 @@ export async function getHomepageEmergencyContacts() {
   const sectionEnabled = await getSetting("homepage_emergency_section", { enabled: true });
   if (!sectionEnabled.enabled) return [];
 
-  // Fetch contacts marked for homepage
+  // Fetch contacts marked for homepage (no take limit so all checked items appear)
   const homepage = await db.emergencyContact.findMany({
     where: { active: true, showOnHomepage: true },
     orderBy: [{ order: "asc" }, { category: "asc" }],
-    take: 6,
   });
 
-  // If admin hasn't marked any, fall back to the first 6 active
+  // If admin hasn't marked any, fall back to Emergency Services category or first active
   if (homepage.length === 0) {
     return db.emergencyContact.findMany({
       where: { active: true },

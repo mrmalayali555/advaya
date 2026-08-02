@@ -230,12 +230,12 @@ async function main() {
   await db.emergencyContact.deleteMany();
   await db.emergencyContact.createMany({
     data: [
-      { category: "Emergency Services", name: "National Emergency Number", phone: "112", description: "All-in-one national emergency helpline", order: 1, active: true },
-      { category: "Emergency Services", name: "Police Helpline", phone: "100", description: "Police control room", order: 2, active: true },
-      { category: "Emergency Services", name: "Fire Force", phone: "101", description: "Fire and rescue control room", order: 3, active: true },
-      { category: "Emergency Services", name: "Ambulance / Disaster Management", phone: "102, 108", description: "Emergency medical transport & disaster response", order: 4, active: true },
-      { category: "Emergency Services", name: "Woman Helpline", phone: "1091", description: "24x7 women safety and emergency helpline", order: 5, active: true },
-      { category: "Emergency Services", name: "KSEB Electricity", phone: "9496010101", description: "Kerala State Electricity Board emergency helpline", order: 6, active: true },
+      { category: "Emergency Services", name: "National Emergency Number", phone: "112", description: "All-in-one national emergency helpline", order: 1, active: true, showOnHomepage: true },
+      { category: "Emergency Services", name: "Police Helpline", phone: "100", description: "Police control room", order: 2, active: true, showOnHomepage: true },
+      { category: "Emergency Services", name: "Fire Force", phone: "101", description: "Fire and rescue control room", order: 3, active: true, showOnHomepage: true },
+      { category: "Emergency Services", name: "Ambulance / Disaster Management", phone: "102, 108", description: "Emergency medical transport & disaster response", order: 4, active: true, showOnHomepage: true },
+      { category: "Emergency Services", name: "Woman Helpline", phone: "1091", description: "24x7 women safety and emergency helpline", order: 5, active: true, showOnHomepage: true },
+      { category: "Emergency Services", name: "KSEB Electricity", phone: "9496010101", description: "Kerala State Electricity Board emergency helpline", order: 6, active: true, showOnHomepage: true },
       { category: "College & Hospital", name: "College Contact Number", phone: "0477 2282611", description: "Govt T.D. Medical College Alappuzha official office", order: 10, active: true },
       { category: "College & Hospital", name: "Hospital Help Desk", phone: "0477 2282367", description: "T.D. Medical College Hospital help desk & reception", order: 11, active: true },
       { category: "College & Hospital", name: "Hospital Ambulance", phone: "80864 13064", description: "T.D. Medical College Hospital 24x7 ambulance", order: 12, active: true },

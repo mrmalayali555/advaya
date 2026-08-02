@@ -11,6 +11,7 @@ const EMERGENCY_CONTACTS = [
     description: "All-in-one national emergency helpline",
     order: 1,
     active: true,
+    showOnHomepage: true,
   },
   {
     category: "Emergency Services",
@@ -19,6 +20,7 @@ const EMERGENCY_CONTACTS = [
     description: "Police control room",
     order: 2,
     active: true,
+    showOnHomepage: true,
   },
   {
     category: "Emergency Services",
@@ -27,6 +29,7 @@ const EMERGENCY_CONTACTS = [
     description: "Fire and rescue control room",
     order: 3,
     active: true,
+    showOnHomepage: true,
   },
   {
     category: "Emergency Services",
@@ -35,6 +38,7 @@ const EMERGENCY_CONTACTS = [
     description: "Emergency medical transport & disaster response",
     order: 4,
     active: true,
+    showOnHomepage: true,
   },
   {
     category: "Emergency Services",
@@ -43,6 +47,7 @@ const EMERGENCY_CONTACTS = [
     description: "24x7 women safety and emergency helpline",
     order: 5,
     active: true,
+    showOnHomepage: true,
   },
   {
     category: "Emergency Services",
@@ -51,6 +56,7 @@ const EMERGENCY_CONTACTS = [
     description: "Kerala State Electricity Board emergency helpline",
     order: 6,
     active: true,
+    showOnHomepage: true,
   },
 
   // --- Category: College & Hospital ---
