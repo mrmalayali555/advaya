@@ -173,7 +173,7 @@ export async function getEmergencyPdf(): Promise<{ url: string; name: string } |
   // Default official copy fallback
   return {
     url: "/documents/emergency-registry.pdf",
-    name: "Emergency Registry - GEC Wayanad.pdf",
+    name: "Emergency Directory - TDMC Alappuzha.pdf",
   };
 }
 

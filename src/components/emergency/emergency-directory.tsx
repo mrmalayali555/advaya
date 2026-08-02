@@ -322,7 +322,7 @@ export function EmergencyDirectory({
       {/* Built-in PDF Viewer Modal */}
       {isPdfModalOpen && pdfData && (
         <PdfViewerModal
-          title="Emergency Registry — GEC Wayanad"
+          title="Emergency Directory — TDMC Alappuzha"
           pdfUrl={pdfData.url}
           filename={pdfData.name}
           onClose={() => setIsPdfModalOpen(false)}
