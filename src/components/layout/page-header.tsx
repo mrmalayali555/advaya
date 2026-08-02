@@ -18,7 +18,7 @@ export function PageHeader({
   const pageKey = breadcrumb?.[0]?.label?.toLowerCase() || "page";
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 bg-[#050208] pt-28 pb-14 sm:pt-36 sm:pb-16">
+    <section className="relative overflow-hidden border-b border-white/5 bg-[#050208] pt-32 pb-12 sm:pt-36 sm:pb-16">
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-70" />
       <div className="pointer-events-none absolute -right-24 -top-10 h-72 w-72 rounded-full bg-purple-300/20 blur-[100px]" />
       <Container className="relative">

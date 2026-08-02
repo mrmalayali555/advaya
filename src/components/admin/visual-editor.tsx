@@ -155,17 +155,17 @@ export function VisualEditorProvider({
       
       {/* Floating Toolbar with Visual Edit Mode, Undo, and Redo */}
       {isAdminUser && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-ink-950/90 backdrop-blur-lg p-2 rounded-full border border-purple-500/30 shadow-2xl">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-1.5 sm:gap-2 bg-ink-950/90 backdrop-blur-lg p-1.5 sm:p-2 rounded-full border border-purple-500/30 shadow-2xl">
           <button
             onClick={() => setEditMode(!isEditMode)}
-            className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-300 ${
+            className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 text-[11px] sm:text-xs font-bold transition-all duration-300 ${
               isEditMode 
                 ? "bg-amber-500 text-white animate-pulse" 
                 : "bg-purple-600 text-white hover:bg-purple-700"
             }`}
           >
-            <PenTool className="h-3.5 w-3.5" />
-            {isEditMode ? "Exit Edit Mode" : "Visual Edit Mode"}
+            <PenTool className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <span>{isEditMode ? "Exit Edit" : "Visual Edit"}</span>
           </button>
 
           {isEditMode && (
