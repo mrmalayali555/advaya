@@ -9,6 +9,7 @@ import {
   Heading1, Heading2, Palette, Type, RotateCw,
 } from "lucide-react";
 import { CyberLoader } from "@/components/ui/cyber-loader";
+import { GalleryPhotoImg } from "@/components/ui/gallery-photo-img";
 
 /* ─── Types ─── */
 type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number; rotation?: number };
@@ -150,16 +151,16 @@ function PhotoSlot({
   if (displayPhoto) {
     return (
       <div className="relative">
-        <div className="relative overflow-hidden bg-ink-100" style={{ aspectRatio }}>
-          <Image
-            src={displayPhoto.url}
-            alt={displayPhoto.caption || ""}
-            fill
-            sizes="200px"
-            className="object-cover transition-transform duration-200"
-            style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%) rotate(${rotation}deg)` }}
-          />
-          <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100">
+        <GalleryPhotoImg
+          src={displayPhoto.url}
+          alt={displayPhoto.caption || ""}
+          aspectRatio={aspectRatio}
+          zoom={zoom}
+          offsetX={offsetX}
+          offsetY={offsetY}
+          rotation={rotation}
+        >
+          <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100 z-10">
             <button
               onClick={() => setShowZoom((v) => !v)}
               className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow hover:scale-105"
@@ -193,7 +194,7 @@ function PhotoSlot({
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
-        </div>
+        </GalleryPhotoImg>
         {/* Transform controls positioned below image so it does not overlay or cover buttons */}
         {showZoom && (
           <div className="mt-2 flex flex-col gap-2 rounded-lg bg-ink-900 p-2.5 text-white shadow-md">
@@ -944,13 +945,15 @@ function NormalEditorPhotoCard({ photo, onPhotoRemoved }: { photo: Photo, onPhot
 
   return (
     <figure className="mb-4 break-inside-avoid overflow-visible rounded-xl border border-ink-200 bg-white p-2 shadow-sm relative group">
-      <div className="relative w-full overflow-hidden rounded-lg bg-black/5">
-        <img
-          src={photo.url}
-          alt=""
-          className="w-full h-auto object-cover transition-transform"
-          style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%) rotate(${rotation}deg)` }}
-        />
+      <GalleryPhotoImg
+        src={photo.url}
+        alt=""
+        zoom={zoom}
+        offsetX={offsetX}
+        offsetY={offsetY}
+        rotation={rotation}
+        className="rounded-lg"
+      >
         <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100 z-10">
           <button
             onClick={() => setShowControls(v => !v)}
@@ -984,7 +987,7 @@ function NormalEditorPhotoCard({ photo, onPhotoRemoved }: { photo: Photo, onPhot
             <Trash2 className="h-4 w-4" />
           </button>
         </div>
-      </div>
+      </GalleryPhotoImg>
       
       {showControls && (
         <div className="mt-2 w-full rounded-xl bg-ink-900 p-3 text-white shadow-md">

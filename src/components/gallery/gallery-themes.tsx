@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { GalleryLightbox } from "./gallery-lightbox";
+import { GalleryPhotoImg } from "@/components/ui/gallery-photo-img";
 
 /* ─── Types ─── */
 type Photo = { id: string; url: string; caption: string; position: number; zoom?: number; offsetX?: number; offsetY?: number; rotation?: number; };
@@ -35,16 +36,16 @@ function Polaroid({
     <figure data-photo-id={photo.id} className={`group relative bg-white p-2 pb-8 shadow-[2px_4px_16px_rgba(0,0,0,0.08)] transition-all duration-300 hover:scale-105 hover:shadow-[4px_8px_32px_rgba(0,0,0,0.15)] hover:z-20 ${className}`}
       style={{ transform: `rotate(${rotate})` }}
     >
-      <div className={`relative overflow-hidden bg-ink-100 ${imgClassName}`}>
-        <Image
-          src={photo.url}
-          alt={photo.caption || "Gallery photo"}
-          fill
-          sizes="200px"
-          className="object-cover transition-transform"
-          style={{ transform: `scale(${photo.zoom || 1}) translate(${photo.offsetX || 0}%, ${photo.offsetY || 0}%)` }}
-        />
-      </div>
+      <GalleryPhotoImg
+        src={photo.url}
+        alt={photo.caption || "Gallery photo"}
+        aspectRatio="3/4"
+        zoom={photo.zoom || 1}
+        offsetX={photo.offsetX || 0}
+        offsetY={photo.offsetY || 0}
+        rotation={photo.rotation || 0}
+        className={imgClassName}
+      />
       {photo.caption && (
         <figcaption
           className={`mt-2 text-center text-sm text-ink-600 ${captionFont}`}
@@ -108,15 +109,16 @@ export function BohemianGallery({ gallery }: { gallery: GalleryData }) {
               }}
             >
               <figure data-photo-id={photo.id} className="group glass-card bg-surface/50 p-2 pb-8 sm:p-3 sm:pb-12 shadow-[2px_3px_10px_rgba(0,0,0,0.2)] transition-all duration-300 hover:scale-110 hover:shadow-[4px_8px_24px_rgba(120,0,255,0.25)] hover:z-20">
-                <div className="relative aspect-[3/4] overflow-hidden bg-black/20 rounded-sm">
-                  <Image
-                    src={photo.url}
-                    alt={photo.caption || ""}
-                    fill
-                    sizes="200px"
-                    className="object-cover"
-                  />
-                </div>
+                <GalleryPhotoImg
+                  src={photo.url}
+                  alt={photo.caption || ""}
+                  aspectRatio="3/4"
+                  zoom={photo.zoom || 1}
+                  offsetX={photo.offsetX || 0}
+                  offsetY={photo.offsetY || 0}
+                  rotation={photo.rotation || 0}
+                  className="rounded-sm"
+                />
                 {photo.caption && (
                   <figcaption
                     className="mt-3 text-center text-sm text-on-surface-variant"
@@ -208,15 +210,16 @@ export function ScrapbookGallery({ gallery }: { gallery: GalleryData }) {
               />
 
               <figure data-photo-id={photo.id} className="glass-card bg-surface/50 p-2 pb-7 shadow-[2px_3px_12px_rgba(0,0,0,0.4)]">
-                <div className="relative aspect-square overflow-hidden bg-black/20 rounded-sm">
-                  <Image
-                    src={photo.url}
-                    alt={photo.caption || ""}
-                    fill
-                    sizes="(max-width: 640px) 50vw, 25vw"
-                    className="object-cover"
-                  />
-                </div>
+                <GalleryPhotoImg
+                  src={photo.url}
+                  alt={photo.caption || ""}
+                  aspectRatio="1/1"
+                  zoom={photo.zoom || 1}
+                  offsetX={photo.offsetX || 0}
+                  offsetY={photo.offsetY || 0}
+                  rotation={photo.rotation || 0}
+                  className="rounded-sm"
+                />
                 {photo.caption && (
                   <figcaption
                     className="mt-2 text-center text-sm text-on-surface-variant"
@@ -291,15 +294,16 @@ export function CorkBoardGallery({ gallery }: { gallery: GalleryData }) {
                 fontSize: "15px",
               }}
             >
-              <div className="relative h-[150px] w-auto overflow-hidden">
-                <Image
-                  src={photo.url}
-                  alt={photo.caption || ""}
-                  width={200}
-                  height={150}
-                  className="h-[150px] w-auto object-cover"
-                />
-              </div>
+              <GalleryPhotoImg
+                src={photo.url}
+                alt={photo.caption || ""}
+                aspectRatio="4/3"
+                zoom={photo.zoom || 1}
+                offsetX={photo.offsetX || 0}
+                offsetY={photo.offsetY || 0}
+                rotation={photo.rotation || 0}
+                className="h-[150px] w-[200px]"
+              />
               {photo.caption && (
                 <figcaption className="mt-1 text-ink-700">
                   {photo.caption}
@@ -350,17 +354,15 @@ export function NormalGallery({ gallery }: { gallery: GalleryData }) {
             data-photo-id={photo.id}
             className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-outline-variant/30 bg-surface/50 p-2 shadow-sm transition-all duration-300 hover:shadow-md hover:border-outline-variant glass-card group"
           >
-            <div className="relative w-full overflow-hidden rounded-lg bg-black/5">
-              <img
-                src={photo.url}
-                alt={photo.caption || "Gallery photo"}
-                className="w-full h-auto object-cover transition-transform"
-                style={{
-                  transform: `scale(${photo.zoom || 1}) translate(${photo.offsetX || 0}%, ${photo.offsetY || 0}%) rotate(${photo.rotation || 0}deg)`,
-                }}
-                loading="lazy"
-              />
-            </div>
+            <GalleryPhotoImg
+              src={photo.url}
+              alt={photo.caption || "Gallery photo"}
+              zoom={photo.zoom || 1}
+              offsetX={photo.offsetX || 0}
+              offsetY={photo.offsetY || 0}
+              rotation={photo.rotation || 0}
+              className="rounded-lg"
+            />
             {photo.caption && (
               <figcaption className="mt-2 px-1 text-sm text-on-surface-variant text-center">
                 {photo.caption}
