@@ -40,7 +40,10 @@ export default async function EditEmergencyPage({
             defaultValue={c.order}
             hint="Lower numbers appear first on the website"
           />
-          <Toggle label="Active" name="active" defaultChecked={c.active} hint="Show on the public site" />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Toggle label="Active" name="active" defaultChecked={c.active} hint="Show on the public site" />
+            <Toggle label="Show on Homepage" name="showOnHomepage" defaultChecked={c.showOnHomepage} hint="Feature on the homepage strip" />
+          </div>
           <div className="flex items-center gap-3 pt-2">
             <SubmitBtn>Save changes</SubmitBtn>
             <Link href="/adminahnuok/emergency" className="text-sm font-medium text-ink-500 hover:text-ink-800">

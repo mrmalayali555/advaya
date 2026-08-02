@@ -157,6 +157,30 @@ export async function getEmergencyContacts() {
   });
 }
 
+export async function getHomepageEmergencyContacts() {
+  // Check if the section is enabled
+  const sectionEnabled = await getSetting("homepage_emergency_section", { enabled: true });
+  if (!sectionEnabled.enabled) return [];
+
+  // Fetch contacts marked for homepage
+  const homepage = await db.emergencyContact.findMany({
+    where: { active: true, showOnHomepage: true },
+    orderBy: [{ order: "asc" }, { category: "asc" }],
+    take: 6,
+  });
+
+  // If admin hasn't marked any, fall back to the first 6 active
+  if (homepage.length === 0) {
+    return db.emergencyContact.findMany({
+      where: { active: true },
+      orderBy: [{ order: "asc" }, { category: "asc" }],
+      take: 6,
+    });
+  }
+
+  return homepage;
+}
+
 export async function getEmergencyPdf(): Promise<{ url: string; name: string } | null> {
   try {
     const row = await db.setting.findUnique({ where: { key: "emergency_registry_pdf" } });

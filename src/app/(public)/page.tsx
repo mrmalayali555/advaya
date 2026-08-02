@@ -20,7 +20,7 @@ import {
   getNotifications,
   getAchievements,
   getUpcomingEvents,
-  getEmergencyContacts,
+  getHomepageEmergencyContacts,
   getPage,
   getMarquee,
 } from "@/lib/queries";
@@ -42,7 +42,7 @@ export default async function HomePage() {
       getNotifications(4),
       getAchievements({ take: 3 }),
       getUpcomingEvents(3),
-      getEmergencyContacts(),
+      getHomepageEmergencyContacts(),
       getPage("about"),
       getMarquee(),
       getSetting("carousel_interval", { value: 4000 }),
@@ -264,6 +264,7 @@ export default async function HomePage() {
       </section>
 
       {/* Emergency strip */}
+      {emergency.length > 0 && (
       <section className="py-8">
         <Container>
           <Reveal>
@@ -283,7 +284,7 @@ export default async function HomePage() {
                 </ButtonLink>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {emergency.slice(0, 6).map((c) => (
+                {emergency.map((c) => (
                   <a
                     key={c.id}
                     href={`tel:${c.phone}`}
@@ -303,6 +304,7 @@ export default async function HomePage() {
           </Reveal>
         </Container>
       </section>
+      )}
 
       {/* Contact CTA */}
       <section className="py-24 sm:py-32">

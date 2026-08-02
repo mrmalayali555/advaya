@@ -13,6 +13,7 @@ function parse(formData: FormData) {
     description: String(formData.get("description") || "").trim() || null,
     order: Number(formData.get("order") || 0),
     active: formData.get("active") ? true : false,
+    showOnHomepage: formData.get("showOnHomepage") ? true : false,
   };
 }
 
@@ -113,6 +114,27 @@ export async function deleteEmergencyPdf() {
   revalidatePath("/emergency");
 }
 
+export async function toggleHomepageEmergencySection(enabled: boolean) {
+  await requireAdmin();
+  const value = JSON.stringify({ enabled });
+  await db.setting.upsert({
+    where: { key: "homepage_emergency_section" },
+    update: { value },
+    create: { key: "homepage_emergency_section", value },
+  });
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/");
+}
 
-
+export async function toggleShowOnHomepage(id: string) {
+  await requireAdmin();
+  const contact = await db.emergencyContact.findUnique({ where: { id } });
+  if (!contact) return;
+  await db.emergencyContact.update({
+    where: { id },
+    data: { showOnHomepage: !contact.showOnHomepage },
+  });
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/");
+}
 

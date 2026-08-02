@@ -2,10 +2,10 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Pencil, Phone, ArrowUp, ArrowDown, Hash, Search, Filter, X } from "lucide-react";
+import { Pencil, Phone, ArrowUp, ArrowDown, Hash, Search, Filter, X, Home } from "lucide-react";
 import { EmptyRow, StatusPill } from "@/components/admin/admin-ui";
 import { DeleteBtn } from "@/components/admin/form-fields";
-import { deleteEmergency, moveEmergency } from "@/lib/actions/emergency";
+import { deleteEmergency, moveEmergency, toggleShowOnHomepage } from "@/lib/actions/emergency";
 
 type EmergencyItem = {
   id: string;
@@ -15,6 +15,7 @@ type EmergencyItem = {
   description: string | null;
   order: number;
   active: boolean;
+  showOnHomepage: boolean;
 };
 
 export function AdminEmergencyManager({ items }: { items: EmergencyItem[] }) {
@@ -152,6 +153,11 @@ export function AdminEmergencyManager({ items }: { items: EmergencyItem[] }) {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-semibold text-ink-900">{c.name}</span>
                     {!c.active && <StatusPill status="draft" />}
+                    {c.showOnHomepage && (
+                      <span className="inline-flex items-center gap-1 rounded bg-purple-100 border border-purple-200 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700">
+                        <Home className="h-2.5 w-2.5" /> Homepage
+                      </span>
+                    )}
                   </div>
                   <div className="mt-1 flex items-center gap-2 text-xs text-ink-500 flex-wrap">
                     <span className="rounded-md bg-purple-50 border border-purple-100 px-2 py-0.5 font-medium text-purple-700">
@@ -170,6 +176,19 @@ export function AdminEmergencyManager({ items }: { items: EmergencyItem[] }) {
 
                 {/* Actions */}
                 <div className="flex items-center gap-1 shrink-0">
+                  <form action={toggleShowOnHomepage.bind(null, c.id)}>
+                    <button
+                      type="submit"
+                      title={c.showOnHomepage ? "Remove from Homepage" : "Show on Homepage"}
+                      className={`inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                        c.showOnHomepage
+                          ? "bg-purple-100 text-purple-600 hover:bg-purple-200"
+                          : "text-ink-300 hover:bg-ink-100 hover:text-purple-600"
+                      }`}
+                    >
+                      <Home className="h-4 w-4" />
+                    </button>
+                  </form>
                   <Link
                     href={`/adminahnuok/emergency/${c.id}`}
                     className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-purple-600"

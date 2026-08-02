@@ -223,13 +223,14 @@ model Intervention {
 // Emergency registry  (ambulance, hospital, police, fire, blood bank, ...)
 // ---------------------------------------------------------------------------
 model EmergencyContact {
-  id          String  @id @default(cuid())
-  category    String // Ambulance | Hospital | Police | Fire Force | Blood Bank | Other
-  name        String
-  phone       String
-  description String?
-  order       Int     @default(0)
-  active      Boolean @default(true)
+  id             String  @id @default(cuid())
+  category       String // Ambulance | Hospital | Police | Fire Force | Blood Bank | Other
+  name           String
+  phone          String
+  description    String?
+  order          Int     @default(0)
+  active         Boolean @default(true)
+  showOnHomepage Boolean @default(false)
 }
 
 // ---------------------------------------------------------------------------
