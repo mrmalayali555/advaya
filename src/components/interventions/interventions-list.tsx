@@ -7,16 +7,14 @@ import { formatDate } from "@/lib/utils";
 import {
   FileText,
   Download,
-  Eye,
   Search,
   Pin,
   Calendar,
-  ExternalLink,
   Tag,
   ArrowRight,
   X,
+  ExternalLink,
 } from "lucide-react";
-import { PdfViewerModal } from "@/components/ui/pdf-viewer-modal";
 
 interface InterventionItem {
   id: string;
@@ -33,7 +31,6 @@ interface InterventionItem {
 export function InterventionsList({ items }: { items: InterventionItem[] }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
-  const [activePdf, setActivePdf] = useState<{ title: string; pdfUrl: string } | null>(null);
   const [readingItem, setReadingItem] = useState<InterventionItem | null>(null);
 
   // Categories list
@@ -167,12 +164,14 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                   <div className="mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4">
                     {/* PDF button */}
                     {item.pdfUrl ? (
-                      <button
-                        onClick={() => setActivePdf({ title: item.title, pdfUrl: item.pdfUrl! })}
+                      <a
+                        href={item.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 rounded-full bg-purple-900/30 border border-purple-500/20 px-3.5 py-1.5 text-xs font-semibold text-purple-300 transition-colors hover:bg-purple-900/50"
                       >
-                        <Eye className="h-3.5 w-3.5" /> View PDF
-                      </button>
+                        <ExternalLink className="h-3.5 w-3.5" /> View PDF
+                      </a>
                     ) : (
                       <span className="text-xs text-white/40">Official Release</span>
                     )}
@@ -190,15 +189,6 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
             );
           })}
         </div>
-      )}
-
-      {/* PDF Modal */}
-      {activePdf && (
-        <PdfViewerModal
-          title={activePdf.title}
-          pdfUrl={activePdf.pdfUrl}
-          onClose={() => setActivePdf(null)}
-        />
       )}
 
       {/* Read More Modal */}
@@ -236,16 +226,14 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
 
             <div className="flex items-center justify-between border-t border-white/10 pt-4">
               {readingItem.pdfUrl ? (
-                <button
-                  onClick={() => {
-                    const pdf = { title: readingItem.title, pdfUrl: readingItem.pdfUrl! };
-                    setReadingItem(null);
-                    setActivePdf(pdf);
-                  }}
-                  className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2 text-xs font-semibold text-white hover:bg-purple-500"
+                <a
+                  href={readingItem.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2 text-xs font-semibold text-white hover:bg-purple-500 transition-colors"
                 >
-                  <FileText className="h-4 w-4" /> Open Official PDF
-                </button>
+                  <ExternalLink className="h-4 w-4" /> Open Official PDF
+                </a>
               ) : (
                 <span className="text-xs text-white/40">No PDF attached</span>
               )}
