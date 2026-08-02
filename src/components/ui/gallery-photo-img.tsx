@@ -80,6 +80,8 @@ export function GalleryPhotoImg({
       {fitMode === "contain" && (
         naturalSize ? (
           <svg
+            width={is90or270 ? naturalSize.h : naturalSize.w}
+            height={is90or270 ? naturalSize.w : naturalSize.h}
             viewBox={`0 0 ${is90or270 ? naturalSize.h : naturalSize.w} ${is90or270 ? naturalSize.w : naturalSize.h}`}
             className="block h-auto w-auto max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] opacity-0 pointer-events-none"
             aria-hidden="true"
