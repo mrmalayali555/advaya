@@ -49,17 +49,17 @@ export default async function InterventionDetailPage({
         ]}
       />
 
-      <section className="py-12 sm:py-16">
+      <section className="py-6 sm:py-16">
         <Container>
           <div className="mx-auto max-w-3xl">
             <Link
               href="/interventions"
-              className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+              className="mb-4 sm:mb-6 inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" /> Back to all interventions
             </Link>
 
-            <div className="glass-card rounded-2xl sm:rounded-3xl border border-white/10 p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
+            <div className="glass-card rounded-2xl sm:rounded-3xl border border-white/10 p-4 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
               {/* Header details */}
               <div className="mb-6 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-white/10 pb-4 text-xs sm:text-sm text-white/80">
                 <span className="flex items-center gap-1.5 font-medium text-on-surface-variant">

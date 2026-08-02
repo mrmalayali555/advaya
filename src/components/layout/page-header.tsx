@@ -18,37 +18,37 @@ export function PageHeader({
   const pageKey = breadcrumb?.[0]?.label?.toLowerCase() || "page";
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 bg-[#050208] pt-32 pb-12 sm:pt-36 sm:pb-16">
+    <section className="relative overflow-hidden border-b border-white/5 bg-[#050208] pt-28 pb-8 sm:pt-36 sm:pb-16">
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-70" />
       <div className="pointer-events-none absolute -right-24 -top-10 h-72 w-72 rounded-full bg-purple-300/20 blur-[100px]" />
       <Container className="relative">
         <Reveal>
           {breadcrumb && (
-            <nav className="mb-5 flex items-center gap-1.5 text-sm text-white/50">
+            <nav className="mb-3 sm:mb-5 flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-white/50">
               <Link href="/" className="hover:text-purple-400">
                 Home
               </Link>
               {breadcrumb.map((b) => (
                 <span key={b.label} className="flex items-center gap-1.5">
-                  <ChevronRight className="h-3.5 w-3.5" />
+                  <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white/30" />
                   {b.href ? (
                     <Link href={b.href} className="hover:text-purple-400">
                       {b.label}
                     </Link>
                   ) : (
-                    <span className="text-white/70">{b.label}</span>
+                    <span className="text-white/70 max-w-[220px] sm:max-w-none truncate">{b.label}</span>
                   )}
                 </span>
               ))}
             </nav>
           )}
-          <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-on-surface sm:text-5xl">
+          <h1 className="mt-2 sm:mt-4 text-2xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-on-surface">
             <EditableText type="page" keyName={pageKey} field="title">
               {title}
             </EditableText>
           </h1>
           {description && (
-            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+            <p className="mt-2.5 sm:mt-4 max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed text-on-surface-variant">
               <EditableText type="page" keyName={pageKey} field="intro">
                 {description}
               </EditableText>

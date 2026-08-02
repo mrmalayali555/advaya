@@ -48,8 +48,15 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4">
-      <div className="relative z-50 mx-auto max-w-7xl">
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/* Top scrim gradient on scroll to avoid text sticking out above floating pill */}
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#050208] via-[#050208]/80 to-transparent transition-opacity duration-300",
+          scrolled ? "opacity-100" : "opacity-0"
+        )}
+      />
+      <div className="relative z-50 mx-auto max-w-7xl px-3 sm:px-4 pt-3 sm:pt-4">
         <div
           className={cn(
             "flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-500 ease-brand border shadow-[var(--shadow-soft)]",
