@@ -89,5 +89,30 @@ export async function deleteEmergency(id: string) {
   revalidatePath("/emergency");
 }
 
+export async function updateEmergencyPdf(url: string, name: string) {
+  await requireAdmin();
+  const value = JSON.stringify({ url, name, updatedAt: new Date().toISOString() });
+  await db.setting.upsert({
+    where: { key: "emergency_registry_pdf" },
+    update: { value },
+    create: { key: "emergency_registry_pdf", value },
+  });
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/emergency");
+}
+
+export async function deleteEmergencyPdf() {
+  await requireAdmin();
+  const value = JSON.stringify({ deleted: true, updatedAt: new Date().toISOString() });
+  await db.setting.upsert({
+    where: { key: "emergency_registry_pdf" },
+    update: { value },
+    create: { key: "emergency_registry_pdf", value },
+  });
+  revalidatePath("/adminahnuok/emergency");
+  revalidatePath("/emergency");
+}
+
+
 
 

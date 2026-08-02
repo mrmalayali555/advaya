@@ -157,6 +157,27 @@ export async function getEmergencyContacts() {
   });
 }
 
+export async function getEmergencyPdf(): Promise<{ url: string; name: string } | null> {
+  try {
+    const row = await db.setting.findUnique({ where: { key: "emergency_registry_pdf" } });
+    if (row?.value) {
+      const parsed = JSON.parse(row.value);
+      if (parsed?.deleted) return null;
+      if (parsed?.url) {
+        return { url: parsed.url, name: parsed.name || "Emergency Registry.pdf" };
+      }
+    }
+  } catch (e) {
+    console.error("Error fetching emergency PDF setting:", e);
+  }
+  // Default official copy fallback
+  return {
+    url: "/documents/emergency-registry.pdf",
+    name: "Emergency Registry - GEC Wayanad.pdf",
+  };
+}
+
+
 // --- Committees ---
 export async function getCommittees() {
   return db.committee.findMany({

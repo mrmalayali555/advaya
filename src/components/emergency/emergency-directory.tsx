@@ -22,6 +22,9 @@ import {
   ChevronDown,
   X,
   Sparkles,
+  FileText,
+  Download,
+  ExternalLink,
 } from "lucide-react";
 
 type EmergencyContact = {
@@ -33,6 +36,11 @@ type EmergencyContact = {
   order: number;
   active: boolean;
 };
+
+interface PdfData {
+  url: string;
+  name: string;
+}
 
 const WATCHMEN_SCHEDULE = [
   { day: "Monday", duty1: "Mr. Satheesh", phone1: "91422 29998", duty2: "Mr. Anandu", phone2: "98463 81767" },
@@ -110,7 +118,13 @@ function getCategoryTheme(category: string) {
   };
 }
 
-export function EmergencyDirectory({ contacts }: { contacts: EmergencyContact[] }) {
+export function EmergencyDirectory({
+  contacts,
+  pdfData,
+}: {
+  contacts: EmergencyContact[];
+  pdfData?: PdfData | null;
+}) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedPreset, setSelectedPreset] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -256,6 +270,52 @@ export function EmergencyDirectory({ contacts }: { contacts: EmergencyContact[] 
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      {/* Official Registry PDF Banner (if available) */}
+      {pdfData && (
+        <div className="rounded-2xl border border-red-500/20 bg-gradient-to-r from-red-950/40 via-purple-950/30 to-surface-container-high/40 p-4 sm:p-5 backdrop-blur-md">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-4">
+            <div className="flex items-start sm:items-center gap-3 min-w-0">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-500/20 text-red-400 border border-red-500/30">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm sm:text-base font-semibold text-on-surface">
+                    Official Emergency Directory (PDF)
+                  </h3>
+                  <span className="rounded-md bg-red-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-red-300 border border-red-500/30">
+                    Official Copy
+                  </span>
+                </div>
+                <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                  Download or print the complete campus emergency directory & guidelines
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+              <a
+                href={pdfData.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-semibold text-white hover:bg-white/20 transition-all shadow-sm"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                <span>View PDF</span>
+              </a>
+              <a
+                href={pdfData.url}
+                download={pdfData.name}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-purple-600 px-3.5 py-2 text-xs font-semibold text-white hover:opacity-90 transition-all shadow-md shadow-red-950/40"
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span>Download PDF</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Quick Category Chips - Edge-to-edge scroll on mobile */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container } from "@/components/ui/primitives";
 import { EmergencyDirectory } from "@/components/emergency/emergency-directory";
-import { getEmergencyContacts } from "@/lib/queries";
+import { getEmergencyContacts, getEmergencyPdf } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Emergency Registry",
@@ -11,7 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function EmergencyPage() {
-  const contacts = await getEmergencyContacts();
+  const [contacts, pdfData] = await Promise.all([
+    getEmergencyContacts(),
+    getEmergencyPdf(),
+  ]);
 
   return (
     <>
@@ -23,10 +26,11 @@ export default async function EmergencyPage() {
       />
       <section className="py-10 sm:py-16">
         <Container>
-          <EmergencyDirectory contacts={contacts} />
+          <EmergencyDirectory contacts={contacts} pdfData={pdfData} />
         </Container>
       </section>
     </>
   );
 }
+
 
