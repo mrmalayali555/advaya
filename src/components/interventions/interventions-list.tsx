@@ -31,7 +31,6 @@ interface InterventionItem {
 export function InterventionsList({ items }: { items: InterventionItem[] }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
-  const [readingItem, setReadingItem] = useState<InterventionItem | null>(null);
 
   // Categories list
   const categories = ["all", ...Array.from(new Set(items.map((i) => i.category).filter(Boolean))) as string[]];
@@ -114,7 +113,7 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
 
                 {/* Cover Image */}
                 {item.image ? (
-                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-ink-100">
+                  <Link href={`/interventions/${item.slug}`} className="relative aspect-[16/9] w-full overflow-hidden bg-ink-100 block">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -124,11 +123,11 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
-                  </div>
+                  </Link>
                 ) : (
-                  <div className="relative flex aspect-[16/9] w-full items-center justify-center bg-purple-950/40 border-b border-white/5 p-6 text-purple-300">
+                  <Link href={`/interventions/${item.slug}`} className="relative flex aspect-[16/9] w-full items-center justify-center bg-purple-950/40 border-b border-white/5 p-6 text-purple-300 block">
                     <FileText className="h-16 w-16 opacity-30" strokeWidth={1.2} />
-                  </div>
+                  </Link>
                 )}
 
                 {/* Card Content */}
@@ -152,7 +151,9 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
 
                   {/* Title */}
                   <h3 className="mb-2 text-lg font-bold leading-snug text-on-surface transition-colors group-hover:text-purple-300">
-                    {item.title}
+                    <Link href={`/interventions/${item.slug}`} className="hover:underline">
+                      {item.title}
+                    </Link>
                   </h3>
 
                   {/* Short Description */}
@@ -176,75 +177,18 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
                       <span className="text-xs text-white/40">Official Release</span>
                     )}
 
-                    {/* Read More button */}
-                    <button
-                      onClick={() => setReadingItem(item)}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-purple-400 hover:text-purple-300"
+                    {/* Read More link */}
+                    <Link
+                      href={`/interventions/${item.slug}`}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors"
                     >
                       Read More <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             );
           })}
-        </div>
-      )}
-
-      {/* Read More Modal */}
-      {readingItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="glass-card flex h-full max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#140a23]/95 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div>
-                <span className="text-xs font-medium text-purple-400">
-                  {formatDate(readingItem.date)}
-                </span>
-                <h3 className="text-xl font-bold text-on-surface mt-1">{readingItem.title}</h3>
-              </div>
-              <button
-                onClick={() => setReadingItem(null)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto py-6 space-y-4 text-sm leading-relaxed text-on-surface-variant whitespace-pre-wrap">
-              {readingItem.image && (
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white/5 mb-4">
-                  <Image
-                    src={readingItem.image}
-                    alt={readingItem.title}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              )}
-              <p>{readingItem.description}</p>
-            </div>
-
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
-              {readingItem.pdfUrl ? (
-                <a
-                  href={readingItem.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-purple-600 px-5 py-2 text-xs font-semibold text-white hover:bg-purple-500 transition-colors"
-                >
-                  <ExternalLink className="h-4 w-4" /> Open Official PDF
-                </a>
-              ) : (
-                <span className="text-xs text-white/40">No PDF attached</span>
-              )}
-              <button
-                onClick={() => setReadingItem(null)}
-                className="rounded-full border border-white/10 px-5 py-2 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white"
-              >
-                Close
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>

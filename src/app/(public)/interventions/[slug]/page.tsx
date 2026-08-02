@@ -59,9 +59,9 @@ export default async function InterventionDetailPage({
               <ArrowLeft className="h-4 w-4" /> Back to all interventions
             </Link>
 
-            <div className="glass-card rounded-3xl border border-white/10 p-6 shadow-2xl backdrop-blur-xl sm:p-10">
+            <div className="glass-card rounded-2xl sm:rounded-3xl border border-white/10 p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl">
               {/* Header details */}
-              <div className="mb-6 flex flex-wrap items-center gap-3 border-b border-white/10 pb-4 text-sm text-white/80">
+              <div className="mb-6 flex flex-wrap items-center gap-2.5 sm:gap-3 border-b border-white/10 pb-4 text-xs sm:text-sm text-white/80">
                 <span className="flex items-center gap-1.5 font-medium text-on-surface-variant">
                   <Calendar className="h-4 w-4 text-purple-400" />
                   {formattedDate}
@@ -80,7 +80,7 @@ export default async function InterventionDetailPage({
 
               {/* Cover Image */}
               {item.image && (
-                <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white/5">
+                <div className="relative mb-6 sm:mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black/40 border border-white/10">
                   <Image
                     src={item.image}
                     alt={item.title}
@@ -92,13 +92,13 @@ export default async function InterventionDetailPage({
               )}
 
               {/* Main Text */}
-              <div className="prose prose-invert max-w-none text-base leading-relaxed text-on-surface-variant whitespace-pre-wrap">
+              <div className="prose prose-invert max-w-none text-sm sm:text-base leading-relaxed text-on-surface-variant whitespace-pre-wrap">
                 {item.description}
               </div>
 
               {/* PDF Attachment Banner */}
               {item.pdfUrl && (
-                <div className="mt-8">
+                <div className="mt-6 sm:mt-8">
                   <PdfPreviewButton
                     title={item.title}
                     pdfUrl={item.pdfUrl}
