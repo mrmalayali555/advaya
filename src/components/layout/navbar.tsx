@@ -9,7 +9,11 @@ import { Logo } from "@/components/ui/logo";
 import { NAV_LINKS } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-export function Navbar() {
+export function Navbar({
+  searchConfig = { showMobile: true, showDesktop: true },
+}: {
+  searchConfig?: { showMobile: boolean; showDesktop: boolean };
+} = {}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -113,13 +117,22 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/search"
-              aria-label="Search"
-              className="flex touch-target items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-            >
-              <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </Link>
+            {(searchConfig.showMobile || searchConfig.showDesktop) && (
+              <Link
+                href="/search"
+                aria-label="Search"
+                className={cn(
+                  "touch-target items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white",
+                  searchConfig.showMobile && searchConfig.showDesktop
+                    ? "flex"
+                    : searchConfig.showMobile
+                    ? "flex sm:hidden"
+                    : "hidden sm:flex"
+                )}
+              >
+                <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </Link>
+            )}
             <Link
               href="/complaints"
               className="hidden min-h-[44px] items-center rounded-full bg-purple-600 px-5 py-2.5 text-sm font-medium text-white shadow-[0_8px_20px_-8px_rgba(120,0,255,0.4)] transition-all hover:-translate-y-0.5 hover:bg-purple-500 md:inline-flex"
@@ -189,14 +202,16 @@ export function Navbar() {
                       />,
                     ]
               )}
-              <Link
-                href="/search"
-                onClick={() => setOpen(false)}
-                className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-white/10"
-              >
-                <Search className="h-4 w-4 text-purple-400" />
-                <span>Search anything...</span>
-              </Link>
+              {searchConfig.showMobile && (
+                <Link
+                  href="/search"
+                  onClick={() => setOpen(false)}
+                  className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  <Search className="h-4 w-4 text-purple-400" />
+                  <span>Search anything...</span>
+                </Link>
+              )}
               <Link
                 href="/complaints"
                 onClick={() => setOpen(false)}

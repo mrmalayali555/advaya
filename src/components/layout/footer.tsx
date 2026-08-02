@@ -10,7 +10,15 @@ import { Logo } from "@/components/ui/logo";
 import { Container } from "@/components/ui/primitives";
 import { SITE, NAV_LINKS } from "@/lib/site";
 
-export function Footer() {
+export function Footer({
+  contact = {
+    address: SITE.address,
+    phone: SITE.phone,
+    email: SITE.email,
+  },
+}: {
+  contact?: { address: string; phone: string; email: string };
+}) {
   const year = new Date().getFullYear();
   return (
     <footer className="relative mt-24 overflow-hidden bg-[#050208] text-white border-t border-[#7800ff]/10">
@@ -34,7 +42,7 @@ export function Footer() {
               <Social href={SITE.socials.youtube} label="YouTube">
                 <YoutubeIcon className="h-4 w-4" />
               </Social>
-              <Social href={SITE.socials.twitter} label="Twitter / X">
+              <Social href={SITE.socials.twitter} label="X (Twitter)">
                 <XIcon className="h-4 w-4" />
               </Social>
             </div>
@@ -42,11 +50,11 @@ export function Footer() {
 
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
-              Explore
+              Navigation
             </h3>
             <ul className="mt-5 space-y-3 text-sm">
-              {NAV_LINKS.filter((l) => !("children" in l && l.children)).map((l) => (
-                <li key={l.href}>
+              {NAV_LINKS.map((l) => (
+                <li key={l.label}>
                   <Link
                     href={l.href}
                     className="text-white/70 transition-colors hover:text-white"
@@ -89,18 +97,18 @@ export function Footer() {
             <ul className="mt-5 space-y-4 text-sm text-white/70">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-purple-300" strokeWidth={1.75} />
-                <span>{SITE.address}</span>
+                <span>{contact.address}</span>
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 h-4 w-4 shrink-0 text-purple-300" strokeWidth={1.75} />
-                <a href={`tel:${SITE.phone}`} className="hover:text-white">
-                  {SITE.phone}
+                <a href={`tel:${contact.phone}`} className="hover:text-white">
+                  {contact.phone}
                 </a>
               </li>
               <li className="flex gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-purple-300" strokeWidth={1.75} />
-                <a href={`mailto:${SITE.email}`} className="hover:text-white">
-                  {SITE.email}
+                <a href={`mailto:${contact.email}`} className="hover:text-white">
+                  {contact.email}
                 </a>
               </li>
             </ul>

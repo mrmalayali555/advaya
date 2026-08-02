@@ -14,7 +14,7 @@ async function getSetting<T>(key: string, fallback: T): Promise<T> {
 }
 
 export default async function AdminSettingsPage() {
-  const [hero, contact, stats, carouselInterval, complaints] = await Promise.all([
+  const [hero, contact, stats, carouselInterval, complaints, navSearch] = await Promise.all([
     getSetting("hero", { badge: SITE.college, title: "The voice of every student.", subtitle: SITE.description }),
     getSetting("contact", { address: SITE.address, phone: SITE.phone, email: SITE.email }),
     getSetting("stats", { students: 1200, events: 48, achievements: 96, committees: 12 }),
@@ -28,6 +28,7 @@ export default async function AdminSettingsPage() {
       f3_title: "No issue too small",
       f3_text: "Academics, facilities, ragging, safety — whatever it is, we want to know.",
     }),
+    getSetting("nav_search", { showMobile: true, showDesktop: true }),
   ]);
 
   return (
@@ -84,6 +85,39 @@ export default async function AdminSettingsPage() {
             <div className="space-y-3 p-4 bg-ink-50 rounded-xl">
               <Field label="Feature 3 Title" name="c_f3_title" defaultValue={complaints.f3_title} />
               <TextArea label="Feature 3 Text" name="c_f3_text" defaultValue={complaints.f3_text} rows={2} />
+            </div>
+          </div>
+        </AdminCard>
+
+        <AdminCard>
+          <h3 className="mb-2 font-semibold text-ink-900">Search Visibility</h3>
+          <p className="mb-4 text-sm text-ink-500">
+            Control whether the Search option is visible across different device sizes (Mobile, Tablet, Laptop/Desktop).
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="search_show_mobile"
+                name="search_show_mobile"
+                defaultChecked={navSearch.showMobile}
+                className="h-5 w-5 rounded border-purple-200 text-purple-600 focus:ring-purple-600"
+              />
+              <label htmlFor="search_show_mobile" className="text-sm font-medium text-ink-900">
+                Show Search icon on Mobile &amp; Tablet
+              </label>
+            </div>
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="search_show_desktop"
+                name="search_show_desktop"
+                defaultChecked={navSearch.showDesktop}
+                className="h-5 w-5 rounded border-purple-200 text-purple-600 focus:ring-purple-600"
+              />
+              <label htmlFor="search_show_desktop" className="text-sm font-medium text-ink-900">
+                Show Search icon on Laptop &amp; Desktop
+              </label>
             </div>
           </div>
         </AdminCard>

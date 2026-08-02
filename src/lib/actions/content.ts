@@ -40,7 +40,7 @@ export async function saveSetting(key: string, value: Record<string, unknown>) {
     update: { value: JSON.stringify(value) },
     create: { key, value: JSON.stringify(value) },
   });
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/adminahnuok/settings");
 }
 
@@ -75,6 +75,10 @@ export async function saveSettingsForm(formData: FormData) {
     f3_title: String(formData.get("c_f3_title") || "").trim(),
     f3_text: String(formData.get("c_f3_text") || "").trim(),
   };
+  const navSearch = {
+    showMobile: formData.get("search_show_mobile") === "on",
+    showDesktop: formData.get("search_show_desktop") === "on",
+  };
 
   await Promise.all([
     saveSetting("hero", hero),
@@ -82,6 +86,7 @@ export async function saveSettingsForm(formData: FormData) {
     saveSetting("stats", stats),
     saveSetting("carousel_interval", carouselInterval),
     saveSetting("complaints", complaints),
+    saveSetting("nav_search", navSearch),
   ]);
 }
 
