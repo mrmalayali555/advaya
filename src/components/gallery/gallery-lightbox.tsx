@@ -132,12 +132,7 @@ export function GalleryLightbox({
             }}
             className="relative flex flex-col items-center justify-center"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photo.url}
-              alt={photo.caption || "Gallery photo"}
-              className="max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] h-auto w-auto rounded-lg object-contain"
-            />
+            <LightboxImage photo={photo} />
             {photo.caption && (
               <p className="mt-3 text-center text-sm font-medium text-white/80 pb-1 px-4">
                 {photo.caption}
@@ -165,5 +160,29 @@ export function GalleryLightbox({
         )}
       </div>
     </motion.div>
+  );
+}
+
+/* ─── Lightbox image with rotation-aware sizing ─── */
+function LightboxImage({ photo }: { photo: LightboxPhoto }) {
+  const rot = photo.rotation || 0;
+  const is90or270 = Math.abs(Math.round(rot)) % 180 === 90;
+
+  // When rotated 90/270°, CSS transform rotates visually but the layout box
+  // stays at original dimensions. We swap max-width ↔ max-height so the
+  // pre-rotation layout box sizes itself such that the post-rotation visual
+  // fits perfectly within the viewport.
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={photo.url}
+      alt={photo.caption || "Gallery photo"}
+      className="h-auto w-auto rounded-lg object-contain"
+      style={{
+        maxWidth: is90or270 ? "85vh" : "90vw",
+        maxHeight: is90or270 ? "90vw" : "85vh",
+        transform: rot ? `rotate(${rot}deg)` : undefined,
+      }}
+    />
   );
 }
