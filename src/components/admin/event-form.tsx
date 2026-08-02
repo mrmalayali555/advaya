@@ -14,6 +14,7 @@ type EventData = {
   poster: string | null;
   status: string;
   published: boolean;
+  committeeId: string | null;
 };
 
 function toDateInput(d: Date) {
@@ -24,10 +25,12 @@ export function EventForm({
   event,
   action,
   deleteAction,
+  committees = [],
 }: {
   event?: EventData;
   action: (formData: FormData) => void;
   deleteAction?: (formData: FormData) => void;
+  committees?: { id: string; name: string }[];
 }) {
   return (
     <div className="space-y-6">
@@ -50,16 +53,27 @@ export function EventForm({
               <Field label="Time" name="time" defaultValue={event?.time ?? ""} placeholder="5:00 PM" />
               <Field label="Venue" name="venue" defaultValue={event?.venue ?? ""} placeholder="Main Auditorium" />
             </div>
-            <Select
-              label="Status"
-              name="status"
-              defaultValue={event?.status ?? "upcoming"}
-              options={[
-                { value: "upcoming", label: "Upcoming" },
-                { value: "completed", label: "Completed" },
-                { value: "cancelled", label: "Cancelled" },
-              ]}
-            />
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Select
+                label="Status"
+                name="status"
+                defaultValue={event?.status ?? "upcoming"}
+                options={[
+                  { value: "upcoming", label: "Upcoming" },
+                  { value: "completed", label: "Completed" },
+                  { value: "cancelled", label: "Cancelled" },
+                ]}
+              />
+              <Select
+                label="Subcommittee (optional)"
+                name="committeeId"
+                defaultValue={event?.committeeId ?? ""}
+                options={[
+                  { value: "", label: "— None —" },
+                  ...committees.map((c) => ({ value: c.id, label: c.name })),
+                ]}
+              />
+            </div>
             <UploadField label="Poster" name="poster" defaultUrl={event?.poster} accept="image/*" hint="JPG, PNG, WebP up to 8MB" />
             <Toggle label="Published" name="published" defaultChecked={event?.published ?? true} hint="Show on the public site" />
           </div>

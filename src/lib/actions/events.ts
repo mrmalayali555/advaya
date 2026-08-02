@@ -21,6 +21,7 @@ async function uniqueSlug(base: string, ignoreId?: string): Promise<string> {
 
 function parse(formData: FormData) {
   const endDateRaw = String(formData.get("endDate") || "").trim();
+  const committeeIdRaw = String(formData.get("committeeId") || "").trim();
   return {
     title: String(formData.get("title") || "").trim(),
     description: String(formData.get("description") || "").trim(),
@@ -31,6 +32,7 @@ function parse(formData: FormData) {
     poster: String(formData.get("poster") || "").trim() || null,
     status: String(formData.get("status") || "upcoming"),
     published: formData.get("published") ? true : false,
+    committeeId: committeeIdRaw || null,
   };
 }
 

@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { CalendarDays, Clock, MapPin, Paperclip, Download, UserPlus } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, Clock, MapPin, Paperclip, Download, UserPlus, Users } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Container, Badge } from "@/components/ui/primitives";
 import { MediaGallery } from "@/components/cards/media-gallery";
@@ -44,7 +45,18 @@ export default async function EventDetail({
       />
       <section className="py-14 sm:py-20">
         <Container size="narrow">
-          <Badge tone={statusTone[e.status] ?? "info"}>{e.status}</Badge>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Badge tone={statusTone[e.status] ?? "info"}>{e.status}</Badge>
+            {e.committee && (
+              <Link
+                href={`/subcommittee/${e.committee.slug}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-purple-900/30 border border-purple-500/20 px-3.5 py-1 text-xs font-semibold text-purple-300 hover:bg-purple-900/50 transition-colors"
+              >
+                <Users className="h-3.5 w-3.5" />
+                {e.committee.name}
+              </Link>
+            )}
+          </div>
 
           {e.poster && (
             <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-3xl border border-ink-100">

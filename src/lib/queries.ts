@@ -65,7 +65,7 @@ export async function getEvents(opts?: { status?: string; take?: number }) {
     },
     orderBy: { date: opts?.status === "completed" ? "desc" : "asc" },
     take: opts?.take,
-    include: { media: { orderBy: { order: "asc" } }, attachments: true },
+    include: { media: { orderBy: { order: "asc" } }, attachments: true, committee: { select: { id: true, name: true, slug: true } } },
   });
 }
 
@@ -74,14 +74,14 @@ export async function getUpcomingEvents(take = 3) {
     where: { published: true, status: "upcoming" },
     orderBy: { date: "asc" },
     take,
-    include: { media: true },
+    include: { media: true, committee: { select: { id: true, name: true, slug: true } } },
   });
 }
 
 export async function getEvent(slug: string) {
   return db.event.findUnique({
     where: { slug },
-    include: { media: { orderBy: { order: "asc" } }, attachments: true, gallery: { include: { photos: { orderBy: { position: "asc" } } } }, registrationForm: true },
+    include: { media: { orderBy: { order: "asc" } }, attachments: true, gallery: { include: { photos: { orderBy: { position: "asc" } } } }, registrationForm: true, committee: { select: { id: true, name: true, slug: true } } },
   });
 }
 
@@ -183,6 +183,28 @@ export async function getCommittees() {
   return db.committee.findMany({
     orderBy: { order: "asc" },
     include: { members: { orderBy: { order: "asc" } } },
+  });
+}
+
+export async function getCommittee(slug: string) {
+  return db.committee.findUnique({
+    where: { slug },
+    include: { members: { orderBy: { order: "asc" } } },
+  });
+}
+
+export async function getCommitteeEvents(committeeId: string) {
+  return db.event.findMany({
+    where: { published: true, committeeId },
+    orderBy: { date: "desc" },
+    include: { media: { orderBy: { order: "asc" } }, attachments: true, committee: { select: { id: true, name: true, slug: true } } },
+  });
+}
+
+export async function getCommitteesList() {
+  return db.committee.findMany({
+    orderBy: { order: "asc" },
+    select: { id: true, name: true },
   });
 }
 

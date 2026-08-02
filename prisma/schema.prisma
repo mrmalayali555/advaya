@@ -87,6 +87,8 @@ model Event {
   poster      String?
   status      String            @default("upcoming") // upcoming | completed | cancelled
   published   Boolean           @default(true)
+  committee   Committee?        @relation(fields: [committeeId], references: [id], onDelete: SetNull)
+  committeeId String?
   media       EventMedia[]
   attachments EventAttachment[]
   gallery     EventGallery?
@@ -96,6 +98,7 @@ model Event {
 
   @@index([status])
   @@index([date])
+  @@index([committeeId])
 }
 
 model EventGallery {
@@ -239,6 +242,7 @@ model Committee {
   description String?
   order       Int               @default(0)
   members     CommitteeMember[]
+  events      Event[]
   createdAt   DateTime          @default(now())
 }
 

@@ -6,6 +6,7 @@ import { EventForm } from "@/components/admin/event-form";
 import { db } from "@/lib/db";
 import { updateEvent, deleteEvent } from "@/lib/actions/events";
 import { deleteGallery } from "@/lib/actions/gallery";
+import { getCommitteesList } from "@/lib/queries";
 
 export default async function EditEventPage({
   params,
@@ -17,6 +18,7 @@ export default async function EditEventPage({
   if (!event) notFound();
 
   const gallery = await db.eventGallery.findUnique({ where: { eventId: id } });
+  const committees = await getCommitteesList();
 
   const update = updateEvent.bind(null, id);
   const remove = deleteEvent.bind(null, id);
@@ -24,7 +26,7 @@ export default async function EditEventPage({
   return (
     <>
       <AdminHeader title="Edit event" description={event.title} />
-      <EventForm event={event} action={update} deleteAction={remove} />
+      <EventForm event={event} action={update} deleteAction={remove} committees={committees} />
 
       {/* ── Photo Gallery Section ── */}
       <div className="mt-10 rounded-2xl border border-ink-100 bg-white p-6 shadow-[var(--shadow-soft)]">

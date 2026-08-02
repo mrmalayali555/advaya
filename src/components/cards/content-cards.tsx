@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, CalendarDays, MapPin, FileText, Download } from "lucide-react";
+import { ArrowUpRight, CalendarDays, MapPin, FileText, Download, Users } from "lucide-react";
 import { Badge, Card } from "@/components/ui/primitives";
 import { formatDate, formatDateRange } from "@/lib/utils";
 
@@ -95,6 +95,7 @@ export function EventCard({
     venue: string | null;
     poster: string | null;
     status: string;
+    committee?: { name: string; slug: string } | null;
   };
 }) {
   return (
@@ -102,9 +103,17 @@ export function EventCard({
       <Link href={`/events/${event.slug}`} className="flex h-full flex-col">
         <div className="relative aspect-[16/10] overflow-hidden">
           <CoverImage src={event.poster} alt={event.title} />
-          <div className="absolute left-4 top-4">
+          <div className="absolute left-4 top-4 flex flex-wrap items-center gap-1.5">
             <Badge tone={statusTone[event.status] ?? "info"}>{event.status}</Badge>
           </div>
+          {event.committee && (
+            <div className="absolute right-3 bottom-3">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 px-3 py-1 text-[11px] font-semibold text-white/90 shadow-sm">
+                <Users className="h-3 w-3 text-purple-300" />
+                {event.committee.name}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex flex-1 flex-col p-6">
           <h3 className="line-clamp-2 text-lg font-semibold text-on-surface transition-colors group-hover:text-purple-300">
