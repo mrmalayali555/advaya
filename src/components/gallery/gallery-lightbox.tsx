@@ -130,21 +130,16 @@ export function GalleryLightbox({
               filter: { duration: 0.2 },
               scale: { duration: 0.2 },
             }}
-            className="relative flex flex-col items-center justify-center rounded-xl bg-white p-2 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+            className="relative flex flex-col items-center justify-center"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo.url}
               alt={photo.caption || "Gallery photo"}
               className="max-h-[85vh] max-w-[90vw] sm:max-w-[85vw] h-auto w-auto rounded-lg object-contain"
-              style={{
-                transform: (photo.rotation || photo.zoom)
-                  ? `rotate(${photo.rotation || 0}deg) scale(${photo.zoom || 1}) translate(${photo.offsetX || 0}%, ${photo.offsetY || 0}%)`
-                  : undefined,
-              }}
             />
             {photo.caption && (
-              <p className="mt-3 text-center text-sm font-medium text-gray-700 pb-1 px-4">
+              <p className="mt-3 text-center text-sm font-medium text-white/80 pb-1 px-4">
                 {photo.caption}
               </p>
             )}
