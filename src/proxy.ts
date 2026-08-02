@@ -20,7 +20,8 @@ async function isValid(token?: string): Promise<boolean> {
 const BLOCKED = [
   "/wp-admin", "/wp-login", "/phpmyadmin", "/.env",
   "/xmlrpc.php", "/admin.php", "/wp-content", "/wp-includes",
-  "/.git", "/cgi-bin", "/config.php",
+  "/.git", "/cgi-bin", "/config.php", "/.aws", "/vendor",
+  "/backup.sql", "/db.sql", "/dump.sql",
 ];
 
 function addSecurityHeaders(res: NextResponse): NextResponse {
@@ -36,6 +37,8 @@ function addSecurityHeaders(res: NextResponse): NextResponse {
     "Strict-Transport-Security",
     "max-age=31536000; includeSubDomains; preload"
   );
+  res.headers.set("X-Permitted-Cross-Domain-Policies", "none");
+  res.headers.set("X-DNS-Prefetch-Control", "off");
   return res;
 }
 
@@ -49,6 +52,16 @@ export async function proxy(req: NextRequest) {
 
   const token = req.cookies.get(COOKIE)?.value;
   const authed = await isValid(token);
+
+  // Protect all /api/admin/* endpoints at the edge/proxy layer.
+  if (pathname.startsWith("/api/admin")) {
+    if (!authed) {
+      return addSecurityHeaders(
+        NextResponse.json({ error: "Unauthorized — valid admin session required." }, { status: 401 })
+      );
+    }
+    return addSecurityHeaders(NextResponse.next());
+  }
 
   // Login page: if already authed, bounce to dashboard.
   if (pathname === "/adminahnuok/login") {
@@ -76,6 +89,7 @@ export async function proxy(req: NextRequest) {
 export const config = {
   matcher: [
     "/adminahnuok/:path*",
+    "/api/admin/:path*",
     "/wp-admin/:path*",
     "/wp-login/:path*",
     "/phpmyadmin/:path*",
@@ -83,4 +97,5 @@ export const config = {
     "/.git/:path*",
   ],
 };
+
 

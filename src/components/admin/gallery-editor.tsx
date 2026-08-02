@@ -65,6 +65,7 @@ function PhotoSlot({
   const [zoom, setZoom] = useState(photo?.zoom || 1);
   const [offsetX, setOffsetX] = useState(photo?.offsetX || 0);
   const [offsetY, setOffsetY] = useState(photo?.offsetY || 0);
+  const [rotation, setRotation] = useState(photo?.rotation || 0);
   const [showZoom, setShowZoom] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -155,45 +156,74 @@ function PhotoSlot({
             alt={displayPhoto.caption || ""}
             fill
             sizes="200px"
-            className="object-cover transition-transform"
-            style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%)` }}
+            className="object-cover transition-transform duration-200"
+            style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%) rotate(${rotation}deg)` }}
           />
           <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100">
             <button
               onClick={() => setShowZoom((v) => !v)}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow"
-              title="Adjust zoom"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow hover:scale-105"
+              title="Edit photo (zoom, rotate, position)"
             >
-              <ZoomIn className="h-3.5 w-3.5" />
+              <Pencil className="h-3.5 w-3.5" />
+            </button>
+            <button
+              onClick={async () => {
+                const nextRot = (rotation + 90) % 360;
+                setRotation(nextRot);
+                const p = localPhoto || photo;
+                if (p) {
+                  await fetch("/api/admin/gallery-photo", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ photoId: p.id, caption, zoom, offsetX, offsetY, rotation: nextRot }),
+                  });
+                }
+              }}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-blue-600 shadow hover:scale-105"
+              title="Rotate 90°"
+            >
+              <RotateCw className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={handleRemove}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-red-600 shadow"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-red-600 shadow hover:scale-105"
               title="Remove photo"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
-        {/* Transform controls */}
+        {/* Transform controls positioned below image so it does not overlay or cover buttons */}
         {showZoom && (
-          <div className="absolute -bottom-14 left-0 right-0 z-20 flex flex-col gap-2 rounded-b-lg bg-black/80 p-2 shadow-xl">
-            <div className="flex items-center justify-between gap-2">
-              <button onClick={() => setZoom((z) => Math.max(1, z - 0.1))} className="text-white hover:text-purple-300"><ZoomOut className="h-3.5 w-3.5" /></button>
+          <div className="mt-2 flex flex-col gap-2 rounded-lg bg-ink-900 p-2.5 text-white shadow-md">
+            <div className="flex items-center gap-2">
+              <ZoomOut className="h-3.5 w-3.5 text-ink-300" />
               <input
                 type="range" min="1" max="3" step="0.05"
                 value={zoom}
                 onChange={(e) => setZoom(parseFloat(e.target.value))}
-                className="h-1 w-20 accent-purple-400"
+                className="flex-1 accent-purple-400"
               />
-              <button onClick={() => setZoom((z) => Math.min(3, z + 0.1))} className="text-white hover:text-purple-300"><ZoomIn className="h-3.5 w-3.5" /></button>
+              <ZoomIn className="h-3.5 w-3.5 text-ink-300" />
+              <span className="w-8 text-right text-xs text-ink-200">{zoom.toFixed(1)}x</span>
             </div>
-            <div className="flex items-center justify-between text-white">
+            <div className="flex items-center gap-2">
+              <RotateCw className="h-3.5 w-3.5 text-ink-300" />
+              <input
+                type="range" min="-180" max="180" step="1"
+                value={rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation)}
+                onChange={(e) => setRotation(parseFloat(e.target.value))}
+                className="flex-1 accent-blue-400"
+              />
+              <span className="w-8 text-right text-xs text-ink-200">{Math.round(rotation)}°</span>
+            </div>
+            <div className="flex items-center justify-between">
               <div className="flex gap-1">
-                <button onClick={() => setOffsetX(x => x - 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">←</button>
-                <button onClick={() => setOffsetX(x => x + 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">→</button>
-                <button onClick={() => setOffsetY(y => y - 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">↑</button>
-                <button onClick={() => setOffsetY(y => y + 5)} className="px-1.5 py-0.5 text-xs hover:bg-white/20 rounded">↓</button>
+                <button onClick={() => setOffsetX(x => x - 5)} className="px-1.5 py-0.5 text-xs bg-white/10 hover:bg-white/20 rounded">←</button>
+                <button onClick={() => setOffsetX(x => x + 5)} className="px-1.5 py-0.5 text-xs bg-white/10 hover:bg-white/20 rounded">→</button>
+                <button onClick={() => setOffsetY(y => y - 5)} className="px-1.5 py-0.5 text-xs bg-white/10 hover:bg-white/20 rounded">↑</button>
+                <button onClick={() => setOffsetY(y => y + 5)} className="px-1.5 py-0.5 text-xs bg-white/10 hover:bg-white/20 rounded">↓</button>
               </div>
               <button 
                 onClick={async () => {
@@ -202,18 +232,19 @@ function PhotoSlot({
                     await fetch("/api/admin/gallery-photo", {
                       method: "PATCH",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ photoId: p.id, zoom, offsetX, offsetY }),
+                      body: JSON.stringify({ photoId: p.id, zoom, offsetX, offsetY, rotation }),
                     });
                   }
                   setShowZoom(false);
                 }} 
-                className="text-xs font-bold text-purple-400 hover:text-purple-300"
+                className="rounded bg-purple-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-purple-500"
               >
                 Save
               </button>
             </div>
           </div>
         )}
+
         {editingCaption ? (
           <div className="mt-1 flex gap-1">
             <input
@@ -921,41 +952,98 @@ function NormalEditorPhotoCard({ photo, onPhotoRemoved }: { photo: Photo, onPhot
           style={{ transform: `scale(${zoom}) translate(${offsetX}%, ${offsetY}%) rotate(${rotation}deg)` }}
         />
         <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all hover:bg-black/40 hover:opacity-100 z-10">
-          <button onClick={() => setShowControls(v => !v)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow" title="Adjust">
-            <ZoomIn className="h-4 w-4" />
+          <button
+            onClick={() => setShowControls(v => !v)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-purple-600 shadow hover:scale-105 transition-transform"
+            title="Edit Photo (Zoom, Rotation, Position)"
+          >
+            <Pencil className="h-4 w-4" />
           </button>
-          <button onClick={() => { setRotation(r => (r + 90) % 360); setShowControls(true); }} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-blue-600 shadow" title="Rotate 90°">
+          <button
+            onClick={async () => {
+              const nextRot = (rotation + 90) % 360;
+              setRotation(nextRot);
+              setSaving(true);
+              await fetch("/api/admin/gallery-photo", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ photoId: photo.id, caption, zoom, offsetX, offsetY, rotation: nextRot }),
+              });
+              setSaving(false);
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-blue-600 shadow hover:scale-105 transition-transform"
+            title="Rotate 90°"
+          >
             <RotateCw className="h-4 w-4" />
           </button>
-          <button onClick={handleRemove} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-600 shadow" title="Remove">
+          <button
+            onClick={handleRemove}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-600 shadow hover:scale-105 transition-transform"
+            title="Remove Photo"
+          >
             <Trash2 className="h-4 w-4" />
           </button>
         </div>
       </div>
       
       {showControls && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-11/12 max-w-sm rounded-lg bg-black/90 p-3 shadow-xl">
+        <div className="mt-2 w-full rounded-xl bg-ink-900 p-3 text-white shadow-md">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <ZoomOut className="h-4 w-4 text-white" />
-              <input type="range" min="1" max="3" step="0.05" value={zoom} onChange={e => setZoom(parseFloat(e.target.value))} className="flex-1 accent-purple-400" />
-              <ZoomIn className="h-4 w-4 text-white" />
+              <ZoomOut className="h-4 w-4 text-ink-300" />
+              <input
+                type="range"
+                min="1"
+                max="3"
+                step="0.05"
+                value={zoom}
+                onChange={e => setZoom(parseFloat(e.target.value))}
+                className="flex-1 accent-purple-400"
+              />
+              <ZoomIn className="h-4 w-4 text-ink-300" />
+              <span className="w-9 text-right text-xs font-medium text-ink-200">{zoom.toFixed(1)}x</span>
             </div>
             <div className="flex items-center gap-2">
-              <RotateCw className="h-4 w-4 text-white" />
-              <input type="range" min="-30" max="30" step="1" value={rotation > 180 ? rotation - 360 : rotation} onChange={e => setRotation(parseFloat(e.target.value))} className="flex-1 accent-blue-400" />
-              <span className="text-xs text-white w-6 text-right">{rotation}°</span>
+              <RotateCw className="h-4 w-4 text-ink-300" />
+              <input
+                type="range"
+                min="-180"
+                max="180"
+                step="1"
+                value={rotation > 180 ? rotation - 360 : (rotation < -180 ? rotation + 360 : rotation)}
+                onChange={e => setRotation(parseFloat(e.target.value))}
+                className="flex-1 accent-blue-400"
+              />
+              <span className="w-9 text-right text-xs font-medium text-ink-200">{Math.round(rotation)}°</span>
             </div>
-            <div className="flex items-center justify-between text-white">
-              <div className="flex gap-1">
-                <button onClick={() => setOffsetX(x => x - 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">←</button>
-                <button onClick={() => setOffsetX(x => x + 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">→</button>
-                <button onClick={() => setOffsetY(y => y - 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">↑</button>
-                <button onClick={() => setOffsetY(y => y + 5)} className="px-2 py-1 text-xs hover:bg-white/20 rounded">↓</button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <span className="mr-1 text-xs text-ink-300">Pos:</span>
+                <button onClick={() => setOffsetX(x => x - 5)} className="rounded bg-white/10 px-2 py-1 text-xs hover:bg-white/20">←</button>
+                <button onClick={() => setOffsetX(x => x + 5)} className="rounded bg-white/10 px-2 py-1 text-xs hover:bg-white/20">→</button>
+                <button onClick={() => setOffsetY(y => y - 5)} className="rounded bg-white/10 px-2 py-1 text-xs hover:bg-white/20">↑</button>
+                <button onClick={() => setOffsetY(y => y + 5)} className="rounded bg-white/10 px-2 py-1 text-xs hover:bg-white/20">↓</button>
               </div>
-              <button onClick={saveChanges} disabled={saving} className="text-sm font-bold text-purple-400 hover:text-purple-300">
-                {saving ? "..." : "Save"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setZoom(1);
+                    setOffsetX(0);
+                    setOffsetY(0);
+                    setRotation(0);
+                  }}
+                  className="text-xs text-ink-400 hover:text-white"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={saveChanges}
+                  disabled={saving}
+                  className="rounded-lg bg-purple-600 px-3 py-1 text-xs font-semibold text-white hover:bg-purple-500 disabled:opacity-50"
+                >
+                  {saving ? "..." : "Save"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

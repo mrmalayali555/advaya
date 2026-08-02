@@ -118,7 +118,7 @@ export function Select({
 export function Toggle({
   label,
   name,
-  defaultChecked = true,
+  defaultChecked = name === "showOnHomepage" ? false : true,
   hint,
 }: {
   label: string;

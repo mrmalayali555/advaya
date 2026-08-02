@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { slugify } from "@/lib/utils";
+import { requireAdmin } from "@/lib/require-admin";
 
 export async function createIntervention(formData: FormData) {
+  await requireAdmin();
   const title = (formData.get("title") as string)?.trim();
   const description = (formData.get("description") as string)?.trim();
   const dateStr = formData.get("date") as string;
@@ -48,6 +50,7 @@ export async function createIntervention(formData: FormData) {
 }
 
 export async function updateIntervention(id: string, formData: FormData) {
+  await requireAdmin();
   const title = (formData.get("title") as string)?.trim();
   const description = (formData.get("description") as string)?.trim();
   const dateStr = formData.get("date") as string;
@@ -84,6 +87,7 @@ export async function updateIntervention(id: string, formData: FormData) {
 }
 
 export async function deleteIntervention(id: string) {
+  await requireAdmin();
   await db.intervention.delete({ where: { id } });
   revalidatePath("/interventions");
   revalidatePath("/adminahnuok/interventions");
@@ -91,6 +95,7 @@ export async function deleteIntervention(id: string) {
 }
 
 export async function togglePublishIntervention(id: string, currentStatus: boolean) {
+  await requireAdmin();
   await db.intervention.update({
     where: { id },
     data: { published: !currentStatus },
@@ -100,6 +105,7 @@ export async function togglePublishIntervention(id: string, currentStatus: boole
 }
 
 export async function togglePinIntervention(id: string, currentPinned: boolean) {
+  await requireAdmin();
   await db.intervention.update({
     where: { id },
     data: { pinned: !currentPinned },
@@ -107,4 +113,5 @@ export async function togglePinIntervention(id: string, currentPinned: boolean) 
   revalidatePath("/interventions");
   revalidatePath("/adminahnuok/interventions");
 }
+
 

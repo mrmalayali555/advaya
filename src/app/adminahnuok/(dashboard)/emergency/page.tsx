@@ -59,7 +59,7 @@ export default async function AdminEmergencyPage() {
               />
               <div className="grid gap-3 sm:grid-cols-2">
                 <Toggle label="Active" name="active" defaultChecked hint="Show on the public site" />
-                <Toggle label="Show on Homepage" name="showOnHomepage" hint="Feature on the homepage strip" />
+                <Toggle label="Show on Homepage" name="showOnHomepage" defaultChecked={false} hint="Feature on the homepage strip" />
               </div>
               <SubmitBtn>Add contact</SubmitBtn>
             </form>
