@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
+import type { PageContent } from "@/lib/page-builder-types";
 
 /** Save a rich page's JSON content (about / ug / pg). */
 export async function savePage(key: string, formData: FormData) {
@@ -29,6 +30,21 @@ export async function savePage(key: string, formData: FormData) {
 
   revalidatePath("/adminahnuok/pages");
   revalidatePath(`/${key === "about" ? "about" : key}`);
+  revalidatePath("/");
+}
+
+/** Save page builder sections (ug / pg). Full JSON content with sections array. */
+export async function savePageSections(key: string, title: string, content: PageContent) {
+  await requireAdmin();
+
+  await db.page.upsert({
+    where: { key },
+    update: { title, content: JSON.stringify(content) },
+    create: { key, title, content: JSON.stringify(content) },
+  });
+
+  revalidatePath("/adminahnuok/pages");
+  revalidatePath(`/${key}`);
   revalidatePath("/");
 }
 

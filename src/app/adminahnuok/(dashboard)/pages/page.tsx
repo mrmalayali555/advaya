@@ -2,9 +2,19 @@ import { AdminHeader, AdminCard } from "@/components/admin/admin-ui";
 import { Field, TextArea, SubmitBtn } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
 import { savePage } from "@/lib/actions/content";
+import { PageBuilder } from "@/components/admin/page-builder/page-builder";
+import { parsePageContent } from "@/lib/page-builder-types";
 
 async function getPageData(key: string) {
   const p = await db.page.findUnique({ where: { key } });
+  return {
+    title: p?.title ?? "",
+    rawContent: p?.content ?? null,
+  };
+}
+
+async function getAboutData() {
+  const p = await db.page.findUnique({ where: { key: "about" } });
   let data: Record<string, string> = {};
   try {
     data = p?.content ? JSON.parse(p.content) : {};
@@ -14,16 +24,20 @@ async function getPageData(key: string) {
 
 export default async function AdminPagesPage() {
   const [about, ug, pg] = await Promise.all([
-    getPageData("about"),
+    getAboutData(),
     getPageData("ug"),
     getPageData("pg"),
   ]);
+
+  const ugContent = parsePageContent(ug.rawContent);
+  const pgContent = parsePageContent(pg.rawContent);
 
   return (
     <>
       <AdminHeader title="Pages" description="Edit the About Union, UG and PG page content." />
 
       <div className="space-y-8">
+        {/* About page — keep the simple form */}
         <AdminCard>
           <h3 className="mb-4 font-semibold text-ink-900">About the Union</h3>
           <form action={savePage.bind(null, "about")} className="grid gap-4">
@@ -36,25 +50,20 @@ export default async function AdminPagesPage() {
           </form>
         </AdminCard>
 
-        <AdminCard>
-          <h3 className="mb-4 font-semibold text-ink-900">Undergraduate (UG)</h3>
-          <form action={savePage.bind(null, "ug")} className="grid gap-4">
-            <Field label="Page title" name="title" defaultValue={ug.title || "Undergraduate (UG)"} />
-            <TextArea label="Intro" name="intro" defaultValue={ug.data.intro} rows={3} />
-            <SubmitBtn>Save UG page</SubmitBtn>
-          </form>
-        </AdminCard>
+        {/* UG page — full page builder */}
+        <PageBuilder
+          pageKey="ug"
+          initialTitle={ug.title || "Undergraduate (UG)"}
+          initialContent={ugContent}
+        />
 
-        <AdminCard>
-          <h3 className="mb-4 font-semibold text-ink-900">Postgraduate (PG)</h3>
-          <form action={savePage.bind(null, "pg")} className="grid gap-4">
-            <Field label="Page title" name="title" defaultValue={pg.title || "Postgraduate (PG)"} />
-            <TextArea label="Intro" name="intro" defaultValue={pg.data.intro} rows={3} />
-            <SubmitBtn>Save PG page</SubmitBtn>
-          </form>
-        </AdminCard>
+        {/* PG page — full page builder */}
+        <PageBuilder
+          pageKey="pg"
+          initialTitle={pg.title || "Postgraduate (PG)"}
+          initialContent={pgContent}
+        />
       </div>
     </>
   );
 }
-
