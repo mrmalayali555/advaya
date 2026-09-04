@@ -71,7 +71,7 @@ export function Footer({
               Quick Links
             </h3>
             <ul className="mt-5 space-y-3 text-sm">
-              {["Search", "UG", "PG", "About Union", "Emergency", "Subcommittee"].map((label) => {
+              {["Search", "About Union", "Emergency", "Subcommittee"].map((label) => {
                 const href =
                   label === "About Union"
                     ? "/about"

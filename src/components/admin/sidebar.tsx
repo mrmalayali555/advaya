@@ -47,7 +47,7 @@ const NAV = [
       { href: "/adminahnuok/emergency", label: "Emergency", icon: Siren },
       { href: "/adminahnuok/complaints", label: "Suggestions", icon: MessageSquareWarning },
       { href: "/adminahnuok/committees", label: "Subcommittees", icon: Users },
-      { href: "/adminahnuok/pages", label: "Pages (About/UG/PG)", icon: GraduationCap },
+      { href: "/adminahnuok/pages", label: "Pages (About)", icon: GraduationCap },
     ],
   },
   {

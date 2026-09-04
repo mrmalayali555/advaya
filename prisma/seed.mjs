@@ -81,22 +81,6 @@ async function main() {
           "It is my privilege to serve the students of Alappuzha Medical College. Together we will make this a year of achievement, unity and unforgettable memories.",
       }),
     },
-    {
-      key: "ug",
-      title: "Undergraduate (UG)",
-      content: JSON.stringify({
-        intro:
-          "Information, resources and union activities for MBBS undergraduate students.",
-      }),
-    },
-    {
-      key: "pg",
-      title: "Postgraduate (PG)",
-      content: JSON.stringify({
-        intro:
-          "Information, resources and union activities for postgraduate residents and scholars.",
-      }),
-    },
   ];
   for (const p of pages) {
     await db.page.upsert({

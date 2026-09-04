@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Menu, X, ChevronDown, Search } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { NAV_LINKS } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -75,45 +75,20 @@ export function Navbar({
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-1 lg:flex">
-            {NAV_LINKS.map((link) =>
-              "children" in link && link.children ? (
-                <div key={link.label} className="group relative">
-                  <button
-                    className="flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
-                    type="button"
-                  >
-                    {link.label}
-                    <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
-                  </button>
-                  <div className="invisible absolute left-0 top-full pt-2 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">
-                    <div className="min-w-[180px] rounded-2xl border border-white/10 bg-surface-container-high p-2 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl">
-                      {link.children.map((c) => (
-                        <Link
-                          key={c.href}
-                          href={c.href}
-                          className="block rounded-xl px-3 py-2 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-                        >
-                          {c.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
-                    isActive(link.href)
-                      ? "bg-white/10 text-white"
-                      : "text-white/70 hover:text-white"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+                  isActive(link.href)
+                    ? "bg-white/10 text-white"
+                    : "text-white/70 hover:text-white"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -173,35 +148,15 @@ export function Navbar({
               transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
               className="absolute inset-x-3 top-20 max-h-[80vh] overflow-auto rounded-3xl border border-white/10 bg-surface-container shadow-2xl backdrop-blur-xl p-3"
             >
-              {NAV_LINKS.flatMap((link) =>
-                "children" in link && link.children
-                  ? [
-                      <div
-                        key={link.label}
-                        className="px-4 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/50"
-                      >
-                        {link.label}
-                      </div>,
-                      ...link.children.map((c) => (
-                        <MobileLink
-                          key={c.href}
-                          href={c.href}
-                          label={c.label}
-                          active={isActive(c.href)}
-                          onClick={() => setOpen(false)}
-                        />
-                      )),
-                    ]
-                  : [
-                      <MobileLink
-                        key={link.href}
-                        href={link.href}
-                        label={link.label}
-                        active={isActive(link.href)}
-                        onClick={() => setOpen(false)}
-                      />,
-                    ]
-              )}
+              {NAV_LINKS.map((link) => (
+                <MobileLink
+                  key={link.href}
+                  href={link.href}
+                  label={link.label}
+                  active={isActive(link.href)}
+                  onClick={() => setOpen(false)}
+                />
+              ))}
               {searchConfig.showMobile && (
                 <Link
                   href="/search"

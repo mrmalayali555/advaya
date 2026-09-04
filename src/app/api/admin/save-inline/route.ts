@@ -69,8 +69,6 @@ export async function POST(req: NextRequest) {
 
     revalidatePath("/");
     revalidatePath("/about");
-    revalidatePath("/ug");
-    revalidatePath("/pg");
     revalidatePath("/emergency");
     revalidatePath("/adminahnuok/pages");
     revalidatePath("/adminahnuok/settings");

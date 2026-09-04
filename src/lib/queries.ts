@@ -320,18 +320,6 @@ const STATIC_PAGES = [
     keywords: "notifications announcements notices circulars updates news breaking alerts schedule bulletins general information",
   },
   {
-    title: "UG Delegate Registrations",
-    href: "/ug",
-    description: "Undergraduate delegate passes and registration portal for Advaya events.",
-    keywords: "ug undergraduate mbbs students delegates registration pass ticket entry general cultural sports fest form",
-  },
-  {
-    title: "PG Delegate Registrations",
-    href: "/pg",
-    description: "Postgraduate doctor and delegate passes for Advaya medical fest.",
-    keywords: "pg postgraduate doctors residents delegates registration pass ticket entry medical fest form",
-  },
-  {
     title: "Union Public Finance",
     href: "/finance",
     description: "Transparent budget breakdown, income, and expenditures of the TDMC College Union.",

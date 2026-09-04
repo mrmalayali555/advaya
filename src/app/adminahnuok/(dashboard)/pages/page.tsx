@@ -2,16 +2,6 @@ import { AdminHeader, AdminCard } from "@/components/admin/admin-ui";
 import { Field, TextArea, SubmitBtn } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
 import { savePage } from "@/lib/actions/content";
-import { PageBuilder } from "@/components/admin/page-builder/page-builder";
-import { parsePageContent } from "@/lib/page-builder-types";
-
-async function getPageData(key: string) {
-  const p = await db.page.findUnique({ where: { key } });
-  return {
-    title: p?.title ?? "",
-    rawContent: p?.content ?? null,
-  };
-}
 
 async function getAboutData() {
   const p = await db.page.findUnique({ where: { key: "about" } });
@@ -23,18 +13,11 @@ async function getAboutData() {
 }
 
 export default async function AdminPagesPage() {
-  const [about, ug, pg] = await Promise.all([
-    getAboutData(),
-    getPageData("ug"),
-    getPageData("pg"),
-  ]);
-
-  const ugContent = parsePageContent(ug.rawContent);
-  const pgContent = parsePageContent(pg.rawContent);
+  const about = await getAboutData();
 
   return (
     <>
-      <AdminHeader title="Pages" description="Edit the About Union, UG and PG page content." />
+      <AdminHeader title="Pages" description="Edit the About Union page content." />
 
       <div className="space-y-8">
         {/* About page — keep the simple form */}
@@ -49,20 +32,6 @@ export default async function AdminPagesPage() {
             <SubmitBtn>Save About page</SubmitBtn>
           </form>
         </AdminCard>
-
-        {/* UG page — full page builder */}
-        <PageBuilder
-          pageKey="ug"
-          initialTitle={ug.title || "Undergraduate (UG)"}
-          initialContent={ugContent}
-        />
-
-        {/* PG page — full page builder */}
-        <PageBuilder
-          pageKey="pg"
-          initialTitle={pg.title || "Postgraduate (PG)"}
-          initialContent={pgContent}
-        />
       </div>
     </>
   );
