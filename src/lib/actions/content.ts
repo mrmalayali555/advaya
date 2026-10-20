@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
 import type { PageContent } from "@/lib/page-builder-types";
@@ -106,3 +107,17 @@ export async function saveSettingsForm(formData: FormData) {
   ]);
 }
 
+export async function saveMaintenanceMode(formData: FormData) {
+  await requireAdmin();
+
+  const enabled = formData.get("maintenance_mode") === "on";
+
+  await db.setting.upsert({
+    where: { key: "maintenance_mode" },
+    update: { value: JSON.stringify({ enabled }) },
+    create: { key: "maintenance_mode", value: JSON.stringify({ enabled }) },
+  });
+
+  revalidatePath("/adminahnuok/settings");
+  redirect(`/adminahnuok/settings?maintenance_saved=${enabled ? "enabled" : "disabled"}`);
+}

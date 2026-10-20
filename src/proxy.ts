@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { TEMPORARY_MAINTENANCE_MODE } from "@/lib/maintenance-config";
+import { db } from "@/lib/db";
 
 const secret = new TextEncoder().encode(
   process.env.AUTH_SECRET || "dev-secret-change-me"
@@ -51,31 +51,6 @@ export async function proxy(req: NextRequest) {
     return new NextResponse("Not Found", { status: 404 });
   }
 
-  // TEMPORARY MAINTENANCE MODE: keep admin/auth available while all public
-  // pages and public APIs resolve to the isolated maintenance experience.
-  const isAdminRoute = pathname === "/adminahnuok" || pathname.startsWith("/adminahnuok/");
-  const isAdminApi = pathname === "/api/admin" || pathname.startsWith("/api/admin/");
-  const isStaticAsset = pathname.startsWith("/_next/") || pathname === "/favicon.ico";
-
-  if (TEMPORARY_MAINTENANCE_MODE && !isAdminRoute && !isAdminApi && !isStaticAsset) {
-    if (pathname.startsWith("/api/")) {
-      return addSecurityHeaders(
-        NextResponse.json(
-          { error: "The website is temporarily under maintenance." },
-          { status: 503, headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } }
-        )
-      );
-    }
-
-    if (pathname !== "/maintenance") {
-      const maintenanceUrl = new URL("/maintenance", req.url);
-      const response = NextResponse.rewrite(maintenanceUrl);
-      response.headers.set("Cache-Control", "no-store");
-      response.headers.set("X-Robots-Tag", "noindex, nofollow");
-      return addSecurityHeaders(response);
-    }
-  }
-
   const token = req.cookies.get(COOKIE)?.value;
   const authed = await isValid(token);
 
@@ -103,10 +78,58 @@ export async function proxy(req: NextRequest) {
   }
 
   // Everything else under /adminahnuok requires a valid session.
-  if (!authed) {
-    const url = new URL("/adminahnuok/login", req.url);
-    url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
+  if (pathname.startsWith("/adminahnuok")) {
+    if (!authed) {
+      const url = new URL("/adminahnuok/login", req.url);
+      url.searchParams.set("from", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    return addSecurityHeaders(NextResponse.next());
+  }
+
+  // TEMPORARY MAINTENANCE MODE
+  // This proxy runs on Node.js in Next 16, so the existing Prisma settings
+  // store can be read for every request without a deployment-time toggle.
+  let maintenanceEnabled = false;
+  try {
+    const setting = await db.setting.findUnique({ where: { key: "maintenance_mode" } });
+    maintenanceEnabled = setting?.value ? JSON.parse(setting.value).enabled === true : false;
+  } catch (error) {
+    console.error("Unable to read maintenance mode setting:", error);
+    if (pathname.startsWith("/api/")) {
+      return addSecurityHeaders(
+        NextResponse.json(
+          { error: "Public services are temporarily unavailable." },
+          { status: 503, headers: { "Retry-After": "60", "Cache-Control": "no-store" } }
+        )
+      );
+    }
+    return addSecurityHeaders(
+      new NextResponse("Public website temporarily unavailable.", {
+        status: 503,
+        headers: { "Retry-After": "60", "Cache-Control": "no-store" },
+      })
+    );
+  }
+
+  if (maintenanceEnabled && pathname.startsWith("/api/")) {
+    return addSecurityHeaders(
+      NextResponse.json(
+        { error: "The public website is temporarily under maintenance." },
+        { status: 503, headers: { "Retry-After": "3600", "Cache-Control": "no-store" } }
+      )
+    );
+  }
+
+  if (maintenanceEnabled && pathname !== "/maintenance") {
+    const response = NextResponse.rewrite(new URL("/maintenance", req.url), {
+      status: 503,
+    });
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    response.headers.set("Retry-After", "3600");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return addSecurityHeaders(response);
   }
 
   return addSecurityHeaders(NextResponse.next());
@@ -114,8 +137,8 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/:path*",
+    // TEMPORARY MAINTENANCE MODE: exclude Next internals and file assets so
+    // the maintenance page can load its fonts, logo, and generated bundles.
+    "/((?!_next/static|_next/image|favicon.ico|maintenance(?:/.*)?|.*\\..*).*)",
   ],
 };
-
-

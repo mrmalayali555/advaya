@@ -1,7 +1,7 @@
 import { AdminHeader, AdminCard } from "@/components/admin/admin-ui";
-import { Field, TextArea, SubmitBtn } from "@/components/admin/form-fields";
+import { Field, TextArea, SubmitBtn, Toggle } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
-import { saveSettingsForm } from "@/lib/actions/content";
+import { saveMaintenanceMode, saveSettingsForm } from "@/lib/actions/content";
 import { SITE } from "@/lib/site";
 
 async function getSetting<T>(key: string, fallback: T): Promise<T> {
@@ -13,8 +13,13 @@ async function getSetting<T>(key: string, fallback: T): Promise<T> {
   }
 }
 
-export default async function AdminSettingsPage() {
-  const [hero, contact, stats, carouselInterval, complaints, navSearch] = await Promise.all([
+export default async function AdminSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ maintenance_saved?: string }>;
+}) {
+  const [{ maintenance_saved: maintenanceSaved }, hero, contact, stats, carouselInterval, complaints, navSearch, maintenanceMode] = await Promise.all([
+    searchParams,
     getSetting("hero", { badge: SITE.college, title: "The voice of every student.", subtitle: SITE.description }),
     getSetting("contact", { address: SITE.address, phone: SITE.phone, email: SITE.email }),
     getSetting("stats", { students: 1200, events: 48, achievements: 96, committees: 12 }),
@@ -29,11 +34,51 @@ export default async function AdminSettingsPage() {
       f3_text: "Academics, facilities, ragging, safety — whatever it is, we want to know.",
     }),
     getSetting("nav_search", { showMobile: true, showDesktop: true }),
+    getSetting("maintenance_mode", { enabled: false }),
   ]);
 
   return (
     <>
       <AdminHeader title="Settings" description="Control the homepage hero, contact details and stat counters." />
+
+      {maintenanceSaved && (
+        <div
+          className={`mb-6 rounded-xl border px-4 py-3 text-sm font-medium ${
+            maintenanceSaved === "enabled"
+              ? "border-amber-200 bg-amber-50 text-amber-800"
+              : "border-emerald-200 bg-emerald-50 text-emerald-800"
+          }`}
+          role="status"
+        >
+          Website maintenance mode {maintenanceSaved === "enabled" ? "enabled" : "disabled"} successfully.
+        </div>
+      )}
+
+      <form action={saveMaintenanceMode} className="mb-8">
+        <AdminCard>
+          <div className="mb-4">
+            <h3 className="font-semibold text-ink-900">Website Maintenance Mode</h3>
+            <p className="mt-1 text-sm text-ink-500">
+              Temporarily replace all public pages with the Advaya maintenance page. Admin access remains available.
+            </p>
+          </div>
+          <div className="mb-5 flex items-center gap-2 text-sm">
+            <span className="font-medium text-ink-700">Current status:</span>
+            <span className={`font-bold ${maintenanceMode.enabled ? "text-amber-700" : "text-emerald-700"}`}>
+              {maintenanceMode.enabled ? "Active" : "Inactive"}
+            </span>
+          </div>
+          <div className="space-y-4">
+            <Toggle
+              label="Enable maintenance mode"
+              name="maintenance_mode"
+              defaultChecked={maintenanceMode.enabled}
+              hint="Public pages and public content APIs will be temporarily unavailable."
+            />
+            <SubmitBtn>Save maintenance mode</SubmitBtn>
+          </div>
+        </AdminCard>
+      </form>
 
       <form action={saveSettingsForm} className="space-y-8">
         <AdminCard>
@@ -207,4 +252,3 @@ export default async function AdminSettingsPage() {
     </>
   );
 }
-

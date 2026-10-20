@@ -165,9 +165,6 @@ export default function RootLayout({
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@400;700&family=Cedarville+Cursive&family=Playfair+Display:wght@700&display=swap"
-          media="print"
-          // @ts-expect-error onload trick for non-blocking font load
-          onLoad="this.media='all'"
         />
         <script
           type="application/ld+json"
