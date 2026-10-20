@@ -324,6 +324,18 @@ export function CorkBoardGallery({ gallery }: { gallery: GalleryData }) {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export function NormalGallery({ gallery }: { gallery: GalleryData }) {
+  const [landscapePhotos, setLandscapePhotos] = useState<Set<string>>(new Set());
+  const columns = gallery.mobileColumns === 3 ? 3 : gallery.mobileColumns === 2 ? 2 : 1;
+  function markOrientation(id: string, width: number, height: number) {
+    if (width > height) {
+      setLandscapePhotos((current) => {
+        if (current.has(id)) return current;
+        const next = new Set(current);
+        next.add(id);
+        return next;
+      });
+    }
+  }
   return (
     <div className="mx-auto my-12 w-full max-w-6xl px-4 sm:px-6">
       {/* Title */}
@@ -348,12 +360,12 @@ export function NormalGallery({ gallery }: { gallery: GalleryData }) {
       )}
 
       {/* Masonry Grid */}
-      <div className={`gap-4 ${gallery.mobileColumns === 3 ? "columns-3" : gallery.mobileColumns === 2 ? "columns-2" : "columns-1"} sm:columns-2 lg:columns-3`}>
+      <div className={`grid items-start gap-4 ${columns === 3 ? "grid-cols-3" : columns === 2 ? "grid-cols-2" : "grid-cols-1"} sm:grid-cols-2 lg:grid-cols-3`}>
         {gallery.photos.map((photo) => (
           <figure
             key={photo.id}
             data-photo-id={photo.id}
-            className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-outline-variant/30 bg-surface/50 p-2 shadow-sm transition-all duration-300 hover:shadow-md hover:border-outline-variant glass-card group"
+            className={`overflow-hidden rounded-xl border border-outline-variant/30 bg-surface/50 p-2 shadow-sm transition-all duration-300 hover:shadow-md hover:border-outline-variant glass-card group ${landscapePhotos.has(photo.id) ? "col-span-full sm:col-span-1" : ""}`}
           >
             <GalleryPhotoImg
               src={photo.url}
@@ -362,6 +374,7 @@ export function NormalGallery({ gallery }: { gallery: GalleryData }) {
               offsetX={photo.offsetX || 0}
               offsetY={photo.offsetY || 0}
               rotation={photo.rotation || 0}
+              onDimensions={(width, height) => markOrientation(photo.id, width, height)}
               className="rounded-lg"
             />
             {photo.caption && (

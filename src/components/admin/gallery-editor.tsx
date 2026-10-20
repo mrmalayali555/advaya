@@ -574,12 +574,23 @@ function MobileGalleryPreview({
 }) {
   const columns = gallery.mobileColumns || 1;
   const photos = gallery.photos.slice().sort((a, b) => a.position - b.position);
+  const [landscapePhotos, setLandscapePhotos] = useState<Set<string>>(new Set());
   const isBohemian = gallery.theme === "bohemian";
   const isScrapbook = gallery.theme === "scrapbook";
   const isCorkboard = gallery.theme === "corkboard";
   const photoGridClass = isBohemian
     ? "flex flex-wrap items-center justify-center gap-3"
     : `grid gap-2 ${columns === 3 ? "grid-cols-3" : columns === 2 ? "grid-cols-2" : "grid-cols-1"}`;
+  const markOrientation = (id: string, width: number, height: number) => {
+    if (width > height) {
+      setLandscapePhotos((current) => {
+        if (current.has(id)) return current;
+        const next = new Set(current);
+        next.add(id);
+        return next;
+      });
+    }
+  };
   return (
     <div className={`mt-5 ${compact ? "" : "md:max-w-[270px]"}`}>
       <div className="mx-auto rounded-[2rem] border-[7px] border-ink-900 bg-ink-900 p-1.5 shadow-xl">
@@ -603,17 +614,17 @@ function MobileGalleryPreview({
               {photos.length > 0 ? photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className={`overflow-hidden rounded-lg ${isCorkboard ? "border border-amber-200/20 bg-[#4b350d]" : isScrapbook ? "border-4 border-white bg-white shadow-md" : "bg-ink-50"} ${isBohemian ? "w-[42%] rotate-[-3deg] p-1 shadow-md even:rotate-[4deg]" : ""}`}
+                  className={`overflow-hidden rounded-lg ${isCorkboard ? "border border-amber-200/20 bg-[#4b350d]" : isScrapbook ? "border-4 border-white bg-white shadow-md" : "bg-ink-50"} ${isBohemian ? "w-[42%] rotate-[-3deg] p-1 shadow-md even:rotate-[4deg]" : landscapePhotos.has(photo.id) ? "col-span-full" : ""}`}
                 >
                   {isScrapbook && <div className="mx-auto -mt-2 mb-1 h-2 w-8 rounded-sm bg-pink-200" />}
                   <GalleryPhotoImg
                     src={photo.url}
                     alt={photo.caption || "Gallery photo"}
-                    aspectRatio="1/1"
                     zoom={photo.zoom || 1}
                     offsetX={photo.offsetX || 0}
                     offsetY={photo.offsetY || 0}
                     rotation={photo.rotation || 0}
+                    onDimensions={(width, height) => markOrientation(photo.id, width, height)}
                   />
                   {photo.caption && (
                     <p className={`truncate px-1.5 py-1 text-[9px] ${isCorkboard ? "text-amber-100" : "text-ink-600"}`}>{photo.caption}</p>

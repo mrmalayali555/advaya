@@ -12,6 +12,7 @@ interface GalleryPhotoImgProps {
   aspectRatio?: string; // Optional fixed aspect ratio (e.g., "3/4" or "1/1")
   fitMode?: "cover" | "contain"; // cover for masonry grid, contain for lightbox
   className?: string;
+  onDimensions?: (width: number, height: number) => void;
   children?: React.ReactNode;
 }
 
@@ -25,6 +26,7 @@ export function GalleryPhotoImg({
   aspectRatio: fixedAspectRatio,
   fitMode = "cover",
   className = "",
+  onDimensions,
   children,
 }: GalleryPhotoImgProps) {
   const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
@@ -66,6 +68,7 @@ export function GalleryPhotoImg({
             w: e.currentTarget.naturalWidth,
             h: e.currentTarget.naturalHeight,
           });
+          onDimensions?.(e.currentTarget.naturalWidth, e.currentTarget.naturalHeight);
         }}
         className={`absolute transition-all duration-200 ${fitMode === "cover" ? "object-cover" : "object-contain"}`}
         style={{
