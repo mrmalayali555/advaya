@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { contactSchema } from "@/lib/validations";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { sendMail } from "@/lib/email";
+import { isMaintenanceMode, maintenanceResponse } from "@/lib/maintenance";
 
 export async function POST(req: NextRequest) {
+  if (await isMaintenanceMode()) return maintenanceResponse();
+
   const ip = clientIp(req.headers);
   const { ok, retryAfter } = rateLimit(`contact:${ip}`, { max: 3, windowMs: 60_000 });
   if (!ok) {

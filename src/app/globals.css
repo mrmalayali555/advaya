@@ -244,3 +244,77 @@
     background-color: rgba(30, 15, 50, 0.9);
     border-color: rgba(160, 0, 255, 0.25);
 }
+
+.maintenance-page {
+  background:
+    radial-gradient(circle at 78% 32%, rgba(91, 42, 134, 0.2), transparent 28rem),
+    radial-gradient(circle at 12% 78%, rgba(183, 109, 255, 0.08), transparent 24rem),
+    #050208;
+}
+
+.maintenance-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: linear-gradient(rgba(221, 183, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(221, 183, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+.maintenance-reveal {
+  animation: maintenance-reveal 800ms var(--ease-brand) both;
+}
+
+.maintenance-reveal-delay {
+  animation-delay: 100ms;
+}
+
+.maintenance-reveal-delay-2 {
+  animation-delay: 180ms;
+}
+
+.maintenance-reveal-delay-3 {
+  animation-delay: 260ms;
+}
+
+.maintenance-orbit {
+  animation: maintenance-orbit 18s linear infinite;
+}
+
+.maintenance-orbit-reverse {
+  animation-direction: reverse;
+  animation-duration: 24s;
+}
+
+.maintenance-dot {
+  animation: maintenance-pulse 3s ease-in-out infinite;
+}
+
+.maintenance-dot-delay {
+  animation-delay: 1.2s;
+}
+
+@keyframes maintenance-reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes maintenance-orbit {
+  from { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.03); }
+  to { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes maintenance-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-reveal,
+  .maintenance-orbit,
+  .maintenance-dot {
+    animation: none;
+  }
+}

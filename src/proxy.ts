@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { TEMPORARY_MAINTENANCE_MODE } from "@/lib/maintenance-config";
 
 const secret = new TextEncoder().encode(
   process.env.AUTH_SECRET || "dev-secret-change-me"
@@ -50,6 +51,31 @@ export async function proxy(req: NextRequest) {
     return new NextResponse("Not Found", { status: 404 });
   }
 
+  // TEMPORARY MAINTENANCE MODE: keep admin/auth available while all public
+  // pages and public APIs resolve to the isolated maintenance experience.
+  const isAdminRoute = pathname === "/adminahnuok" || pathname.startsWith("/adminahnuok/");
+  const isAdminApi = pathname === "/api/admin" || pathname.startsWith("/api/admin/");
+  const isStaticAsset = pathname.startsWith("/_next/") || pathname === "/favicon.ico";
+
+  if (TEMPORARY_MAINTENANCE_MODE && !isAdminRoute && !isAdminApi && !isStaticAsset) {
+    if (pathname.startsWith("/api/")) {
+      return addSecurityHeaders(
+        NextResponse.json(
+          { error: "The website is temporarily under maintenance." },
+          { status: 503, headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } }
+        )
+      );
+    }
+
+    if (pathname !== "/maintenance") {
+      const maintenanceUrl = new URL("/maintenance", req.url);
+      const response = NextResponse.rewrite(maintenanceUrl);
+      response.headers.set("Cache-Control", "no-store");
+      response.headers.set("X-Robots-Tag", "noindex, nofollow");
+      return addSecurityHeaders(response);
+    }
+  }
+
   const token = req.cookies.get(COOKIE)?.value;
   const authed = await isValid(token);
 
@@ -88,13 +114,7 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/adminahnuok/:path*",
-    "/api/admin/:path*",
-    "/wp-admin/:path*",
-    "/wp-login/:path*",
-    "/phpmyadmin/:path*",
-    "/.env",
-    "/.git/:path*",
+    "/:path*",
   ],
 };
 

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { isMaintenanceMode, maintenanceResponse } from "@/lib/maintenance";
 
 export async function POST(req: Request) {
+  if (await isMaintenanceMode()) return maintenanceResponse();
+
   try {
     const body = await req.json();
     const { formId, data, files } = body;
@@ -35,7 +38,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, submissionId: submission.id });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Registration submit error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
