@@ -7,7 +7,6 @@ import {
   MAINTENANCE_ANIMATIONS,
   parseMaintenanceSettings,
 } from "@/lib/maintenance-settings";
-import { DEFAULT_CONTENT_LAYOUT } from "@/lib/content-layout";
 
 async function getSetting<T>(key: string, fallback: T): Promise<T> {
   const row = await db.setting.findUnique({ where: { key } });
@@ -28,7 +27,7 @@ export default async function AdminSettingsPage({
 }: {
   searchParams: Promise<{ maintenance_saved?: string }>;
 }) {
-  const [{ maintenance_saved: maintenanceSaved }, hero, contact, stats, carouselInterval, complaints, navSearch, contentLayout, maintenanceMode] = await Promise.all([
+  const [{ maintenance_saved: maintenanceSaved }, hero, contact, stats, carouselInterval, complaints, navSearch, maintenanceMode] = await Promise.all([
     searchParams,
     getSetting("hero", { badge: SITE.college, title: "The voice of every student.", subtitle: SITE.description }),
     getSetting("contact", { address: SITE.address, phone: SITE.phone, email: SITE.email }),
@@ -44,7 +43,6 @@ export default async function AdminSettingsPage({
       f3_text: "Academics, facilities, ragging, safety — whatever it is, we want to know.",
     }),
     getSetting("nav_search", { showMobile: true, showDesktop: true }),
-    getSetting("content_layout", DEFAULT_CONTENT_LAYOUT),
     getMaintenanceSettings(),
   ]);
 
@@ -66,30 +64,6 @@ export default async function AdminSettingsPage({
       )}
 
       <form action={saveMaintenanceMode} className="mb-8">
-        <AdminCard>
-          <h3 className="mb-2 font-semibold text-ink-900">Mobile content layout</h3>
-          <p className="mb-4 text-sm text-ink-500">
-            Choose how many cards appear side by side on phones. Desktop layouts remain responsive.
-          </p>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Select label="Events on mobile" name="layout_events" defaultValue={String(contentLayout.events)} options={[
-              { value: "1", label: "1 column" },
-              { value: "2", label: "2 columns" },
-              { value: "3", label: "3 columns" },
-            ]} />
-            <Select label="Achievements on mobile" name="layout_achievements" defaultValue={String(contentLayout.achievements)} options={[
-              { value: "1", label: "1 column" },
-              { value: "2", label: "2 columns" },
-              { value: "3", label: "3 columns" },
-            ]} />
-            <Select label="Interventions on mobile" name="layout_interventions" defaultValue={String(contentLayout.interventions)} options={[
-              { value: "1", label: "1 column" },
-              { value: "2", label: "2 columns" },
-              { value: "3", label: "3 columns" },
-            ]} />
-          </div>
-        </AdminCard>
-
         <AdminCard>
           <div className="mb-4">
             <h3 className="font-semibold text-ink-900">Website Maintenance Mode</h3>

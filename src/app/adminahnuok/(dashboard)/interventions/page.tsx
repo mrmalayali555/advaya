@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Plus, Pencil, Trash2, Pin, Eye, EyeOff, FileText, Calendar } from "lucide-react";
-import { AdminHeader, AdminCard, EmptyRow, StatusPill } from "@/components/admin/admin-ui";
+import { Pencil, Pin, Eye, EyeOff, FileText, Calendar } from "lucide-react";
+import { AdminHeader, AdminCard, EmptyRow } from "@/components/admin/admin-ui";
 import { DeleteBtn } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
@@ -9,23 +9,30 @@ import {
   togglePublishIntervention,
   togglePinIntervention,
 } from "@/lib/actions/interventions";
+import { Select, SubmitBtn } from "@/components/admin/form-fields";
+import { saveContentLayout } from "@/lib/actions/content";
+import { parseContentLayout } from "@/lib/content-layout";
 
 export default async function AdminInterventionsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; q?: string; layout_saved?: string }>;
 }) {
-  const { status = "all", q = "" } = await searchParams;
+  const { status = "all", q = "", layout_saved: layoutSaved } = await searchParams;
 
-  const items = await db.intervention.findMany({
-    where: {
-      ...(status === "published" ? { published: true } : {}),
-      ...(status === "draft" ? { published: false } : {}),
-      ...(status === "pinned" ? { pinned: true } : {}),
-      ...(q ? { OR: [{ title: { contains: q } }, { description: { contains: q } }] } : {}),
-    },
-    orderBy: [{ pinned: "desc" }, { date: "desc" }],
-  });
+  const [items, layoutRow] = await Promise.all([
+    db.intervention.findMany({
+      where: {
+        ...(status === "published" ? { published: true } : {}),
+        ...(status === "draft" ? { published: false } : {}),
+        ...(status === "pinned" ? { pinned: true } : {}),
+        ...(q ? { OR: [{ title: { contains: q } }, { description: { contains: q } }] } : {}),
+      },
+      orderBy: [{ pinned: "desc" }, { date: "desc" }],
+    }),
+    db.setting.findUnique({ where: { key: "content_layout" } }),
+  ]);
+  const layout = parseContentLayout(layoutRow?.value);
 
   const tabs = [
     { key: "all", label: "All" },
@@ -41,6 +48,23 @@ export default async function AdminInterventionsPage({
         description="Manage official letters, representations, and requests to authorities."
         action={{ label: "Add intervention", href: "/adminahnuok/interventions/new" }}
       />
+      <AdminCard className="mb-6">
+        <form action={saveContentLayout.bind(null, "interventions")} className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="font-semibold text-ink-900">Mobile intervention layout</h2>
+            <p className="mt-1 text-sm text-ink-500">Choose how many intervention cards appear side by side on phones.</p>
+          </div>
+          <div className="flex items-end gap-3">
+            <Select label="Columns on mobile" name="columns" defaultValue={String(layout.interventions)} options={[
+              { value: "1", label: "1 column" },
+              { value: "2", label: "2 columns" },
+              { value: "3", label: "3 columns" },
+            ]} />
+            <SubmitBtn>Save</SubmitBtn>
+          </div>
+        </form>
+        {layoutSaved && <p className="mt-3 text-sm font-medium text-emerald-700" role="status">Mobile intervention layout saved.</p>}
+      </AdminCard>
 
       {/* Tabs */}
       <div className="mb-6 flex flex-wrap items-center gap-2">
@@ -163,4 +187,3 @@ export default async function AdminInterventionsPage({
     </>
   );
 }
-

@@ -1,11 +1,24 @@
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { AdminHeader, EmptyRow, StatusPill } from "@/components/admin/admin-ui";
-import { db } from "@/lib/db";
 import { formatDateRange } from "@/lib/utils";
+import { Select, SubmitBtn } from "@/components/admin/form-fields";
+import { AdminCard } from "@/components/admin/admin-ui";
+import { db as database } from "@/lib/db";
+import { saveContentLayout } from "@/lib/actions/content";
+import { parseContentLayout } from "@/lib/content-layout";
 
-export default async function AdminEventsPage() {
-  const events = await db.event.findMany({ orderBy: { date: "desc" } });
+export default async function AdminEventsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ layout_saved?: string }>;
+}) {
+  const [{ layout_saved: layoutSaved }, events, layoutRow] = await Promise.all([
+    searchParams,
+    database.event.findMany({ orderBy: { date: "desc" } }),
+    database.setting.findUnique({ where: { key: "content_layout" } }),
+  ]);
+  const layout = parseContentLayout(layoutRow?.value);
 
   return (
     <>
@@ -14,6 +27,23 @@ export default async function AdminEventsPage() {
         description="Create and manage events. Upcoming ones appear on the home page."
         action={{ label: "New event", href: "/adminahnuok/events/new" }}
       />
+      <AdminCard className="mb-6">
+        <form action={saveContentLayout.bind(null, "events")} className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="font-semibold text-ink-900">Mobile event layout</h2>
+            <p className="mt-1 text-sm text-ink-500">Choose how many event cards appear side by side on phones.</p>
+          </div>
+          <div className="flex items-end gap-3">
+            <Select label="Columns on mobile" name="columns" defaultValue={String(layout.events)} options={[
+              { value: "1", label: "1 column" },
+              { value: "2", label: "2 columns" },
+              { value: "3", label: "3 columns" },
+            ]} />
+            <SubmitBtn>Save</SubmitBtn>
+          </div>
+        </form>
+        {layoutSaved && <p className="mt-3 text-sm font-medium text-emerald-700" role="status">Mobile event layout saved.</p>}
+      </AdminCard>
 
       {events.length === 0 ? (
         <EmptyRow>No events yet. Create your first one.</EmptyRow>
@@ -59,4 +89,3 @@ export default async function AdminEventsPage() {
     </>
   );
 }
-

@@ -10,6 +10,7 @@ import {
   isMaintenanceAnimation,
   parseMaintenanceSettings,
 } from "@/lib/maintenance-settings";
+import { parseContentLayout, type ContentLayoutSettings } from "@/lib/content-layout";
 
 /** Save a rich page's JSON content (about / ug / pg). */
 export async function savePage(key: string, formData: FormData) {
@@ -101,12 +102,6 @@ export async function saveSettingsForm(formData: FormData) {
     showMobile: formData.get("search_show_mobile") === "on",
     showDesktop: formData.get("search_show_desktop") === "on",
   };
-  const contentLayout = {
-    events: Math.min(3, Math.max(1, Number(formData.get("layout_events") || 1))),
-    achievements: Math.min(3, Math.max(1, Number(formData.get("layout_achievements") || 1))),
-    interventions: Math.min(3, Math.max(1, Number(formData.get("layout_interventions") || 1))),
-  };
-
   await Promise.all([
     saveSetting("hero", hero),
     saveSetting("contact", contact),
@@ -114,8 +109,31 @@ export async function saveSettingsForm(formData: FormData) {
     saveSetting("carousel_interval", carouselInterval),
     saveSetting("complaints", complaints),
     saveSetting("nav_search", navSearch),
-    saveSetting("content_layout", contentLayout),
   ]);
+}
+
+export async function saveContentLayout(
+  section: keyof ContentLayoutSettings,
+  formData: FormData
+) {
+  await requireAdmin();
+
+  const columns = Number(formData.get("columns"));
+  if (columns !== 1 && columns !== 2 && columns !== 3) {
+    throw new Error("Invalid mobile column count.");
+  }
+
+  const current = await db.setting.findUnique({ where: { key: "content_layout" } });
+  const layout = parseContentLayout(current?.value);
+  await db.setting.upsert({
+    where: { key: "content_layout" },
+    update: { value: JSON.stringify({ ...layout, [section]: columns }) },
+    create: { key: "content_layout", value: JSON.stringify({ ...layout, [section]: columns }) },
+  });
+
+  revalidatePath(`/${section}`);
+  revalidatePath(`/adminahnuok/${section}`);
+  redirect(`/adminahnuok/${section}?layout_saved=1`);
 }
 
 export async function saveMaintenanceMode(formData: FormData) {
