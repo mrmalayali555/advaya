@@ -13,9 +13,13 @@ async function main() {
   console.log("🌱 Seeding ADVAYA database…");
 
   // --- Admin ---
-  const email = process.env.ADMIN_EMAIL || "admin@advaya.local";
-  const password = process.env.ADMIN_PASSWORD || "advaya123";
+  const isDevelopment = process.env.NODE_ENV !== "production";
+  const email = process.env.ADMIN_EMAIL || (isDevelopment ? "admin@advaya.local" : "");
+  const password = process.env.ADMIN_PASSWORD || (isDevelopment ? "advaya123" : "");
   const name = process.env.ADMIN_NAME || "ADVAYA Admin";
+  if (!email || !password) {
+    throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD are required when seeding outside development.");
+  }
   const passwordHash = await bcrypt.hash(password, 12);
 
   await db.admin.upsert({
@@ -23,7 +27,7 @@ async function main() {
     update: { passwordHash, name, role: "superadmin" },
     create: { email, name, passwordHash, role: "superadmin" },
   });
-  console.log(`   ✓ Admin: ${email} / ${password}`);
+  console.log(`   ✓ Admin account seeded: ${email}`);
 
   // --- Marquee ---
   await db.marquee.deleteMany();

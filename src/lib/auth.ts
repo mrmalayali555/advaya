@@ -2,11 +2,9 @@ import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
+import { getAuthSecret } from "./auth-secret";
 
 const COOKIE_NAME = "advaya_session";
-const secret = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "dev-secret-change-me"
-);
 const MAX_AGE = 60 * 60 * 8; // 8 hours
 
 export type SessionPayload = {
@@ -37,7 +35,7 @@ export async function createSession(
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
-    .sign(secret);
+    .sign(getAuthSecret());
 
   // Save session in DB
   const { db } = await import("./db");
@@ -73,7 +71,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
   
   try {
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, getAuthSecret());
     
     // Check if session still exists in DB
     const { db } = await import("./db");
@@ -95,7 +93,7 @@ export async function getSession(): Promise<SessionPayload | null> {
 /** Verify a token string (used in middleware where cookies() isn't available the same way). */
 export async function verifyToken(token: string): Promise<SessionPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, getAuthSecret());
     
     // We can't import Prisma directly into edge middleware, 
     // but verifyToken is only used if there's middleware.

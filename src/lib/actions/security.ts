@@ -2,7 +2,7 @@
 
 import { requireAdmin } from "@/lib/require-admin";
 import { db } from "@/lib/db";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword, verifyPassword } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function changeAdminPassword(formData: FormData) {
@@ -16,8 +16,11 @@ export async function changeAdminPassword(formData: FormData) {
     return { error: "Both master password and new password are required." };
   }
 
-  // Verify the master password exactly as requested by the user
-  if (masterPassword !== "Shyba247") {
+  const admin = await db.admin.findUnique({
+    where: { id: session.sub },
+    select: { passwordHash: true },
+  });
+  if (!admin || !(await verifyPassword(masterPassword, admin.passwordHash))) {
     return { error: "Incorrect master password." };
   }
 

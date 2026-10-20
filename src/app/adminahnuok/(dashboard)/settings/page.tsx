@@ -197,11 +197,11 @@ export default async function AdminSettingsPage({
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field 
-                label="Master Password" 
+                label="Current Password"
                 name="master_password" 
                 type="password" 
                 required 
-                placeholder="Enter master password..."
+                placeholder="Enter current password..."
                 hint="Required to verify your identity."
               />
               <Field 

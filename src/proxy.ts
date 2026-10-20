@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { db } from "@/lib/db";
+import { getAuthSecret } from "@/lib/auth-secret";
 
-const secret = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "dev-secret-change-me"
-);
 const COOKIE = "advaya_session";
 
 async function isValid(token?: string): Promise<boolean> {
   if (!token) return false;
   try {
-    await jwtVerify(token, secret);
+    await jwtVerify(token, getAuthSecret());
+    const session = await db.adminSession.findUnique({
+      where: { token },
+      select: { id: true },
+    });
+    if (!session) return false;
     return true;
   } catch {
     return false;

@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+process.env.AUTH_SECRET ??= "local-development-secret-change-this-32chars";
 const productionSchemaPath = path.join(root, "prisma", "schema.prisma");
 const localSchemaPath = path.join(root, "prisma", "schema.local.prisma");
 

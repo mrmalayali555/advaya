@@ -1,22 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { jwtVerify } from "jose";
-
-const secret = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "dev-secret-change-me"
-);
-const COOKIE = "advaya_session";
+import { verifyToken, SESSION_COOKIE } from "@/lib/auth";
 
 async function isAdmin(req: NextRequest) {
-  const token = req.cookies.get(COOKIE)?.value;
-  if (!token) return false;
-  try {
-    await jwtVerify(token, secret);
-    return true;
-  } catch {
-    return false;
-  }
+  const token = req.cookies.get(SESSION_COOKIE)?.value;
+  return token ? Boolean(await verifyToken(token)) : false;
 }
 
 export async function POST(req: NextRequest) {

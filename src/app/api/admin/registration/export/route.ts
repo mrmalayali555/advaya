@@ -25,6 +25,16 @@ export async function GET(req: Request) {
       return new NextResponse("Form not found", { status: 404 });
     }
 
+    const sanitizeSpreadsheetValue = (value: unknown): string => {
+      const text = String(value ?? "");
+      return /^[=+\-@]/.test(text) ? `'${text}` : text;
+    };
+
+    const csvCell = (value: unknown): string => {
+      const cell = sanitizeSpreadsheetValue(value).replace(/"/g, '""');
+      return `"${cell}"`;
+    };
+
     // Prepare CSV header
     const headers = ["Submission ID", "Date", ...form.fields.map((f) => f.label), "Files"];
     
@@ -52,13 +62,10 @@ export async function GET(req: Request) {
         filesStr,
       ];
 
-      return row.map(cell => {
-        const cellStr = String(cell).replace(/"/g, '""');
-        return `"${cellStr}"`;
-      }).join(",");
+      return row.map(csvCell).join(",");
     });
 
-    const csv = [headers.map(h => `"${h}"`).join(","), ...rows].join("\n");
+    const csv = [headers.map(csvCell).join(","), ...rows].join("\n");
 
     return new NextResponse(csv, {
       headers: {
