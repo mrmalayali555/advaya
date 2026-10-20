@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { isMaintenanceMode, maintenanceResponse } from "@/lib/maintenance";
 
 export async function POST(req: Request) {
-  if (await isMaintenanceMode()) return maintenanceResponse();
-
   try {
     const body = await req.json();
     const { formId, data, files } = body;

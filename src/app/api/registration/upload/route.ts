@@ -1,10 +1,7 @@
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
-import { isMaintenanceMode, maintenanceResponse } from '@/lib/maintenance';
 
 export async function POST(request: Request): Promise<NextResponse> {
-  if (await isMaintenanceMode()) return maintenanceResponse();
-
   const { searchParams } = new URL(request.url);
   const filename = searchParams.get('filename');
 
