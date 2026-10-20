@@ -51,6 +51,7 @@ export async function createIntervention(formData: FormData) {
 
 export async function updateIntervention(id: string, formData: FormData) {
   await requireAdmin();
+  const existing = await db.intervention.findUnique({ where: { id }, select: { slug: true } });
   const title = (formData.get("title") as string)?.trim();
   const description = (formData.get("description") as string)?.trim();
   const dateStr = formData.get("date") as string;
@@ -81,6 +82,7 @@ export async function updateIntervention(id: string, formData: FormData) {
   });
 
   revalidatePath("/interventions");
+  if (existing?.slug) revalidatePath(`/interventions/${existing.slug}`);
   revalidatePath("/adminahnuok/interventions");
   revalidatePath(`/adminahnuok/interventions/${id}`);
   redirect("/adminahnuok/interventions");
@@ -113,5 +115,4 @@ export async function togglePinIntervention(id: string, currentPinned: boolean) 
   revalidatePath("/interventions");
   revalidatePath("/adminahnuok/interventions");
 }
-
 

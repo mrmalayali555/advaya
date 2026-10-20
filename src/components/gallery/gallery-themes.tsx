@@ -15,6 +15,7 @@ type GalleryData = {
   subtitle: string;
   blogText?: string | null;
   photos: Photo[];
+  mobileColumns?: 1 | 2 | 3;
 };
 
 /* ─── Shared polaroid frame ─── */
@@ -194,7 +195,7 @@ export function ScrapbookGallery({ gallery }: { gallery: GalleryData }) {
             "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0z' fill='none'/%3E%3Cpath d='M0 20h40M20 0v40' stroke='rgba(255,255,255,0.05)' stroke-width='0.5'/%3E%3C/svg%3E\")",
         }}
       >
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+        <div className={`grid gap-6 ${gallery.mobileColumns === 3 ? "grid-cols-3" : gallery.mobileColumns === 2 ? "grid-cols-2" : "grid-cols-1"} sm:grid-cols-3 lg:grid-cols-4`}>
           {gallery.photos.map((photo, i) => (
             <div
               key={photo.id}
@@ -347,7 +348,7 @@ export function NormalGallery({ gallery }: { gallery: GalleryData }) {
       )}
 
       {/* Masonry Grid */}
-      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+      <div className={`gap-4 ${gallery.mobileColumns === 3 ? "columns-3" : gallery.mobileColumns === 2 ? "columns-2" : "columns-1"} sm:columns-2 lg:columns-3`}>
         {gallery.photos.map((photo) => (
           <figure
             key={photo.id}
@@ -518,4 +519,3 @@ function GalleryClickWrapper({
     </div>
   );
 }
-

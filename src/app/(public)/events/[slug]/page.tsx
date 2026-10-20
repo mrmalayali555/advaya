@@ -9,6 +9,7 @@ import { MediaGallery } from "@/components/cards/media-gallery";
 import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
 import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getEvent } from "@/lib/queries";
+import { getSetting } from "@/lib/queries";
 import { formatDateRange, formatDateTime } from "@/lib/utils";
 import { SITE } from "@/lib/site";
 
@@ -74,6 +75,9 @@ export default async function EventDetail({
   const { slug } = await params;
   const e = await getEvent(slug);
   if (!e) notFound();
+  const galleryLayout = e.gallery
+    ? await getSetting(`event_gallery_layout:${e.gallery.id}`, { mobileColumns: 1 })
+    : { mobileColumns: 1 };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -248,7 +252,15 @@ export default async function EventDetail({
           )}
 
           {e.gallery && e.gallery.photos.length > 0 && (
-            <EventGalleryRenderer gallery={e.gallery} />
+            <EventGalleryRenderer
+              gallery={{
+                ...e.gallery,
+                mobileColumns:
+                  galleryLayout.mobileColumns === 2 || galleryLayout.mobileColumns === 3
+                    ? galleryLayout.mobileColumns
+                    : 1,
+              }}
+            />
           )}
         </Container>
       </section>

@@ -33,6 +33,9 @@ export default async function GalleryCustomizePage({
 
   const galleryData = {
     ...event.gallery,
+    mobileColumns: getMobileColumns(await db.setting.findUnique({
+      where: { key: `event_gallery_layout:${event.gallery.id}` },
+    })),
     eventId: event.id,
   };
 
@@ -46,4 +49,13 @@ export default async function GalleryCustomizePage({
       <GalleryEditor gallery={galleryData} />
     </div>
   );
+}
+
+function getMobileColumns(setting: { value: string } | null) {
+  try {
+    const value = JSON.parse(setting?.value || "{}").mobileColumns;
+    return value === 2 || value === 3 ? value : 1;
+  } catch {
+    return 1;
+  }
 }

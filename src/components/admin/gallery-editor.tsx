@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -22,6 +22,7 @@ type GalleryData = {
   blogText?: string | null;
   photos: Photo[];
   eventId: string;
+  mobileColumns?: 1 | 2 | 3;
 };
 
 /* ─── Slot configs per theme ─── */
@@ -365,6 +366,15 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
   const [gallery, setGallery] = useState(initialGallery);
   const [saving, setSaving] = useState(false);
   const [blogText, setBlogText] = useState(gallery.blogText || "");
+  const [isNarrowViewport, setIsNarrowViewport] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsNarrowViewport(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   const photoMap = new Map(gallery.photos.map((p) => [p.position, p]));
 
@@ -406,6 +416,7 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           subtitle: gallery.subtitle,
           blogText,
           theme: gallery.theme,
+          mobileColumns: gallery.mobileColumns || 1,
         }),
       });
       router.refresh();
@@ -426,6 +437,48 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
         <div>
           <h3 className="text-sm font-semibold text-ink-700">Gallery Theme</h3>
           <p className="text-xs text-ink-500">Change the visual style of this gallery.</p>
+        </div>
+
+        <div className="rounded-2xl border border-purple-100 bg-purple-50/60 p-6 shadow-sm">
+          <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_280px] md:items-start">
+            <div>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-ink-700">Mobile gallery layout</h3>
+                  <p className="mt-1 max-w-xl text-xs leading-5 text-ink-500">
+                    Choose how many photos visitors see side by side on phones. Desktop layout stays unchanged.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <label htmlFor="gallery-mobile-columns" className="text-xs font-medium text-ink-600">
+                    Photos per row
+                  </label>
+                  <select
+                    id="gallery-mobile-columns"
+                    value={gallery.mobileColumns || 1}
+                    onChange={(e) =>
+                      setGallery((g) => ({
+                        ...g,
+                        mobileColumns: Number(e.target.value) as 1 | 2 | 3,
+                      }))
+                    }
+                    className="rounded-xl border border-purple-200 bg-white px-3 py-2 text-sm font-semibold text-ink-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+                  >
+                    <option value={1}>1 column</option>
+                    <option value={2}>2 columns</option>
+                    <option value={3}>3 columns</option>
+                  </select>
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-purple-700">
+                {isNarrowViewport
+                  ? "On mobile, the preview is shown below the editor so you can review it before saving."
+                  : "On desktop, the phone preview updates live as you change the column count."}
+              </p>
+            </div>
+            {!isNarrowViewport && <MobileGalleryPreview gallery={gallery} />}
+          </div>
+          {isNarrowViewport && <MobileGalleryPreview gallery={gallery} compact />}
         </div>
         <select
           value={gallery.theme}
@@ -508,6 +561,64 @@ export function GalleryEditor({ gallery: initialGallery }: { gallery: GalleryDat
           Back to Event
         </a>
       </div>
+    </div>
+  );
+}
+
+function MobileGalleryPreview({
+  gallery,
+  compact = false,
+}: {
+  gallery: GalleryData;
+  compact?: boolean;
+}) {
+  const columns = gallery.mobileColumns || 1;
+  const photos = gallery.photos.slice().sort((a, b) => a.position - b.position);
+  return (
+    <div className={`mt-5 ${compact ? "" : "md:max-w-[270px]"}`}>
+      <div className="mx-auto rounded-[2rem] border-[7px] border-ink-900 bg-ink-900 p-1.5 shadow-xl">
+        <div className="overflow-hidden rounded-[1.45rem] bg-white">
+          <div className="flex h-6 items-center justify-center bg-ink-900">
+            <div className="h-1.5 w-16 rounded-full bg-ink-700" />
+          </div>
+          <div className="max-h-[390px] overflow-y-auto p-3">
+            <div className="mb-3">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-purple-600">
+                {gallery.titleLine1 || "Event memories"}
+              </p>
+              <h4 className="mt-1 text-base font-bold text-ink-900">
+                {gallery.titleLine2 || "Gallery preview"}
+              </h4>
+              {gallery.subtitle && (
+                <p className="mt-1 text-[10px] leading-4 text-ink-500">{gallery.subtitle}</p>
+              )}
+            </div>
+            <div className={`grid gap-2 ${columns === 3 ? "grid-cols-3" : columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+              {photos.length > 0 ? photos.map((photo) => (
+                <div key={photo.id} className="overflow-hidden rounded-lg bg-ink-50">
+                  <GalleryPhotoImg
+                    src={photo.url}
+                    alt={photo.caption || "Gallery photo"}
+                    aspectRatio="1/1"
+                    zoom={photo.zoom || 1}
+                    offsetX={photo.offsetX || 0}
+                    offsetY={photo.offsetY || 0}
+                    rotation={photo.rotation || 0}
+                  />
+                  {photo.caption && (
+                    <p className="truncate px-1.5 py-1 text-[9px] text-ink-600">{photo.caption}</p>
+                  )}
+                </div>
+              )) : (
+                <p className="col-span-3 py-10 text-center text-[10px] text-ink-400">Upload photos to preview them here.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 text-center text-xs font-medium text-ink-500">
+        Visitor view · {columns} {columns === 1 ? "column" : "columns"} on mobile
+      </p>
     </div>
   );
 }

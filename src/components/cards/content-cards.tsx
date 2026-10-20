@@ -52,29 +52,32 @@ export function AchievementCard({
   };
 }) {
   return (
-    <Card interactive className="flex h-full flex-col">
+    <Card interactive className="flex h-full flex-col rounded-[1.5rem] sm:rounded-[2rem]">
       <Link href={`/achievements/${achievement.slug}`} className="flex h-full flex-col">
         <div className="relative aspect-[16/10] overflow-hidden">
           <CoverImage src={achievement.coverImage} alt={achievement.title} />
-          <div className="absolute left-4 top-4">
-            <Badge tone={achTone[achievement.category] ?? "purple"}>
+          <div className="absolute left-2.5 top-2.5 sm:left-4 sm:top-4">
+            <Badge
+              tone={achTone[achievement.category] ?? "purple"}
+              className="px-2 py-0.5 text-[10px] sm:px-2.5 sm:py-1 sm:text-xs"
+            >
               {achievement.category}
             </Badge>
           </div>
         </div>
-        <div className="flex flex-1 flex-col p-6">
-          <time className="text-xs font-medium text-white/50">
+        <div className="flex flex-1 flex-col p-3.5 sm:p-6">
+          <time className="text-[10px] font-medium text-white/50 sm:text-xs">
             {formatDate(achievement.date)}
           </time>
-          <h3 className="mt-2 line-clamp-2 text-lg font-semibold text-on-surface transition-colors group-hover:text-purple-300">
+          <h3 className="mt-1.5 line-clamp-2 text-sm font-semibold leading-snug text-on-surface transition-colors group-hover:text-purple-300 sm:mt-2 sm:text-lg">
             {achievement.title}
           </h3>
-          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-on-surface-variant">
+          <p className="mt-1.5 line-clamp-2 flex-1 text-[11px] leading-[1.45] text-on-surface-variant sm:mt-2 sm:text-sm sm:leading-relaxed">
             {achievement.description}
           </p>
-          <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-purple-400">
-            Read more
-            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-purple-400 sm:mt-4 sm:text-sm">
+            View achievement
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-4 sm:w-4" />
           </span>
         </div>
       </Link>
@@ -100,12 +103,17 @@ export function EventCard({
   };
 }) {
   return (
-    <Card interactive className="flex h-full flex-col">
+    <Card interactive className="flex h-full flex-col rounded-[1.5rem] sm:rounded-[2rem]">
       <Link href={`/events/${event.slug}`} className="flex h-full flex-col">
         <div className="relative aspect-[16/10] overflow-hidden">
           <CoverImage src={event.poster} alt={event.title} />
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-1.5">
-            <Badge tone={statusTone[event.status] ?? "info"}>{event.status}</Badge>
+            <Badge
+              tone={statusTone[event.status] ?? "info"}
+              className="px-2 py-0.5 text-[10px] sm:px-2.5 sm:py-1 sm:text-xs"
+            >
+              {event.status}
+            </Badge>
           </div>
           {(() => {
             const allCommittees = [
@@ -115,13 +123,13 @@ export function EventCard({
 
             if (allCommittees.length === 0) return null;
             return (
-              <div className="absolute right-3 bottom-3 flex flex-wrap gap-1.5 justify-end max-w-[85%]">
+              <div className="absolute bottom-2 right-2 flex max-w-[78%] flex-wrap justify-end gap-1 sm:bottom-3 sm:right-3 sm:max-w-[85%] sm:gap-1.5">
                 {allCommittees.map((c) => (
                   <span
                     key={c.slug}
-                    className="inline-flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 px-2.5 py-0.5 text-[11px] font-semibold text-white/90 shadow-sm truncate max-w-full"
+                    className="inline-flex max-w-full items-center gap-1 truncate rounded-full border border-white/15 bg-black/60 px-2 py-0.5 text-[9px] font-semibold text-white/90 shadow-sm backdrop-blur-md sm:px-2.5 sm:py-0.5 sm:text-[11px]"
                   >
-                    <Users className="h-3 w-3 text-purple-300 shrink-0" />
+                    <Users className="h-2.5 w-2.5 shrink-0 text-purple-300 sm:h-3 sm:w-3" />
                     <span className="truncate">{c.name}</span>
                   </span>
                 ))}
@@ -129,23 +137,25 @@ export function EventCard({
             );
           })()}
         </div>
-        <div className="flex flex-1 flex-col p-6">
-          <h3 className="line-clamp-2 text-lg font-semibold text-on-surface transition-colors group-hover:text-purple-300">
+        <div className="flex flex-1 flex-col p-3.5 sm:p-6">
+          <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-on-surface transition-colors group-hover:text-purple-300 sm:text-lg">
             {event.title}
           </h3>
-          <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-on-surface-variant">
+          <p className="mt-1.5 line-clamp-2 flex-1 text-[11px] leading-[1.45] text-on-surface-variant sm:mt-2 sm:text-sm sm:leading-relaxed">
             {event.description}
           </p>
-          <div className="mt-4 space-y-1.5 text-sm text-on-surface-variant">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="h-4 w-4 text-purple-400" strokeWidth={1.75} />
-              {formatDateRange(event.date, event.endDate)}
-              {event.time ? ` · ${event.time}` : ""}
+          <div className="mt-3 space-y-1.5 text-[11px] leading-snug text-on-surface-variant sm:mt-4 sm:text-sm">
+            <div className="flex items-start gap-1.5">
+              <CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0 text-purple-400 sm:h-4 sm:w-4" strokeWidth={1.75} />
+              <span className="line-clamp-2">
+                {formatDateRange(event.date, event.endDate)}
+                {event.time ? ` · ${event.time}` : ""}
+              </span>
             </div>
             {event.venue && (
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-purple-400" strokeWidth={1.75} />
-                {event.venue}
+              <div className="flex items-start gap-1.5">
+                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-purple-400 sm:h-4 sm:w-4" strokeWidth={1.75} />
+                <span className="line-clamp-1">{event.venue}</span>
               </div>
             )}
           </div>

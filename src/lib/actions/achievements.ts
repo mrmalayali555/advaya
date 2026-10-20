@@ -48,6 +48,7 @@ export async function updateAchievement(id: string, formData: FormData) {
   await db.achievement.update({ where: { id }, data: { ...data, slug } });
   revalidatePath("/adminahnuok/achievements");
   revalidatePath("/achievements");
+  revalidatePath(`/achievements/${slug}`);
   revalidatePath("/");
   redirect("/adminahnuok/achievements");
 }
@@ -60,4 +61,3 @@ export async function deleteAchievement(id: string) {
   revalidatePath("/");
   redirect("/adminahnuok/achievements");
 }
-
