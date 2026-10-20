@@ -615,6 +615,7 @@ function MobileGalleryPreview({
                 <div
                   key={photo.id}
                   className={`overflow-hidden rounded-lg ${isCorkboard ? "border border-amber-200/20 bg-[#4b350d]" : isScrapbook ? "border-4 border-white bg-white shadow-md" : "bg-ink-50"} ${isBohemian ? "w-[42%] rotate-[-3deg] p-1 shadow-md even:rotate-[4deg]" : landscapePhotos.has(photo.id) ? "col-span-full" : ""}`}
+                  style={landscapePhotos.has(photo.id) && !isBohemian ? { gridColumn: "1 / -1" } : undefined}
                 >
                   {isScrapbook && <div className="mx-auto -mt-2 mb-1 h-2 w-8 rounded-sm bg-pink-200" />}
                   <GalleryPhotoImg

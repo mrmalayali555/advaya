@@ -366,6 +366,7 @@ export function NormalGallery({ gallery }: { gallery: GalleryData }) {
             key={photo.id}
             data-photo-id={photo.id}
             className={`overflow-hidden rounded-xl border border-outline-variant/30 bg-surface/50 p-2 shadow-sm transition-all duration-300 hover:shadow-md hover:border-outline-variant glass-card group ${landscapePhotos.has(photo.id) ? "col-span-full sm:col-span-1" : ""}`}
+            style={landscapePhotos.has(photo.id) ? { gridColumn: "1 / -1" } : undefined}
           >
             <GalleryPhotoImg
               src={photo.url}
