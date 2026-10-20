@@ -574,28 +574,38 @@ function MobileGalleryPreview({
 }) {
   const columns = gallery.mobileColumns || 1;
   const photos = gallery.photos.slice().sort((a, b) => a.position - b.position);
+  const isBohemian = gallery.theme === "bohemian";
+  const isScrapbook = gallery.theme === "scrapbook";
+  const isCorkboard = gallery.theme === "corkboard";
+  const photoGridClass = isBohemian
+    ? "flex flex-wrap items-center justify-center gap-3"
+    : `grid gap-2 ${columns === 3 ? "grid-cols-3" : columns === 2 ? "grid-cols-2" : "grid-cols-1"}`;
   return (
     <div className={`mt-5 ${compact ? "" : "md:max-w-[270px]"}`}>
       <div className="mx-auto rounded-[2rem] border-[7px] border-ink-900 bg-ink-900 p-1.5 shadow-xl">
-        <div className="overflow-hidden rounded-[1.45rem] bg-white">
+        <div className={`overflow-hidden rounded-[1.45rem] ${isCorkboard ? "bg-[#3b2a09]" : "bg-white"}`}>
           <div className="flex h-6 items-center justify-center bg-ink-900">
             <div className="h-1.5 w-16 rounded-full bg-ink-700" />
           </div>
           <div className="max-h-[390px] overflow-y-auto p-3">
-            <div className="mb-3">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-purple-600">
+            <div className="mb-3 text-center">
+              <p className={`text-[9px] font-semibold uppercase tracking-[0.16em] ${isCorkboard ? "text-amber-200" : "text-purple-600"}`}>
                 {gallery.titleLine1 || "Event memories"}
               </p>
-              <h4 className="mt-1 text-base font-bold text-ink-900">
+              <h4 className={`mt-1 text-base font-bold ${isCorkboard ? "text-white" : "text-ink-900"}`}>
                 {gallery.titleLine2 || "Gallery preview"}
               </h4>
               {gallery.subtitle && (
-                <p className="mt-1 text-[10px] leading-4 text-ink-500">{gallery.subtitle}</p>
+                <p className={`mt-1 text-[10px] leading-4 ${isCorkboard ? "text-amber-100/70" : "text-ink-500"}`}>{gallery.subtitle}</p>
               )}
             </div>
-            <div className={`grid gap-2 ${columns === 3 ? "grid-cols-3" : columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+            <div className={`${isCorkboard ? "rounded-lg bg-[#2d2007] p-2" : ""} ${photoGridClass}`}>
               {photos.length > 0 ? photos.map((photo) => (
-                <div key={photo.id} className="overflow-hidden rounded-lg bg-ink-50">
+                <div
+                  key={photo.id}
+                  className={`overflow-hidden rounded-lg ${isCorkboard ? "border border-amber-200/20 bg-[#4b350d]" : isScrapbook ? "border-4 border-white bg-white shadow-md" : "bg-ink-50"} ${isBohemian ? "w-[42%] rotate-[-3deg] p-1 shadow-md even:rotate-[4deg]" : ""}`}
+                >
+                  {isScrapbook && <div className="mx-auto -mt-2 mb-1 h-2 w-8 rounded-sm bg-pink-200" />}
                   <GalleryPhotoImg
                     src={photo.url}
                     alt={photo.caption || "Gallery photo"}
@@ -606,7 +616,7 @@ function MobileGalleryPreview({
                     rotation={photo.rotation || 0}
                   />
                   {photo.caption && (
-                    <p className="truncate px-1.5 py-1 text-[9px] text-ink-600">{photo.caption}</p>
+                    <p className={`truncate px-1.5 py-1 text-[9px] ${isCorkboard ? "text-amber-100" : "text-ink-600"}`}>{photo.caption}</p>
                   )}
                 </div>
               )) : (
@@ -617,7 +627,7 @@ function MobileGalleryPreview({
         </div>
       </div>
       <p className="mt-2 text-center text-xs font-medium text-ink-500">
-        Visitor view · {columns} {columns === 1 ? "column" : "columns"} on mobile
+        Visitor view · {gallery.theme} · {columns} {columns === 1 ? "column" : "columns"} on mobile
       </p>
     </div>
   );
