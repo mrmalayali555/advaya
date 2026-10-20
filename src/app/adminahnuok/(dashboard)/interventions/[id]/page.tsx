@@ -88,8 +88,10 @@ export default async function EditInterventionPage({
               name="image"
               defaultUrl={item.image}
               accept="image/*"
-              enableCrop={false}
-              hint="Upload header photo or event image"
+              enableCrop
+              cropAspectRatio={16 / 9}
+              cropTitle="Adjust intervention cover"
+              hint="Drag the preview to choose the visible area"
             />
           </div>
 

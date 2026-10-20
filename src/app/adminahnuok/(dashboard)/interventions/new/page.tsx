@@ -70,8 +70,10 @@ export default function NewInterventionPage() {
               label="Cover Image (Optional)"
               name="image"
               accept="image/*"
-              enableCrop={false}
-              hint="Upload header photo or event image"
+              enableCrop
+              cropAspectRatio={16 / 9}
+              cropTitle="Adjust intervention cover"
+              hint="Drag the preview to choose the visible area"
             />
           </div>
 
@@ -103,4 +105,3 @@ export default function NewInterventionPage() {
     </>
   );
 }
-

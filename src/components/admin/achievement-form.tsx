@@ -45,7 +45,7 @@ export function AchievementForm({
               <Field label="Date" name="date" type="date" defaultValue={item ? toDateInput(item.date) : new Date().toISOString().slice(0, 10)} required />
             </div>
             <TextArea label="Description" name="description" defaultValue={item?.description} required rows={5} />
-            <UploadField label="Cover image" name="coverImage" defaultUrl={item?.coverImage} accept="image/*" hint="JPG, PNG, WebP up to 8MB" />
+            <UploadField label="Cover image" name="coverImage" defaultUrl={item?.coverImage} accept="image/*" enableCrop cropAspectRatio={16 / 9} cropTitle="Adjust achievement cover" hint="Drag the preview to choose the visible area. JPG, PNG, WebP up to 8MB" />
             <Toggle label="Published" name="published" defaultChecked={item?.published ?? true} hint="Show on the public site" />
           </div>
         </div>
@@ -62,4 +62,3 @@ export function AchievementForm({
     </div>
   );
 }
-

@@ -6,6 +6,8 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { AchievementCard } from "@/components/cards/content-cards";
 import { getAchievements } from "@/lib/queries";
 import { cn } from "@/lib/utils";
+import { getSetting } from "@/lib/queries";
+import { DEFAULT_CONTENT_LAYOUT, responsiveGridClass } from "@/lib/content-layout";
 
 export const metadata: Metadata = {
   title: "Achievements",
@@ -26,7 +28,10 @@ export default async function AchievementsPage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const { category = "all" } = await searchParams;
-  const achievements = await getAchievements({ category });
+  const [achievements, layout] = await Promise.all([
+    getAchievements({ category }),
+    getSetting("content_layout", DEFAULT_CONTENT_LAYOUT),
+  ]);
 
   return (
     <>
@@ -61,7 +66,7 @@ export default async function AchievementsPage({
           {achievements.length === 0 ? (
             <EmptyState />
           ) : (
-            <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <RevealGroup className={`mt-10 grid gap-6 ${responsiveGridClass(layout.achievements)}`}>
               {achievements.map((a) => (
                 <RevealItem key={a.id}>
                   <AchievementCard achievement={a} />

@@ -126,7 +126,7 @@ export function EventForm({
               />
             </div>
 
-            <UploadField label="Poster" name="poster" defaultUrl={event?.poster} accept="image/*" hint="JPG, PNG, WebP up to 8MB" />
+            <UploadField label="Poster" name="poster" defaultUrl={event?.poster} accept="image/*" enableCrop cropAspectRatio={16 / 9} cropTitle="Adjust event cover" hint="Drag the preview to choose the visible area. JPG, PNG, WebP up to 8MB" />
             <Toggle label="Published" name="published" defaultChecked={event?.published ?? true} hint="Show on the public site" />
           </div>
         </div>
@@ -147,4 +147,3 @@ export function EventForm({
     </div>
   );
 }
-

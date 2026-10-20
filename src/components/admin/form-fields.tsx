@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { Loader2, Upload, X, FileText, Trash2, Crop } from "lucide-react";
@@ -156,6 +156,8 @@ export function UploadField({
   accept = "image/*",
   hint,
   enableCrop = false,
+  cropAspectRatio = 1,
+  cropTitle = "Crop image",
 }: {
   label: string;
   name: string;
@@ -163,6 +165,8 @@ export function UploadField({
   accept?: string;
   hint?: string;
   enableCrop?: boolean;
+  cropAspectRatio?: number;
+  cropTitle?: string;
 }) {
   const [url, setUrl] = useState(defaultUrl || "");
   const [busy, setBusy] = useState(false);
@@ -170,10 +174,6 @@ export function UploadField({
   const [error, setError] = useState<string | null>(null);
   const [cropperRawSrc, setCropperRawSrc] = useState<string | null>(null);
   const [originalFileName, setOriginalFileName] = useState("photo.jpg");
-
-  useEffect(() => {
-    setUrl(defaultUrl || "");
-  }, [defaultUrl]);
 
   const isPdf = url.toLowerCase().endsWith(".pdf");
 
@@ -222,7 +222,7 @@ export function UploadField({
     try {
       const file = await compressImage(rawFile);
       
-      const data = await new Promise<any>((resolve, reject) => {
+      const data = await new Promise<{ url: string; error?: string }>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         const fd = new FormData();
         fd.append("file", file);
@@ -288,6 +288,8 @@ export function UploadField({
           imageSrc={cropperRawSrc}
           onCropComplete={handleCropComplete}
           onCancel={() => setCropperRawSrc(null)}
+          aspectRatio={cropAspectRatio}
+          title={cropTitle}
         />
       )}
 
@@ -309,7 +311,7 @@ export function UploadField({
                 type="button"
                 onClick={() => setCropperRawSrc(url)}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-purple-700 shadow hover:bg-white"
-                title="Recrop face"
+                title="Adjust cover crop"
               >
                 <Crop className="h-4 w-4" />
               </button>
@@ -416,4 +418,3 @@ export function IconDeleteBtn({ className }: { className?: string }) {
     </button>
   );
 }
-

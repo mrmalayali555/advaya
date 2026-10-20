@@ -4,6 +4,8 @@ import { Container } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { InterventionsList } from "@/components/interventions/interventions-list";
 import { getInterventions } from "@/lib/queries";
+import { getSetting } from "@/lib/queries";
+import { DEFAULT_CONTENT_LAYOUT } from "@/lib/content-layout";
 
 export const metadata: Metadata = {
   title: "Interventions & Official Letters",
@@ -12,7 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function InterventionsPage() {
-  const items = await getInterventions({ publishedOnly: true });
+  const [items, layout] = await Promise.all([
+    getInterventions({ publishedOnly: true }),
+    getSetting("content_layout", DEFAULT_CONTENT_LAYOUT),
+  ]);
 
   return (
     <>
@@ -25,7 +30,7 @@ export default async function InterventionsPage() {
       <section className="py-12 sm:py-16">
         <Container>
           <Reveal>
-            <InterventionsList items={items} />
+            <InterventionsList items={items} columns={layout.interventions} />
           </Reveal>
         </Container>
       </section>

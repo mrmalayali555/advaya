@@ -8,6 +8,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { getEvents } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
+import { getSetting } from "@/lib/queries";
+import { DEFAULT_CONTENT_LAYOUT, responsiveGridClass } from "@/lib/content-layout";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -26,7 +28,10 @@ export default async function EventsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status = "all" } = await searchParams;
-  const events = await getEvents({ status });
+  const [events, layout] = await Promise.all([
+    getEvents({ status }),
+    getSetting("content_layout", DEFAULT_CONTENT_LAYOUT),
+  ]);
 
   return (
     <>
@@ -66,7 +71,7 @@ export default async function EventsPage({
               />
             </div>
           ) : (
-            <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <RevealGroup className={`mt-10 grid gap-6 ${responsiveGridClass(layout.events)}`}>
               {events.map((e) => (
                 <RevealItem key={e.id}>
                   <EventCard event={e} />

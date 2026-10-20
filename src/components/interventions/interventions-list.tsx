@@ -6,7 +6,6 @@ import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import {
   FileText,
-  Download,
   Search,
   Pin,
   Calendar,
@@ -15,6 +14,7 @@ import {
   X,
   ExternalLink,
 } from "lucide-react";
+import { responsiveGridClass } from "@/lib/content-layout";
 
 interface InterventionItem {
   id: string;
@@ -28,7 +28,7 @@ interface InterventionItem {
   pinned: boolean;
 }
 
-export function InterventionsList({ items }: { items: InterventionItem[] }) {
+export function InterventionsList({ items, columns = 1 }: { items: InterventionItem[]; columns?: 1 | 2 | 3 }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
 
@@ -96,7 +96,7 @@ export function InterventionsList({ items }: { items: InterventionItem[] }) {
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid gap-6 ${responsiveGridClass(columns)}`}>
           {filtered.map((item) => {
             const formattedDate = formatDate(item.date);
             return (

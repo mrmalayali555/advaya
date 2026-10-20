@@ -7,12 +7,16 @@ interface ImageCropperModalProps {
   imageSrc: string;
   onCropComplete: (croppedBlob: Blob) => void;
   onCancel: () => void;
+  aspectRatio?: number;
+  title?: string;
 }
 
 export function ImageCropperModal({
   imageSrc,
   onCropComplete,
   onCancel,
+  aspectRatio = 1,
+  title = "Crop image",
 }: ImageCropperModalProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [zoom, setZoom] = useState(1);
@@ -41,21 +45,21 @@ export function ImageCropperModal({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const size = 320;
-    canvas.width = size;
-    canvas.height = size;
+    const previewWidth = 320;
+    const previewHeight = Math.round(previewWidth / aspectRatio);
+    canvas.width = previewWidth;
+    canvas.height = previewHeight;
 
     const img = imageRef.current;
-    ctx.clearRect(0, 0, size, size);
+    ctx.clearRect(0, 0, previewWidth, previewHeight);
 
     ctx.save();
     // Center of canvas
-    ctx.translate(size / 2, size / 2);
+    ctx.translate(previewWidth / 2, previewHeight / 2);
     ctx.rotate((rotation * Math.PI) / 180);
 
     // Calculate scale to fit initially
-    const minDim = Math.min(img.width, img.height);
-    const baseScale = size / minDim;
+    const baseScale = Math.max(previewWidth / img.width, previewHeight / img.height);
     const currentScale = baseScale * zoom;
 
     const drawWidth = img.width * currentScale;
@@ -69,7 +73,7 @@ export function ImageCropperModal({
       drawHeight
     );
     ctx.restore();
-  }, [loaded, zoom, offset, rotation]);
+  }, [loaded, zoom, offset, rotation, aspectRatio]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     setIsDragging(true);
@@ -98,21 +102,22 @@ export function ImageCropperModal({
 
     // Export a high resolution cropped square (500x500)
     const exportCanvas = document.createElement("canvas");
-    const exportSize = 500;
-    exportCanvas.width = exportSize;
-    exportCanvas.height = exportSize;
+    const exportWidth = 1600;
+    const exportHeight = Math.round(exportWidth / aspectRatio);
+    exportCanvas.width = exportWidth;
+    exportCanvas.height = exportHeight;
     const ctx = exportCanvas.getContext("2d");
     if (!ctx) return;
 
     ctx.save();
-    ctx.translate(exportSize / 2, exportSize / 2);
+    ctx.translate(exportWidth / 2, exportHeight / 2);
     ctx.rotate((rotation * Math.PI) / 180);
 
-    const previewSize = 320;
-    const scaleFactor = exportSize / previewSize;
+    const previewWidth = 320;
+    const scaleFactor = exportWidth / previewWidth;
 
-    const minDim = Math.min(img.width, img.height);
-    const baseScale = previewSize / minDim;
+    const previewHeight = Math.round(previewWidth / aspectRatio);
+    const baseScale = Math.max(previewWidth / img.width, previewHeight / img.height);
     const currentScale = baseScale * zoom * scaleFactor;
 
     const drawWidth = img.width * currentScale;
@@ -140,7 +145,7 @@ export function ImageCropperModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/70 p-4 backdrop-blur-sm">
       <div className="w-full max-w-md overflow-hidden rounded-3xl border border-ink-100 bg-white p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-ink-900">Crop Profile Photo</h3>
+          <h3 className="text-lg font-bold text-ink-900">{title}</h3>
           <button
             onClick={onCancel}
             className="flex h-8 w-8 items-center justify-center rounded-full text-ink-400 hover:bg-ink-100"
@@ -150,11 +155,14 @@ export function ImageCropperModal({
         </div>
 
         <p className="mb-4 text-xs text-ink-500">
-          Drag to center the face inside the circle. Use the slider to zoom in or out.
+          Drag the image to choose exactly what appears in the cover. Use the slider to zoom.
         </p>
 
         {/* Cropper Container */}
-        <div className="relative mx-auto flex h-[320px] w-[320px] items-center justify-center overflow-hidden rounded-2xl bg-ink-950 shadow-inner">
+        <div
+          className="relative mx-auto flex w-[320px] max-w-full items-center justify-center overflow-hidden rounded-2xl bg-ink-950 shadow-inner"
+          style={{ aspectRatio }}
+        >
           <canvas
             ref={canvasRef}
             onPointerDown={handlePointerDown}
@@ -162,8 +170,7 @@ export function ImageCropperModal({
             onPointerUp={handlePointerUp}
             className="cursor-move touch-none"
           />
-          {/* Circular mask overlay (WhatsApp style) */}
-          <div className="pointer-events-none absolute inset-0 rounded-full border-2 border-white/80 shadow-[0_0_0_9999px_rgba(15,23,42,0.6)]" />
+          <div className="pointer-events-none absolute inset-0 border-2 border-white/80 shadow-[0_0_0_9999px_rgba(15,23,42,0.6)]" />
           <div className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur">
             <Move className="h-3 w-3" /> Drag face to fit
           </div>

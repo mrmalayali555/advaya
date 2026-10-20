@@ -101,6 +101,11 @@ export async function saveSettingsForm(formData: FormData) {
     showMobile: formData.get("search_show_mobile") === "on",
     showDesktop: formData.get("search_show_desktop") === "on",
   };
+  const contentLayout = {
+    events: Math.min(3, Math.max(1, Number(formData.get("layout_events") || 1))),
+    achievements: Math.min(3, Math.max(1, Number(formData.get("layout_achievements") || 1))),
+    interventions: Math.min(3, Math.max(1, Number(formData.get("layout_interventions") || 1))),
+  };
 
   await Promise.all([
     saveSetting("hero", hero),
@@ -109,6 +114,7 @@ export async function saveSettingsForm(formData: FormData) {
     saveSetting("carousel_interval", carouselInterval),
     saveSetting("complaints", complaints),
     saveSetting("nav_search", navSearch),
+    saveSetting("content_layout", contentLayout),
   ]);
 }
 
