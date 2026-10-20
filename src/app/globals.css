@@ -252,6 +252,25 @@
     #050208;
 }
 
+.maintenance-editor-input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 0.875rem;
+  color: white;
+  outline: none;
+}
+
+.maintenance-editor-input:focus {
+  border-color: rgba(221, 183, 255, 0.8);
+  box-shadow: 0 0 0 3px rgba(221, 183, 255, 0.16);
+}
+
+.maintenance-editor-input option {
+  color: #17101f;
+}
+
 .maintenance-grid {
   position: absolute;
   inset: 0;

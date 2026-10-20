@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { db } from "@/lib/db";
 import { getAuthSecret } from "@/lib/auth-secret";
+import { parseMaintenanceSettings } from "@/lib/maintenance-settings";
 
 const COOKIE = "advaya_session";
 
@@ -97,7 +98,7 @@ export async function proxy(req: NextRequest) {
   let maintenanceEnabled = false;
   try {
     const setting = await db.setting.findUnique({ where: { key: "maintenance_mode" } });
-    maintenanceEnabled = setting?.value ? JSON.parse(setting.value).enabled === true : false;
+    maintenanceEnabled = parseMaintenanceSettings(setting?.value).enabled;
   } catch (error) {
     console.error("Unable to read maintenance mode setting:", error);
     if (pathname.startsWith("/api/")) {

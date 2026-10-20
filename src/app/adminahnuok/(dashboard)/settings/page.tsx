@@ -1,8 +1,12 @@
 import { AdminHeader, AdminCard } from "@/components/admin/admin-ui";
-import { Field, TextArea, SubmitBtn, Toggle } from "@/components/admin/form-fields";
+import { Field, TextArea, SubmitBtn, Toggle, Select } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
 import { saveMaintenanceMode, saveSettingsForm } from "@/lib/actions/content";
 import { SITE } from "@/lib/site";
+import {
+  MAINTENANCE_ANIMATIONS,
+  parseMaintenanceSettings,
+} from "@/lib/maintenance-settings";
 
 async function getSetting<T>(key: string, fallback: T): Promise<T> {
   const row = await db.setting.findUnique({ where: { key } });
@@ -11,6 +15,11 @@ async function getSetting<T>(key: string, fallback: T): Promise<T> {
   } catch {
     return fallback;
   }
+}
+
+async function getMaintenanceSettings() {
+  const row = await db.setting.findUnique({ where: { key: "maintenance_mode" } });
+  return parseMaintenanceSettings(row?.value);
 }
 
 export default async function AdminSettingsPage({
@@ -34,7 +43,7 @@ export default async function AdminSettingsPage({
       f3_text: "Academics, facilities, ragging, safety — whatever it is, we want to know.",
     }),
     getSetting("nav_search", { showMobile: true, showDesktop: true }),
-    getSetting("maintenance_mode", { enabled: false }),
+    getMaintenanceSettings(),
   ]);
 
   return (
@@ -69,6 +78,52 @@ export default async function AdminSettingsPage({
             </span>
           </div>
           <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field
+                label="Status label"
+                name="maintenance_status"
+                defaultValue={maintenanceMode.status}
+                hint="For example: Scheduled Maintenance"
+                required
+              />
+              <Select
+                label="Animation style"
+                name="maintenance_animation"
+                defaultValue={maintenanceMode.animation}
+                options={MAINTENANCE_ANIMATIONS.map((animation) => ({
+                  value: animation.value,
+                  label: animation.label,
+                }))}
+                hint="Choose one of seven lightweight styles."
+              />
+            </div>
+            <Field
+              label="Small heading"
+              name="maintenance_eyebrow"
+              defaultValue={maintenanceMode.eyebrow}
+              hint="The short line above the main heading"
+              required
+            />
+            <Field
+              label="Main heading"
+              name="maintenance_title"
+              defaultValue={maintenanceMode.title}
+              required
+            />
+            <TextArea
+              label="Message"
+              name="maintenance_message"
+              defaultValue={maintenanceMode.message}
+              rows={3}
+              required
+            />
+            <Field
+              label="Footer brand line"
+              name="maintenance_footer"
+              defaultValue={maintenanceMode.footer}
+              hint="Keep this short; it appears in the page footer."
+              required
+            />
             <Toggle
               label="Enable maintenance mode"
               name="maintenance_mode"

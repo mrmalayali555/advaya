@@ -5,6 +5,11 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
 import type { PageContent } from "@/lib/page-builder-types";
+import {
+  DEFAULT_MAINTENANCE_SETTINGS,
+  isMaintenanceAnimation,
+  parseMaintenanceSettings,
+} from "@/lib/maintenance-settings";
 
 /** Save a rich page's JSON content (about / ug / pg). */
 export async function savePage(key: string, formData: FormData) {
@@ -111,13 +116,36 @@ export async function saveMaintenanceMode(formData: FormData) {
   await requireAdmin();
 
   const enabled = formData.get("maintenance_mode") === "on";
+  const animation = String(formData.get("maintenance_animation") || "");
+  const current = await db.setting.findUnique({ where: { key: "maintenance_mode" } });
+  const existing = parseMaintenanceSettings(current?.value);
+  const settings = {
+    ...DEFAULT_MAINTENANCE_SETTINGS,
+    ...existing,
+    enabled,
+    eyebrow: String(formData.get("maintenance_eyebrow") || "").trim().slice(0, 120),
+    title: String(formData.get("maintenance_title") || "").trim().slice(0, 160),
+    message: String(formData.get("maintenance_message") || "").trim().slice(0, 500),
+    status: String(formData.get("maintenance_status") || "").trim().slice(0, 80),
+    footer: String(formData.get("maintenance_footer") || "").trim().slice(0, 120),
+    animation: isMaintenanceAnimation(animation) ? animation : existing.animation,
+  };
+
+  if (!settings.eyebrow || !settings.title || !settings.message || !settings.status || !settings.footer) {
+    throw new Error("Maintenance copy cannot be empty.");
+  }
 
   await db.setting.upsert({
     where: { key: "maintenance_mode" },
-    update: { value: JSON.stringify({ enabled }) },
-    create: { key: "maintenance_mode", value: JSON.stringify({ enabled }) },
+    update: { value: JSON.stringify(settings) },
+    create: { key: "maintenance_mode", value: JSON.stringify(settings) },
   });
 
   revalidatePath("/adminahnuok/settings");
-  redirect(`/adminahnuok/settings?maintenance_saved=${enabled ? "enabled" : "disabled"}`);
+  revalidatePath("/maintenance");
+  redirect(
+    formData.get("maintenance_return") === "site"
+      ? "/maintenance"
+      : `/adminahnuok/settings?maintenance_saved=${enabled ? "enabled" : "disabled"}`
+  );
 }

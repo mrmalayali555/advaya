@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { db } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 import { LogoMark } from "@/components/ui/logo";
+import { MaintenanceEditor } from "./maintenance-editor";
+import { parseMaintenanceSettings } from "@/lib/maintenance-settings";
 import styles from "./maintenance.module.css";
 
 export const metadata: Metadata = {
@@ -8,9 +12,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function MaintenancePage() {
+export default async function MaintenancePage() {
+  const [setting, session] = await Promise.all([
+    db.setting.findUnique({ where: { key: "maintenance_mode" } }),
+    getSession(),
+  ]);
+  const settings = parseMaintenanceSettings(setting?.value);
+
   return (
-    <main className={styles.page}>
+    <main className={`${styles.page} ${styles[settings.animation]}`}>
       <div className={styles.ambient} aria-hidden="true" />
 
       <div className={styles.content}>
@@ -21,18 +31,14 @@ export default function MaintenancePage() {
 
         <div className={styles.layout}>
           <section className={styles.copy} aria-labelledby="maintenance-title">
-            <p className={styles.eyebrow}>We&apos;re improving your experience</p>
+            <p className={styles.eyebrow}>{settings.eyebrow}</p>
             <h1 id="maintenance-title" className={styles.title}>
-              We&apos;re Building Something Better
+              {settings.title}
             </h1>
-            <p className={styles.message}>
-              The ADVAYA College Union website is temporarily under maintenance
-              while we make it clearer, faster, and more useful. We&apos;ll
-              return soon.
-            </p>
+            <p className={styles.message}>{settings.message}</p>
             <div className={styles.status} role="status">
               <span className={styles.statusDot} aria-hidden="true" />
-              <span>Scheduled Maintenance</span>
+              <span>{settings.status}</span>
             </div>
           </section>
 
@@ -70,11 +76,12 @@ export default function MaintenancePage() {
         </div>
 
         <footer className={styles.footer}>
-          <span>ADVAYA College Union</span>
+          <span>{settings.footer}</span>
           <span className={styles.footerRule} aria-hidden="true" />
           <span>Govt. TD Medical College, Alappuzha</span>
         </footer>
       </div>
+      {session && <MaintenanceEditor settings={settings} />}
     </main>
   );
 }

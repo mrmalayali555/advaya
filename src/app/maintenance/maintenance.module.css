@@ -154,6 +154,39 @@
   animation: orbit 18s linear reverse infinite;
 }
 
+.pulse .orbitOne,
+.pulse .orbitTwo {
+  animation-name: pulse-ring;
+}
+
+.pulse .sun {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.shimmer .arch {
+  animation: shimmer 3.5s ease-in-out infinite;
+}
+
+.drift .arch {
+  animation: drift 6s ease-in-out infinite;
+}
+
+.radar .orbitOne {
+  animation-name: radar-sweep;
+}
+
+.radar .orbitTwo {
+  animation-name: radar-sweep-reverse;
+}
+
+.breathe .arch {
+  animation: breathe 4.5s ease-in-out infinite;
+}
+
+.scan .illustrationLabel {
+  animation: scan 2.8s ease-in-out infinite;
+}
+
 .spark {
   position: absolute;
   width: 0.45rem;
@@ -217,6 +250,42 @@
   50% { opacity: 0.45; transform: scale(0.75); }
 }
 
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(0.92); opacity: 0.35; }
+  50% { transform: scale(1.08); opacity: 0.9; }
+}
+
+@keyframes glow-pulse {
+  50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.72; }
+}
+
+@keyframes shimmer {
+  0%, 100% { filter: brightness(0.9); transform: translateX(-0.5rem); }
+  50% { filter: brightness(1.25); transform: translateX(0.5rem); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-0.8rem) rotate(1deg); }
+}
+
+@keyframes radar-sweep {
+  to { transform: rotate(360deg) scale(1.04); opacity: 0.75; }
+}
+
+@keyframes radar-sweep-reverse {
+  to { transform: rotate(-360deg) scale(0.96); opacity: 0.35; }
+}
+
+@keyframes breathe {
+  50% { transform: scale(1.035); filter: drop-shadow(0 28px 34px rgba(183, 109, 255, 0.25)); }
+}
+
+@keyframes scan {
+  0%, 100% { opacity: 0.45; transform: translateX(-0.4rem); }
+  50% { opacity: 1; transform: translateX(0.4rem); }
+}
+
 @media (max-width: 760px) {
   .content {
     width: min(100% - 2rem, 560px);
@@ -254,7 +323,10 @@
   .illustration,
   .statusDot,
   .orbitOne,
-  .orbitTwo {
+  .orbitTwo,
+  .sun,
+  .arch,
+  .illustrationLabel {
     animation: none;
   }
 }
