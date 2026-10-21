@@ -24,6 +24,7 @@ type Config = {
   unionFundLabel: string;
   otherIncomeLabel: string;
   allowPdfExport: boolean;
+  showGraph: boolean;
 };
 
 function money(value: number) {
@@ -60,13 +61,6 @@ export function FinanceDashboard({
   const income = filtered.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
   const expenditure = filtered.filter((entry) => entry.kind === "expenditure").reduce((sum, entry) => sum + entry.amount, 0);
   const balance = income - expenditure;
-  const categorySnapshots = useMemo(() => categories.map((name) => {
-    const categoryEntries = filtered.filter((entry) => entry.category === name);
-    const categoryIncome = categoryEntries.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
-    const categoryExpenditure = categoryEntries.filter((entry) => entry.kind === "expenditure").reduce((sum, entry) => sum + entry.amount, 0);
-    const latest = categoryEntries[0]?.date;
-    return { name, balance: categoryIncome - categoryExpenditure, latest };
-  }), [categories, filtered]);
   const unionFundEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase());
   const otherIncomeEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() !== config.unionFundLabel.trim().toLowerCase());
   const unionFundTotal = unionFundEntries.reduce((sum, entry) => sum + entry.amount, 0);
@@ -99,17 +93,6 @@ export function FinanceDashboard({
         <SummaryCard label={config.expenditureLabel} amount={expenditure} tone="expense" icon={ArrowDownRight} reducedMotion={reducedMotion} />
         <SummaryCard label="Current balance" amount={balance} tone="balance" icon={Landmark} reducedMotion={reducedMotion} />
       </div>
-      {categorySnapshots.length > 0 && (
-        <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
-          {categorySnapshots.map((snapshot) => (
-            <div key={snapshot.name} className="min-w-[190px] flex-1 rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3">
-              <div className="truncate text-xs text-white/45">{snapshot.name}</div>
-              <div className={`mt-1 text-lg font-semibold ${snapshot.balance >= 0 ? "text-white/85" : "text-rose-300"}`}>{money(snapshot.balance)}</div>
-              <div className="mt-1 text-[11px] text-white/35">{snapshot.latest ? `Updated ${formatDate(snapshot.latest)}` : "No entries yet"}</div>
-            </div>
-          ))}
-        </div>
-      )}
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <IncomeGroup title={config.unionFundLabel} description="Collections received from students, shown by collection period." total={unionFundTotal} entries={unionFundEntries} tone="emerald" />
         <IncomeGroup title={config.otherIncomeLabel} description="Sponsorships, coupon sales, donations, and other named income streams." total={otherIncomeTotal} entries={otherIncomeEntries} tone="purple" />
@@ -152,7 +135,7 @@ export function FinanceDashboard({
             </p>
           )}
       </section>
-      <FinanceGraph data={chartData} config={config} reducedMotion={reducedMotion} />
+      {config.showGraph && <FinanceGraph data={chartData} config={config} reducedMotion={reducedMotion} />}
     </div>
   );
 }
@@ -259,7 +242,8 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 }
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(new Date(value));
+  const date = new Date(value);
+  return date.getFullYear() < 1900 ? "Date not specified" : new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(date);
 }
 
 function formatPeriod(start: string, end: string | null) {
@@ -274,7 +258,8 @@ function shortMoney(value: number) {
 }
 
 function formatShortDate(value: string) {
-  return new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short" }).format(new Date(value));
+  const date = new Date(value);
+  return date.getFullYear() < 1900 ? "—" : new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short" }).format(date);
 }
 
 function IncomeGroup({

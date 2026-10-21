@@ -94,6 +94,14 @@ export default async function AdminFinancePage() {
               hint="When disabled, the public page stays clean and the export control is hidden."
             />
           </div>
+          <div className="sm:col-span-2">
+            <Toggle
+              label="Show public finance graph"
+              name="showGraph"
+              defaultChecked={config.showGraph}
+              hint="Hide the graph when you want a simpler public account page."
+            />
+          </div>
           <div className="sm:col-span-2"><SubmitBtn>Save account settings</SubmitBtn></div>
         </form>
       </AdminCard>

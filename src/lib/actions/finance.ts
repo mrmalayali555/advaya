@@ -57,6 +57,7 @@ export async function saveFinanceConfig(formData: FormData) {
     otherIncomeLabel: String(formData.get("otherIncomeLabel") || "").trim() || current.otherIncomeLabel,
     categories: categories.length > 0 ? categories : current.categories,
     allowPdfExport: formData.get("allowPdfExport") === "on",
+    showGraph: formData.get("showGraph") === "on",
   };
 
   await db.setting.upsert({
