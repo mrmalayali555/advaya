@@ -1,4 +1,6 @@
 import PDFDocument from "pdfkit";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { getFinanceConfig } from "@/lib/finance";
@@ -40,6 +42,7 @@ export async function GET(request: NextRequest) {
   });
 
   const document = new PDFDocument({ margin: 42, size: "A4", bufferPages: true });
+  const logo = await readFile(path.join(process.cwd(), "public", "logo.png"));
   const chunks: Buffer[] = [];
   document.on("data", (chunk: Buffer) => chunks.push(chunk));
   const finished = new Promise<Buffer>((resolve) => document.on("end", () => resolve(Buffer.concat(chunks))));
@@ -63,7 +66,7 @@ export async function GET(request: NextRequest) {
   const green = "#087443";
   const red = "#b4233c";
 
-  drawHeader(document, config.title, generatedAt, navy, purple);
+  drawHeader(document, generatedAt, navy, logo);
   document.x = left;
   document.moveDown(1.1);
   document.fontSize(25).fillColor(navy).font("Helvetica-Bold").text("Financial transparency report", left);
@@ -92,7 +95,7 @@ export async function GET(request: NextRequest) {
   entries.forEach((entry, index) => {
     if (document.y > document.page.height - 78) {
       document.addPage();
-      drawHeader(document, config.title, generatedAt, navy, purple);
+      drawHeader(document, generatedAt, navy, logo);
       document.x = left;
       document.y = 92;
       drawTableHeader(document, contentWidth, light, muted);
@@ -126,13 +129,12 @@ export async function GET(request: NextRequest) {
   });
 }
 
-function drawHeader(document: PDFKit.PDFDocument, title: string, generatedAt: Date, navy: string, purple: string) {
+function drawHeader(document: PDFKit.PDFDocument, generatedAt: Date, navy: string, logo: Buffer) {
   const x = document.page.margins.left;
   const width = document.page.width - document.page.margins.left - document.page.margins.right;
   document.save();
   document.rect(0, 0, document.page.width, 70).fill(navy);
-  document.circle(x + 17, 35, 13).fill(purple);
-  document.fillColor("#ffffff").font("Helvetica-Bold").fontSize(14).text("A", x + 12, 27);
+  document.image(logo, x, 12, { width: 34 });
   document.fillColor("#ffffff").fontSize(12).text("ADVAYA", x + 38, 24);
   document.fillColor("#c4b5fd").font("Helvetica").fontSize(8).text("COLLEGE UNION  •  FINANCIAL RECORD", x + 38, 42);
   document.fillColor("#ddd6fe").fontSize(8).text(`Generated ${formatDate(generatedAt)}`, x + width - 130, 31, { width: 130, align: "right" });
