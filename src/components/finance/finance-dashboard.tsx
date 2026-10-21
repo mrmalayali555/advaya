@@ -12,6 +12,7 @@ type Entry = {
   amount: number;
   note: string | null;
   date: string;
+  endDate: string | null;
 };
 
 type Config = {
@@ -46,12 +47,13 @@ export function FinanceDashboard({
     [entries]
   );
   const filtered = useMemo(() => entries.filter((entry) => {
-    const date = entry.date.slice(0, 10);
+    const start = entry.date.slice(0, 10);
+    const end = (entry.endDate || entry.date).slice(0, 10);
     return (
       (kind === "all" || entry.kind === kind) &&
       (category === "all" || entry.category === category) &&
-      (!from || date >= from) &&
-      (!to || date <= to)
+      (!from || end >= from) &&
+      (!to || start <= to)
     );
   }), [entries, kind, category, from, to]);
   const income = filtered.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
@@ -65,6 +67,10 @@ export function FinanceDashboard({
     const latest = categoryEntries[0]?.date;
     return { name, balance: categoryIncome - categoryExpenditure, latest };
   }), [categories, filtered]);
+  const unionFundEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase());
+  const otherIncomeEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() !== config.unionFundLabel.trim().toLowerCase());
+  const unionFundTotal = unionFundEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  const otherIncomeTotal = otherIncomeEntries.reduce((sum, entry) => sum + entry.amount, 0);
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-8">
@@ -84,6 +90,10 @@ export function FinanceDashboard({
           ))}
         </div>
       )}
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <IncomeGroup title={config.unionFundLabel} description="Collections received from students, shown by collection period." total={unionFundTotal} entries={unionFundEntries} tone="emerald" />
+        <IncomeGroup title={config.otherIncomeLabel} description="Sponsorships, coupon sales, donations, and other named income streams." total={otherIncomeTotal} entries={otherIncomeEntries} tone="purple" />
+      </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[var(--shadow-card)] sm:p-7">
@@ -109,7 +119,7 @@ export function FinanceDashboard({
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium text-white/85">{entry.label}</div>
                     <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-white/40">
-                      <span>{entry.category}</span><span>{formatDate(entry.date)}</span>
+                      <span>{entry.category}</span><span>{formatPeriod(entry.date, entry.endDate)}</span>
                     </div>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-white/10">
@@ -143,7 +153,7 @@ export function FinanceDashboard({
               {filtered.map((entry) => (
                 <motion.div key={entry.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="rounded-2xl border border-white/8 bg-black/15 p-3">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0"><p className="truncate text-sm text-white/80">{entry.label}</p><p className="mt-1 text-xs text-white/35">{entry.category} · {formatDate(entry.date)}</p></div>
+                    <div className="min-w-0"><p className="truncate text-sm text-white/80">{entry.label}</p><p className="mt-1 text-xs text-white/35">{entry.category} · {formatPeriod(entry.date, entry.endDate)}</p></div>
                     <strong className={`shrink-0 text-sm ${entry.kind === "income" ? "text-emerald-300" : "text-rose-300"}`}>{entry.kind === "income" ? "+" : "−"}{money(entry.amount)}</strong>
                   </div>
                   {entry.note && <p className="mt-2 text-xs leading-relaxed text-white/45">{entry.note}</p>}
@@ -168,4 +178,40 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(new Date(value));
+}
+
+function formatPeriod(start: string, end: string | null) {
+  const from = formatDate(start);
+  return end ? `${from} – ${formatDate(end)}` : from;
+}
+
+function IncomeGroup({
+  title,
+  description,
+  total,
+  entries,
+  tone,
+}: {
+  title: string;
+  description: string;
+  total: number;
+  entries: Entry[];
+  tone: "emerald" | "purple";
+}) {
+  return (
+    <section className="rounded-[1.6rem] border border-white/10 bg-white/[0.035] p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div><h2 className="text-base font-semibold text-white">{title}</h2><p className="mt-1 text-xs leading-relaxed text-white/45">{description}</p></div>
+        <strong className={`shrink-0 text-lg ${tone === "emerald" ? "text-emerald-300" : "text-purple-200"}`}>{money(total)}</strong>
+      </div>
+      <div className="mt-4 space-y-2">
+        {entries.length === 0 ? <p className="text-xs text-white/35">No entries in this period.</p> : entries.slice(0, 4).map((entry) => (
+          <div key={entry.id} className="flex items-center justify-between gap-3 rounded-xl bg-black/15 px-3 py-2">
+            <div className="min-w-0"><p className="truncate text-xs text-white/75">{entry.label}</p><p className="text-[10px] text-white/35">{formatPeriod(entry.date, entry.endDate)}</p></div>
+            <span className="shrink-0 text-xs font-semibold text-emerald-300">+{money(entry.amount)}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }

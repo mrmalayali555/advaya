@@ -1,0 +1,1 @@
+ALTER TABLE "FinanceEntry" ADD COLUMN "endDate" TIMESTAMP(3);

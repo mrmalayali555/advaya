@@ -19,6 +19,7 @@ export default async function FinancePage() {
           amount: entry.amount,
           note: entry.note,
           date: entry.date.toISOString(),
+          endDate: entry.endDate?.toISOString() || null,
         }))}
       />
     </>

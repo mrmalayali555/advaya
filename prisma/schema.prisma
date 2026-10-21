@@ -178,6 +178,7 @@ model FinanceEntry {
   note       String?
   receiptUrl String?
   date       DateTime @default(now())
+  endDate    DateTime?
   createdAt  DateTime @default(now())
 
   @@index([kind])
