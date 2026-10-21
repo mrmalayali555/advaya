@@ -163,11 +163,15 @@ function drawFooters(document: PDFKit.PDFDocument, siteUrl: string, generatedAt:
   const range = document.bufferedPageRange();
   for (let page = range.start; page < range.start + range.count; page++) {
     document.switchToPage(page);
-    const y = document.page.height - 35;
-    document.moveTo(document.page.margins.left, y - 8).lineTo(document.page.width - document.page.margins.right, y - 8).strokeColor("#e5dfeb").lineWidth(0.7).stroke();
-    document.fillColor(purple).font("Helvetica-Bold").fontSize(8).text("ADVAYA", document.page.margins.left, y);
-    document.fillColor(muted).font("Helvetica").text(siteUrl, document.page.margins.left + 52, y);
-    document.text(`Page ${page + 1} of ${range.count}`, document.page.width - document.page.margins.right - 90, y, { width: 90, align: "right" });
+    const y = document.page.height - document.page.margins.bottom + 5;
+    const left = document.page.margins.left;
+    const right = document.page.width - document.page.margins.right;
+    document.save();
+    document.moveTo(left, y - 8).lineTo(right, y - 8).strokeColor("#e5dfeb").lineWidth(0.7).stroke();
+    document.fillColor(purple).font("Helvetica-Bold").fontSize(8).text("ADVAYA", left, y, { lineBreak: false });
+    document.fillColor(muted).font("Helvetica").text(siteUrl, left + 52, y, { lineBreak: false });
+    document.text(`Page ${page - range.start + 1} of ${range.count}`, right - 90, y, { width: 90, align: "right", lineBreak: false });
+    document.restore();
   }
 }
 
