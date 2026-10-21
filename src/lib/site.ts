@@ -33,6 +33,7 @@ export const NAV_LINKS = [
   { label: "Notifications", href: "/notifications" },
   { label: "Subcommittee", href: "/subcommittee" },
   { label: "Emergency", href: "/emergency" },
+  { label: "Union Accounts", href: "/finance" },
   { label: "Contact", href: "/contact" },
 ] as const;
 

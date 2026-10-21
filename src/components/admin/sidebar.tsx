@@ -48,6 +48,7 @@ const NAV = [
       { href: "/adminahnuok/complaints", label: "Suggestions", icon: MessageSquareWarning },
       { href: "/adminahnuok/committees", label: "Subcommittees", icon: Users },
       { href: "/adminahnuok/pages", label: "Pages (About)", icon: GraduationCap },
+      { href: "/adminahnuok/finance", label: "Union Accounts", icon: Wallet },
     ],
   },
   {

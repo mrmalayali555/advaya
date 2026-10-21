@@ -11,8 +11,10 @@ import { cn } from "@/lib/utils";
 
 export function Navbar({
   searchConfig = { showMobile: true, showDesktop: true },
+  financeLabel = "Union Accounts",
 }: {
   searchConfig?: { showMobile: boolean; showDesktop: boolean };
+  financeLabel?: string;
 } = {}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -27,7 +29,8 @@ export function Navbar({
   }, []);
 
   useEffect(() => {
-    setOpen(false);
+    const timer = window.setTimeout(() => setOpen(false), 0);
+    return () => window.clearTimeout(timer);
   }, [pathname]);
 
   useEffect(() => {
@@ -86,7 +89,7 @@ export function Navbar({
                     : "text-white/70 hover:text-white"
                 )}
               >
-                {link.label}
+                {link.href === "/finance" ? financeLabel : link.label}
               </Link>
             ))}
           </nav>
@@ -152,7 +155,7 @@ export function Navbar({
                 <MobileLink
                   key={link.href}
                   href={link.href}
-                  label={link.label}
+                  label={link.href === "/finance" ? financeLabel : link.label}
                   active={isActive(link.href)}
                   onClick={() => setOpen(false)}
                 />

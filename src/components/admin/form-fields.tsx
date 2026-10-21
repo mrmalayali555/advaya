@@ -59,6 +59,7 @@ export function TextArea({
   placeholder,
   required,
   rows = 5,
+  hint,
 }: {
   label: string;
   name: string;
@@ -66,6 +67,7 @@ export function TextArea({
   placeholder?: string;
   required?: boolean;
   rows?: number;
+  hint?: string;
 }) {
   return (
     <div>
@@ -81,6 +83,7 @@ export function TextArea({
         required={required}
         className={inputCls + " resize-y"}
       />
+      {hint && <p className="mt-1 text-xs text-ink-400">{hint}</p>}
     </div>
   );
 }
