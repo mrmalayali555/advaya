@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight, CalendarDays, Download, Landmark, TrendingUp } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, CalendarDays, Download, Landmark } from "lucide-react";
 
 type Entry = {
   id: string;
@@ -60,7 +60,6 @@ export function FinanceDashboard({
   const income = filtered.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
   const expenditure = filtered.filter((entry) => entry.kind === "expenditure").reduce((sum, entry) => sum + entry.amount, 0);
   const balance = income - expenditure;
-  const maxAmount = Math.max(...filtered.map((entry) => entry.amount), 1);
   const categorySnapshots = useMemo(() => categories.map((name) => {
     const categoryEntries = filtered.filter((entry) => entry.category === name);
     const categoryIncome = categoryEntries.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
@@ -78,6 +77,20 @@ export function FinanceDashboard({
     ...(from ? { from } : {}),
     ...(to ? { to } : {}),
   }).toString();
+  const chartData = useMemo(() => {
+    const byDate = new Map<string, { unionFund: number; otherIncome: number; expenditure: number }>();
+    filtered.forEach((entry) => {
+      const date = entry.date.slice(0, 10);
+      const current = byDate.get(date) || { unionFund: 0, otherIncome: 0, expenditure: 0 };
+      if (entry.kind === "expenditure") current.expenditure += entry.amount;
+      else if (entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase()) current.unionFund += entry.amount;
+      else current.otherIncome += entry.amount;
+      byDate.set(date, current);
+    });
+    return Array.from(byDate.entries())
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([date, values]) => ({ date, ...values }));
+  }, [filtered, config.unionFundLabel]);
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-8">
@@ -102,51 +115,7 @@ export function FinanceDashboard({
         <IncomeGroup title={config.otherIncomeLabel} description="Sponsorships, coupon sales, donations, and other named income streams." total={otherIncomeTotal} entries={otherIncomeEntries} tone="purple" />
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[var(--shadow-card)] sm:p-7">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                <TrendingUp className="h-4 w-4 text-purple-300" /> Transaction flow
-              </div>
-              <p className="mt-1 text-xs text-white/45">Every recorded entry, with the largest movements highlighted.</p>
-            </div>
-            <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/60">{filtered.length} entries</span>
-          </div>
-          <div className="mt-6 space-y-3">
-            {filtered.length === 0 ? <p className="py-12 text-center text-sm text-white/45">No entries match these filters.</p> : (
-              filtered.slice(0, 8).map((entry, index) => (
-                <motion.div
-                  key={entry.id}
-                  initial={reducedMotion ? false : { opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: reducedMotion ? 0 : index * 0.035 }}
-                  className="grid grid-cols-[minmax(0,1fr)_minmax(110px,0.7fr)_auto] items-center gap-3"
-                >
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-medium text-white/85">{entry.label}</div>
-                    <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-white/40">
-                      <span>{entry.category}</span><span>{formatPeriod(entry.date, entry.endDate)}</span>
-                    </div>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${Math.max((entry.amount / maxAmount) * 100, 4)}%` }}
-                      transition={{ duration: reducedMotion ? 0 : 0.7, delay: reducedMotion ? 0 : index * 0.035 }}
-                      className={`h-full rounded-full ${entry.kind === "income" ? "bg-emerald-400" : "bg-rose-400"}`}
-                    />
-                  </div>
-                  <span className={`text-right text-sm font-semibold ${entry.kind === "income" ? "text-emerald-300" : "text-rose-300"}`}>
-                    {entry.kind === "income" ? "+" : "−"}{money(entry.amount)}
-                  </span>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </section>
-
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[var(--shadow-card)] sm:p-7">
+      <section className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[var(--shadow-card)] sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2 text-sm font-semibold text-white"><CalendarDays className="h-4 w-4 text-purple-300" /> Account history</div>
@@ -182,9 +151,101 @@ export function FinanceDashboard({
               Showing the latest 12 entries. Use Download PDF for the complete filtered list.
             </p>
           )}
-        </section>
-      </div>
+      </section>
+      <FinanceGraph data={chartData} config={config} reducedMotion={reducedMotion} />
     </div>
+  );
+}
+
+function FinanceGraph({
+  data,
+  config,
+  reducedMotion,
+}: {
+  data: { date: string; unionFund: number; otherIncome: number; expenditure: number }[];
+  config: Config;
+  reducedMotion: boolean | null;
+}) {
+  const width = 840;
+  const height = 300;
+  const left = 48;
+  const right = 18;
+  const top = 22;
+  const bottom = 44;
+  const plotWidth = width - left - right;
+  const plotHeight = height - top - bottom;
+  const maximum = Math.max(...data.flatMap((point) => [point.unionFund, point.otherIncome, point.expenditure]), 1);
+  const x = (index: number) => left + (data.length <= 1 ? plotWidth / 2 : (index / (data.length - 1)) * plotWidth);
+  const y = (amount: number) => top + plotHeight - (amount / maximum) * plotHeight;
+  const series = [
+    { key: "unionFund", label: config.unionFundLabel, color: "#34d399" },
+    { key: "otherIncome", label: config.otherIncomeLabel, color: "#c084fc" },
+    { key: "expenditure", label: config.expenditureLabel, color: "#fb7185" },
+  ] as const;
+  const pathFor = (key: (typeof series)[number]["key"]) =>
+    data.map((point, index) => `${index === 0 ? "M" : "L"} ${x(index)} ${y(point[key])}`).join(" ");
+
+  return (
+    <section className="mt-6 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[var(--shadow-card)] sm:p-7">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-purple-300">Live overview</p>
+          <h2 className="mt-1 text-xl font-semibold text-white">Income & expenditure over time</h2>
+          <p className="mt-1 text-xs text-white/45">Amounts are grouped by the start date of each recorded collection period.</p>
+        </div>
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-white/65">
+          {series.map((item) => (
+            <span key={item.key} className="inline-flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+              {item.label}
+            </span>
+          ))}
+        </div>
+      </div>
+      {data.length === 0 ? (
+        <p className="py-16 text-center text-sm text-white/45">Apply a broader filter or add entries to see the graph.</p>
+      ) : (
+        <div className="mt-6 overflow-x-auto pb-1">
+          <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Finance activity graph" className="h-auto min-w-[620px] w-full">
+            {[0, 0.5, 1].map((ratio) => {
+              const value = maximum * ratio;
+              return (
+                <g key={ratio}>
+                  <line x1={left} x2={width - right} y1={y(value)} y2={y(value)} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 6" />
+                  <text x={left - 8} y={y(value) + 4} textAnchor="end" fill="rgba(255,255,255,0.4)" fontSize="10">{shortMoney(value)}</text>
+                </g>
+              );
+            })}
+            {series.map((item) => (
+              <motion.path
+                key={item.key}
+                d={pathFor(item.key)}
+                fill="none"
+                stroke={item.color}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={reducedMotion ? false : { pathLength: 0, opacity: 0.5 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: reducedMotion ? 0 : 1, ease: "easeOut" }}
+              />
+            ))}
+            {data.map((point, index) => (
+              <g key={point.date}>
+                {series.map((item) => (
+                  <circle key={item.key} cx={x(index)} cy={y(point[item.key])} r="4" fill="#11091b" stroke={item.color} strokeWidth="2">
+                    <title>{`${item.label}: ${money(point[item.key])} on ${formatDate(point.date)}`}</title>
+                  </circle>
+                ))}
+                {(index === 0 || index === data.length - 1 || data.length < 5) && (
+                  <text x={x(index)} y={height - 15} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="10">{formatShortDate(point.date)}</text>
+                )}
+              </g>
+            ))}
+          </svg>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -204,6 +265,16 @@ function formatDate(value: string) {
 function formatPeriod(start: string, end: string | null) {
   const from = formatDate(start);
   return end ? `${from} – ${formatDate(end)}` : from;
+}
+
+function shortMoney(value: number) {
+  if (value >= 1000000) return `₹${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `₹${(value / 1000).toFixed(1)}k`;
+  return `₹${Math.round(value)}`;
+}
+
+function formatShortDate(value: string) {
+  return new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short" }).format(new Date(value));
 }
 
 function IncomeGroup({
