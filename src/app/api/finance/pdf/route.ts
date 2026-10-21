@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
   ];
   const pageWidth = document.page.width;
   const contentWidth = pageWidth - document.page.margins.left - document.page.margins.right;
+  const left = document.page.margins.left;
   const navy = "#160b24";
   const purple = "#6d28d9";
   const muted = "#6b6373";
@@ -63,24 +64,28 @@ export async function GET(request: NextRequest) {
   const red = "#b4233c";
 
   drawHeader(document, config.title, generatedAt, navy, purple);
+  document.x = left;
   document.moveDown(1.1);
-  document.fontSize(25).fillColor(navy).font("Helvetica-Bold").text("Financial transparency report");
+  document.fontSize(25).fillColor(navy).font("Helvetica-Bold").text("Financial transparency report", left);
   document.moveDown(0.25);
   document.fontSize(10).fillColor(muted).font("Helvetica").text("A verified snapshot of recorded union income and expenditure.");
   document.moveDown(0.9);
-  document.roundedRect(document.x, document.y, contentWidth, 35, 8).fill("#f0e9fb");
-  document.fillColor("#4c1d95").fontSize(9).font("Helvetica-Bold").text("REPORT SCOPE", document.x + 12, document.y + 11);
-  document.fillColor("#5b5264").font("Helvetica").text(filters.join("  •  "), document.x + 90, document.y + 11, { width: contentWidth - 102 });
-  document.y += 50;
+  const scopeY = document.y;
+  document.roundedRect(left, scopeY, contentWidth, 35, 8).fill("#f0e9fb");
+  document.fillColor("#4c1d95").fontSize(9).font("Helvetica-Bold").text("REPORT SCOPE", left + 12, scopeY + 11);
+  document.fillColor("#5b5264").font("Helvetica").text(filters.join("  •  "), left + 90, scopeY + 11, { width: contentWidth - 102 });
+  document.y = scopeY + 50;
 
   const cardGap = 10;
   const cardWidth = (contentWidth - cardGap * 2) / 3;
-  drawMetric(document, document.x, document.y, cardWidth, "TOTAL INCOME", money(income), "#e9f8f1", green);
-  drawMetric(document, document.x + cardWidth + cardGap, document.y, cardWidth, "TOTAL EXPENDITURE", money(expenditure), "#fff0f2", red);
-  drawMetric(document, document.x + (cardWidth + cardGap) * 2, document.y, cardWidth, "CURRENT BALANCE", money(balance), "#f0e9fb", purple);
-  document.y += 78;
+  const metricY = document.y;
+  drawMetric(document, left, metricY, cardWidth, "TOTAL INCOME", money(income), "#e9f8f1", green);
+  drawMetric(document, left + cardWidth + cardGap, metricY, cardWidth, "TOTAL EXPENDITURE", money(expenditure), "#fff0f2", red);
+  drawMetric(document, left + (cardWidth + cardGap) * 2, metricY, cardWidth, "CURRENT BALANCE", money(balance), "#f0e9fb", purple);
+  document.y = metricY + 78;
 
-  document.fontSize(13).fillColor(navy).font("Helvetica-Bold").text("Transaction register");
+  document.x = left;
+  document.fontSize(13).fillColor(navy).font("Helvetica-Bold").text("Transaction register", left);
   document.moveDown(0.45);
   drawTableHeader(document, contentWidth, light, muted);
 
@@ -88,18 +93,19 @@ export async function GET(request: NextRequest) {
     if (document.y > document.page.height - 78) {
       document.addPage();
       drawHeader(document, config.title, generatedAt, navy, purple);
+      document.x = left;
       document.y = 92;
       drawTableHeader(document, contentWidth, light, muted);
     }
     const rowY = document.y;
     const rowHeight = entry.note ? 42 : 31;
-    if (index % 2 === 0) document.rect(document.x, rowY - 5, contentWidth, rowHeight).fill("#fbfaff");
+    if (index % 2 === 0) document.rect(left, rowY - 5, contentWidth, rowHeight).fill("#fbfaff");
     const amountColor = entry.kind === "income" ? green : red;
-    document.font("Helvetica-Bold").fontSize(9).fillColor(navy).text(entry.label, document.x + 8, rowY + 2, { width: 190, ellipsis: true });
-    document.font("Helvetica").fontSize(8).fillColor(muted).text(entry.category, document.x + 8, rowY + 16, { width: 190, ellipsis: true });
-    document.fillColor("#3c3442").text(formatPeriod(entry.date, entry.endDate), document.x + 205, rowY + 7, { width: 115, ellipsis: true });
-    document.fillColor(amountColor).font("Helvetica-Bold").text(`${entry.kind === "income" ? "+" : "-"}${money(entry.amount)}`, document.x + contentWidth - 105, rowY + 7, { width: 97, align: "right" });
-    if (entry.note) document.fillColor(muted).font("Helvetica-Oblique").fontSize(7.5).text(entry.note, document.x + 8, rowY + 29, { width: contentWidth - 16, ellipsis: true });
+    document.font("Helvetica-Bold").fontSize(9).fillColor(navy).text(entry.label, left + 8, rowY + 2, { width: 190, ellipsis: true });
+    document.font("Helvetica").fontSize(8).fillColor(muted).text(entry.category, left + 8, rowY + 16, { width: 190, ellipsis: true });
+    document.fillColor("#3c3442").text(formatPeriod(entry.date, entry.endDate), left + 205, rowY + 7, { width: 115, ellipsis: true });
+    document.fillColor(amountColor).font("Helvetica-Bold").text(`${entry.kind === "income" ? "+" : "-"}${money(entry.amount)}`, left + contentWidth - 105, rowY + 7, { width: 97, align: "right" });
+    if (entry.note) document.fillColor(muted).font("Helvetica-Oblique").fontSize(7.5).text(entry.note, left + 8, rowY + 29, { width: contentWidth - 16, ellipsis: true });
     document.y = rowY + rowHeight;
   });
 
@@ -141,12 +147,13 @@ function drawMetric(document: PDFKit.PDFDocument, x: number, y: number, width: n
 }
 
 function drawTableHeader(document: PDFKit.PDFDocument, width: number, background: string, color: string) {
+  const left = document.page.margins.left;
   const y = document.y;
-  document.roundedRect(document.x, y, width, 24, 5).fill(background);
+  document.roundedRect(left, y, width, 24, 5).fill(background);
   document.fillColor(color).font("Helvetica-Bold").fontSize(7.5);
-  document.text("DESCRIPTION", document.x + 8, y + 8);
-  document.text("COLLECTION PERIOD", document.x + 205, y + 8);
-  document.text("AMOUNT", document.x + width - 105, y + 8, { width: 97, align: "right" });
+  document.text("DESCRIPTION", left + 8, y + 8);
+  document.text("COLLECTION PERIOD", left + 205, y + 8);
+  document.text("AMOUNT", left + width - 105, y + 8, { width: 97, align: "right" });
   document.y = y + 30;
 }
 
