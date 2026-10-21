@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight, CalendarDays, Landmark, TrendingUp } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, CalendarDays, Download, Landmark, TrendingUp } from "lucide-react";
 
 type Entry = {
   id: string;
@@ -23,6 +23,7 @@ type Config = {
   expenditureLabel: string;
   unionFundLabel: string;
   otherIncomeLabel: string;
+  allowPdfExport: boolean;
 };
 
 function money(value: number) {
@@ -71,6 +72,12 @@ export function FinanceDashboard({
   const otherIncomeEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() !== config.unionFundLabel.trim().toLowerCase());
   const unionFundTotal = unionFundEntries.reduce((sum, entry) => sum + entry.amount, 0);
   const otherIncomeTotal = otherIncomeEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  const exportQuery = new URLSearchParams({
+    kind,
+    category,
+    ...(from ? { from } : {}),
+    ...(to ? { to } : {}),
+  }).toString();
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-8">
@@ -140,8 +147,17 @@ export function FinanceDashboard({
         </section>
 
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[var(--shadow-card)] sm:p-7">
-          <div className="flex items-center gap-2 text-sm font-semibold text-white"><CalendarDays className="h-4 w-4 text-purple-300" /> Account history</div>
-          <p className="mt-1 text-xs text-white/45">Filter the public record by type, category, or date range.</p>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-white"><CalendarDays className="h-4 w-4 text-purple-300" /> Account history</div>
+              <p className="mt-1 text-xs text-white/45">Filter the public record by type, category, or date range.</p>
+            </div>
+            {config.allowPdfExport && (
+              <a href={`/api/finance/pdf?${exportQuery}`} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-purple-400/30 bg-purple-500/15 px-3 py-2 text-xs font-semibold text-purple-100 transition hover:bg-purple-500/25">
+                <Download className="h-4 w-4" /> Download PDF
+              </a>
+            )}
+          </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <FilterSelect label="View" value={kind} onChange={(value) => setKind(value as typeof kind)} options={[["all", "All entries"], ["income", config.incomeLabel], ["expenditure", config.expenditureLabel]]} />
             <FilterSelect label="Category" value={category} onChange={setCategory} options={[["all", "All categories"], ...categories.map((value) => [value, value])]} />
@@ -150,7 +166,7 @@ export function FinanceDashboard({
           </div>
           <div className="mt-6 max-h-[360px] space-y-2 overflow-y-auto pr-1">
             <AnimatePresence initial={false}>
-              {filtered.map((entry) => (
+              {filtered.slice(0, 12).map((entry) => (
                 <motion.div key={entry.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="rounded-2xl border border-white/8 bg-black/15 p-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0"><p className="truncate text-sm text-white/80">{entry.label}</p><p className="mt-1 text-xs text-white/35">{entry.category} · {formatPeriod(entry.date, entry.endDate)}</p></div>
@@ -161,6 +177,11 @@ export function FinanceDashboard({
               ))}
             </AnimatePresence>
           </div>
+          {filtered.length > 12 && (
+            <p className="mt-3 text-center text-[11px] text-white/35">
+              Showing the latest 12 entries. Use Download PDF for the complete filtered list.
+            </p>
+          )}
         </section>
       </div>
     </div>

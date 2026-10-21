@@ -11,6 +11,7 @@ export const DEFAULT_FINANCE_CONFIG = {
   unionFundLabel: "Union Fund",
   otherIncomeLabel: "Other Income",
   categories: ["Union Fund", "Sponsorship", "Coupon Sale"],
+  allowPdfExport: true,
 };
 
 export type FinanceConfig = typeof DEFAULT_FINANCE_CONFIG;
@@ -27,6 +28,7 @@ export async function getFinanceConfig(): Promise<FinanceConfig> {
       categories: Array.isArray(parsed.categories) && parsed.categories.length > 0
         ? parsed.categories.filter((category): category is string => typeof category === "string" && category.trim().length > 0)
         : DEFAULT_FINANCE_CONFIG.categories,
+      allowPdfExport: parsed.allowPdfExport !== false,
     };
   } catch {
     return DEFAULT_FINANCE_CONFIG;

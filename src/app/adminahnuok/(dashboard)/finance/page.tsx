@@ -1,5 +1,5 @@
 import { AdminHeader, AdminCard, EmptyRow } from "@/components/admin/admin-ui";
-import { Field, Select, TextArea, UploadField, SubmitBtn, DeleteBtn } from "@/components/admin/form-fields";
+import { Field, Select, TextArea, UploadField, SubmitBtn, DeleteBtn, Toggle } from "@/components/admin/form-fields";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import { createFinance, deleteFinance, saveFinanceConfig } from "@/lib/actions/finance";
@@ -86,6 +86,14 @@ export default async function AdminFinancePage() {
           <Field label="Other income label" name="otherIncomeLabel" defaultValue={config.otherIncomeLabel} required />
           <div className="sm:col-span-2"><TextArea label="Public page description" name="description" defaultValue={config.description} rows={2} required /></div>
           <div className="sm:col-span-2"><TextArea label="Income categories" name="categories" defaultValue={config.categories.join("\n")} rows={4} hint="One category per line. For example: Union Fund, Sponsorship, Coupon Sale." /></div>
+          <div className="sm:col-span-2">
+            <Toggle
+              label="Allow public PDF downloads"
+              name="allowPdfExport"
+              defaultChecked={config.allowPdfExport}
+              hint="When disabled, the public page stays clean and the export control is hidden."
+            />
+          </div>
           <div className="sm:col-span-2"><SubmitBtn>Save account settings</SubmitBtn></div>
         </form>
       </AdminCard>

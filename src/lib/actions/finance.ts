@@ -56,6 +56,7 @@ export async function saveFinanceConfig(formData: FormData) {
     unionFundLabel: String(formData.get("unionFundLabel") || "").trim() || current.unionFundLabel,
     otherIncomeLabel: String(formData.get("otherIncomeLabel") || "").trim() || current.otherIncomeLabel,
     categories: categories.length > 0 ? categories : current.categories,
+    allowPdfExport: formData.get("allowPdfExport") === "on",
   };
 
   await db.setting.upsert({
