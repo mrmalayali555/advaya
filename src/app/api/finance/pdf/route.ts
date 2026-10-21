@@ -163,7 +163,7 @@ function drawFooters(document: PDFKit.PDFDocument, siteUrl: string, generatedAt:
   const range = document.bufferedPageRange();
   for (let page = range.start; page < range.start + range.count; page++) {
     document.switchToPage(page);
-    const y = document.page.height - document.page.margins.bottom + 5;
+    const y = document.page.height - document.page.margins.bottom - 12;
     const left = document.page.margins.left;
     const right = document.page.width - document.page.margins.right;
     document.save();
