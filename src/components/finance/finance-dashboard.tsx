@@ -247,7 +247,9 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 function formatDate(value: string | null) {
   if (!value) return "Date not specified";
   const date = new Date(value);
-  return date.getFullYear() < 1900 ? "Date not specified" : new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(date);
+  return Number.isNaN(date.getTime()) || date.getFullYear() < 1900
+    ? "Date not specified"
+    : new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(date);
 }
 
 function formatPeriod(start: string | null, end: string | null) {
@@ -261,8 +263,11 @@ function shortMoney(value: number) {
 }
 
 function formatShortDate(value: string) {
+  if (!value) return "—";
   const date = new Date(value);
-  return date.getFullYear() < 1900 ? "—" : new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short" }).format(date);
+  return Number.isNaN(date.getTime()) || date.getFullYear() < 1900
+    ? "—"
+    : new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short" }).format(date);
 }
 
 function IncomeGroup({
