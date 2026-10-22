@@ -178,7 +178,7 @@ model FinanceEntry {
   amount     Float
   note       String?
   receiptUrl String?
-  date       DateTime @default(now())
+  date       DateTime?
   endDate    DateTime?
   createdAt  DateTime @default(now())
 

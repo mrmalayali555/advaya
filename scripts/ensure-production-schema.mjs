@@ -14,6 +14,12 @@ if (isProductionDatabase) {
     await prisma.$executeRawUnsafe(
       'ALTER TABLE "Event" ALTER COLUMN "date" DROP NOT NULL'
     );
+    await prisma.$executeRawUnsafe(
+      'ALTER TABLE "FinanceEntry" ALTER COLUMN "date" DROP NOT NULL'
+    );
+    await prisma.$executeRawUnsafe(
+      'ALTER TABLE "FinanceEntry" ALTER COLUMN "date" DROP DEFAULT'
+    );
     console.log("Production schema checked.");
   } finally {
     await prisma.$disconnect();

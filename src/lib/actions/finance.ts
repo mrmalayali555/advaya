@@ -22,14 +22,11 @@ export async function createFinance(formData: FormData) {
     amount: Number(formData.get("amount") || 0),
     note: String(formData.get("note") || "").trim() || null,
     receiptUrl: String(formData.get("receiptUrl") || "").trim() || null,
-    date: parseDate(formData.get("date")),
+    date: undefined,
     endDate: parseDate(formData.get("endDate")),
   };
   if (!data.label || !Number.isFinite(data.amount) || data.amount <= 0) {
     throw new Error("A label and a positive amount are required.");
-  }
-  if (data.date && data.endDate && data.endDate < data.date) {
-    throw new Error("The end date cannot be earlier than the start date.");
   }
   await db.financeEntry.create({ data });
   revalidatePath("/adminahnuok/finance");

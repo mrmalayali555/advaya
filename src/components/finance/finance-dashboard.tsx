@@ -11,7 +11,7 @@ type Entry = {
   label: string;
   amount: number;
   note: string | null;
-  date: string;
+  date: string | null;
   endDate: string | null;
 };
 
@@ -48,11 +48,11 @@ export function FinanceDashboard({
     [entries]
   );
   const filtered = useMemo(() => entries.filter((entry) => {
-    const start = entry.date.slice(0, 10);
+    const effectiveDate = (entry.endDate || entry.date || "").slice(0, 10);
     return (
       (kind === "all" || entry.kind === kind) &&
       (category === "all" || entry.category === category) &&
-      (!to || start <= to)
+      (!to || effectiveDate <= to)
     );
   }), [entries, kind, category, to]);
   const income = filtered.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
@@ -70,7 +70,7 @@ export function FinanceDashboard({
   const chartData = useMemo(() => {
     const byDate = new Map<string, { unionFund: number; otherIncome: number; expenditure: number }>();
     filtered.forEach((entry) => {
-      const date = entry.date.slice(0, 10);
+      const date = (entry.endDate || entry.date || "").slice(0, 10);
       const current = byDate.get(date) || { unionFund: 0, otherIncome: 0, expenditure: 0 };
       if (entry.kind === "expenditure") current.expenditure += entry.amount;
       else if (entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase()) current.unionFund += entry.amount;
@@ -236,14 +236,14 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
   return <label className="text-xs text-white/50">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="mt-1 block w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-white">{options.map(([option, text]) => <option key={option} value={option}>{text}</option>)}</select></label>;
 }
 
-function formatDate(value: string) {
+function formatDate(value: string | null) {
+  if (!value) return "Date not specified";
   const date = new Date(value);
   return date.getFullYear() < 1900 ? "Date not specified" : new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(date);
 }
 
-function formatPeriod(start: string, end: string | null) {
-  const from = formatDate(start);
-  return end ? `${from} – ${formatDate(end)}` : from;
+function formatPeriod(start: string | null, end: string | null) {
+  return `Up to ${formatDate(end || start)}`;
 }
 
 function shortMoney(value: number) {

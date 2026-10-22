@@ -23,19 +23,13 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const kind = params.get("kind");
   const category = params.get("category");
-  const from = parseDate(params.get("from"));
   const to = parseDate(params.get("to"));
   const entries = await db.financeEntry.findMany({
     where: {
       ...(kind === "income" || kind === "expenditure" ? { kind } : {}),
       ...(category && category !== "all" ? { category } : {}),
-      ...(from || to
-        ? {
-            OR: [
-              { date: { lte: to || new Date("9999-12-31") }, endDate: { gte: from || new Date("1970-01-01") } },
-              { date: { gte: from || new Date("1970-01-01"), lte: to || new Date("9999-12-31") } },
-            ],
-          }
+      ...(to
+        ? { OR: [{ date: { lte: to } }, { date: null, endDate: { lte: to } }] }
         : {}),
     },
     orderBy: [{ date: "desc" }, { createdAt: "desc" }],
@@ -54,7 +48,7 @@ export async function GET(request: NextRequest) {
   const filters = [
     kind === "income" ? config.incomeLabel : kind === "expenditure" ? config.expenditureLabel : "All entries",
     category && category !== "all" ? category : "All categories",
-    from || to ? `${from ? formatDate(from) : "Any date"} - ${to ? formatDate(to) : "Any date"}` : "All dates",
+    to ? `Up to ${formatDate(to)}` : "All dates",
   ];
   const pageWidth = document.page.width;
   const contentWidth = pageWidth - document.page.margins.left - document.page.margins.right;
@@ -179,11 +173,11 @@ function money(value: number) {
   return `Rs. ${value.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 }
 
-function formatPeriod(start: Date, end: Date | null) {
-  const from = formatDate(start);
-  return end ? `${from} - ${formatDate(end)}` : from;
+function formatPeriod(start: Date | null, end: Date | null) {
+  return `Up to ${formatDate(end || start)}`;
 }
 
-function formatDate(value: Date) {
+function formatDate(value: Date | null) {
+  if (!value) return "Date not specified";
   return value.getFullYear() < 1900 ? "Date not specified" : value.toLocaleDateString("en-IN", { dateStyle: "medium" });
 }

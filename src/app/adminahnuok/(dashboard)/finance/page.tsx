@@ -34,10 +34,7 @@ export default async function AdminFinancePage() {
             </datalist>
             <Field label="Label" name="label" required placeholder="Annual union fund collection" />
             <Field label="Amount (₹)" name="amount" type="number" required placeholder="480000" />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Collected from (optional)" name="date" type="date" hint="Start of the collection period." />
-              <Field label="Collected up to (optional)" name="endDate" type="date" hint="End of the collection period." />
-            </div>
+            <Field label="Collected up to (optional)" name="endDate" type="date" hint="Use this when you want to show the date up to which the amount was collected." />
             <TextArea label="Note (optional)" name="note" rows={2} />
             <UploadField label="Receipt (optional)" name="receiptUrl" accept="application/pdf,image/*" hint="PDF or image" />
             <SubmitBtn>Add entry</SubmitBtn>
@@ -109,7 +106,7 @@ export default async function AdminFinancePage() {
   );
 }
 
-function formatPeriod(start: Date, end: Date | null) {
-  const from = formatDate(start);
-  return end ? `${from} – ${formatDate(end)}` : from;
+function formatPeriod(start: Date | null, end: Date | null) {
+  if (end) return `Up to ${formatDate(end)}`;
+  return start ? `Up to ${formatDate(start)}` : "Date not specified";
 }
