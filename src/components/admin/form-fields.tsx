@@ -106,7 +106,7 @@ export function Select({
       <label htmlFor={name} className="mb-1.5 block text-sm font-medium text-ink-700">
         {label}
       </label>
-      <select id={name} name={name} defaultValue={defaultValue} className={inputCls}>
+      <select id={name} name={name} defaultValue={defaultValue} className={`${inputCls} admin-select`}>
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}

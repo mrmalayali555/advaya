@@ -28,7 +28,7 @@ export function FinanceCategoryField({
         id="category"
         value={selection}
         onChange={(event) => setSelection(event.target.value)}
-        className={inputClass}
+        className={`${inputClass} admin-select`}
         aria-describedby="category-hint"
       >
         {categories.map((category) => (

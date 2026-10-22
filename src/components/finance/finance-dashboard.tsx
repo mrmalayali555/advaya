@@ -233,7 +233,7 @@ function SummaryCard({ label, amount, tone, icon: Icon, reducedMotion }: { label
 }
 
 function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: string[][] }) {
-  return <label className="text-xs text-white/50">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="mt-1 block w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-white">{options.map(([option, text]) => <option key={option} value={option}>{text}</option>)}</select></label>;
+  return <label className="text-xs text-white/50">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="finance-select mt-1 block w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 pr-11 text-sm text-white">{options.map(([option, text]) => <option key={option} value={option}>{text}</option>)}</select></label>;
 }
 
 function formatDate(value: string | null) {
