@@ -12,8 +12,13 @@ function parseJSON<T>(value: string | undefined | null, fallback: T): T {
 }
 
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {
-  const row = await db.setting.findUnique({ where: { key } });
-  return parseJSON<T>(row?.value, fallback);
+  try {
+    const row = await db.setting.findUnique({ where: { key } });
+    return parseJSON<T>(row?.value, fallback);
+  } catch (error) {
+    console.error(`Unable to load setting "${key}"; using the configured fallback.`, error);
+    return fallback;
+  }
 }
 
 export async function getPage(key: string) {
