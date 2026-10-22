@@ -11,7 +11,10 @@ export default async function AdminFinancePage() {
     db.financeEntry.findMany({ orderBy: [{ date: "desc" }, { createdAt: "desc" }] }),
     getFinanceConfig(),
   ]);
-  const totalIncome = entries.filter((e) => e.kind === "income").reduce((s, e) => s + e.amount, 0);
+  const unionFundEntries = entries.filter((e) => e.kind === "income" && e.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase());
+  const unionFundTotal = [...unionFundEntries].sort(compareFinanceEntries)[0]?.amount || 0;
+  const otherIncomeTotal = entries.filter((e) => e.kind === "income" && e.category.trim().toLowerCase() !== config.unionFundLabel.trim().toLowerCase()).reduce((s, e) => s + e.amount, 0);
+  const totalIncome = unionFundTotal + otherIncomeTotal;
   const totalExp = entries.filter((e) => e.kind === "expenditure").reduce((s, e) => s + e.amount, 0);
 
   return (
@@ -107,4 +110,10 @@ export default async function AdminFinancePage() {
 function formatPeriod(start: Date | null, end: Date | null) {
   if (end) return `Up to ${formatDate(end)}`;
   return start ? `Up to ${formatDate(start)}` : "Date not specified";
+}
+
+function compareFinanceEntries(left: { date: Date | null; endDate: Date | null; createdAt: Date }, right: { date: Date | null; endDate: Date | null; createdAt: Date }) {
+  const leftDate = (left.endDate || left.date)?.getTime() || 0;
+  const rightDate = (right.endDate || right.date)?.getTime() || 0;
+  return rightDate - leftDate || right.createdAt.getTime() - left.createdAt.getTime();
 }

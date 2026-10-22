@@ -41,7 +41,10 @@ export async function GET(request: NextRequest) {
   document.on("data", (chunk: Buffer) => chunks.push(chunk));
   const finished = new Promise<Buffer>((resolve) => document.on("end", () => resolve(Buffer.concat(chunks))));
 
-  const income = entries.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
+  const unionFundEntries = entries.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase());
+  const latestUnionFund = [...unionFundEntries].sort(compareFinanceEntries)[0];
+  const otherIncome = entries.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() !== config.unionFundLabel.trim().toLowerCase()).reduce((sum, entry) => sum + entry.amount, 0);
+  const income = (latestUnionFund?.amount || 0) + otherIncome;
   const expenditure = entries.filter((entry) => entry.kind === "expenditure").reduce((sum, entry) => sum + entry.amount, 0);
   const balance = income - expenditure;
   const generatedAt = new Date();
@@ -180,4 +183,10 @@ function formatPeriod(start: Date | null, end: Date | null) {
 function formatDate(value: Date | null) {
   if (!value) return "Date not specified";
   return value.getFullYear() < 1900 ? "Date not specified" : value.toLocaleDateString("en-IN", { dateStyle: "medium" });
+}
+
+function compareFinanceEntries(left: { date: Date | null; endDate: Date | null; createdAt: Date }, right: { date: Date | null; endDate: Date | null; createdAt: Date }) {
+  const leftDate = (left.endDate || left.date)?.getTime() || 0;
+  const rightDate = (right.endDate || right.date)?.getTime() || 0;
+  return rightDate - leftDate || right.createdAt.getTime() - left.createdAt.getTime();
 }

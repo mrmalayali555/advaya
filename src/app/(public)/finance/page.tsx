@@ -20,6 +20,7 @@ export default async function FinancePage() {
           note: entry.note,
           date: entry.date?.toISOString() || null,
           endDate: entry.endDate?.toISOString() || null,
+          createdAt: entry.createdAt.toISOString(),
         }))}
       />
     </>

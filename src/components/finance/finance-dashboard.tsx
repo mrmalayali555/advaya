@@ -13,6 +13,7 @@ type Entry = {
   note: string | null;
   date: string | null;
   endDate: string | null;
+  createdAt: string;
 };
 
 type Config = {
@@ -55,13 +56,14 @@ export function FinanceDashboard({
       (!to || effectiveDate <= to)
     );
   }), [entries, kind, category, to]);
-  const income = filtered.filter((entry) => entry.kind === "income").reduce((sum, entry) => sum + entry.amount, 0);
-  const expenditure = filtered.filter((entry) => entry.kind === "expenditure").reduce((sum, entry) => sum + entry.amount, 0);
-  const balance = income - expenditure;
   const unionFundEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase());
   const otherIncomeEntries = filtered.filter((entry) => entry.kind === "income" && entry.category.trim().toLowerCase() !== config.unionFundLabel.trim().toLowerCase());
-  const unionFundTotal = unionFundEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  const latestUnionFund = [...unionFundEntries].sort(compareFinanceEntries)[0];
+  const unionFundTotal = latestUnionFund?.amount || 0;
   const otherIncomeTotal = otherIncomeEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  const income = unionFundTotal + otherIncomeTotal;
+  const expenditure = filtered.filter((entry) => entry.kind === "expenditure").reduce((sum, entry) => sum + entry.amount, 0);
+  const balance = income - expenditure;
   const exportQuery = new URLSearchParams({
     kind,
     category,
@@ -73,7 +75,7 @@ export function FinanceDashboard({
       const date = (entry.endDate || entry.date || "").slice(0, 10);
       const current = byDate.get(date) || { unionFund: 0, otherIncome: 0, expenditure: 0 };
       if (entry.kind === "expenditure") current.expenditure += entry.amount;
-      else if (entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase()) current.unionFund += entry.amount;
+      else if (entry.category.trim().toLowerCase() === config.unionFundLabel.trim().toLowerCase()) current.unionFund = Math.max(current.unionFund, entry.amount);
       else current.otherIncome += entry.amount;
       byDate.set(date, current);
     });
@@ -133,6 +135,12 @@ export function FinanceDashboard({
       {config.showGraph && <FinanceGraph data={chartData} config={config} reducedMotion={reducedMotion} />}
     </div>
   );
+}
+
+function compareFinanceEntries(left: Entry, right: Entry) {
+  const leftDate = left.endDate || left.date || "";
+  const rightDate = right.endDate || right.date || "";
+  return rightDate.localeCompare(leftDate) || right.createdAt.localeCompare(left.createdAt);
 }
 
 function FinanceGraph({
