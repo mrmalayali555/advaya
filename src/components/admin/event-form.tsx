@@ -8,7 +8,8 @@ type EventData = {
   id: string;
   title: string;
   description: string;
-  date: Date;
+  date: Date | null;
+  dateText: string | null;
   endDate: Date | null;
   time: string | null;
   venue: string | null;
@@ -57,7 +58,8 @@ export function EventForm({
             <Field label="Title" name="title" defaultValue={event?.title} required placeholder="ADVAYA Union Day 2026" />
             <TextArea label="Description" name="description" defaultValue={event?.description} required rows={5} placeholder="What's this event about?" />
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Start Date" name="date" type="date" defaultValue={event ? toDateInput(event.date) : ""} required />
+              <Field label="Start Date (optional)" name="date" type="date" defaultValue={event?.date ? toDateInput(event.date) : ""} hint="Leave blank if the date is not confirmed" />
+              <Field label="Date announcement (optional)" name="dateText" defaultValue={event?.dateText ?? ""} placeholder="Coming soon" hint="Use this when you do not have a confirmed date" />
               <Field
                 label="End Date (optional)"
                 name="endDate"

@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Clock, MapPin, Paperclip, Download, UserPlus, Users } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
@@ -10,7 +9,7 @@ import { EventGalleryRenderer } from "@/components/gallery/gallery-themes";
 import { ExpandableImage } from "@/components/ui/expandable-image";
 import { getEvent } from "@/lib/queries";
 import { getSetting } from "@/lib/queries";
-import { formatDateRange, formatDateTime } from "@/lib/utils";
+import { formatDateTime, formatEventDate } from "@/lib/utils";
 import { SITE } from "@/lib/site";
 
 const statusTone: Record<string, "info" | "success" | "danger"> = {
@@ -214,7 +213,7 @@ export default async function EventDetail({
             <MetaTile
               icon={<CalendarDays className="h-5 w-5" />}
               label={e.endDate ? "Dates" : "Date"}
-              value={formatDateRange(e.date, e.endDate)}
+              value={formatEventDate(e.date, e.dateText, e.endDate)}
             />
             {e.time && <MetaTile icon={<Clock className="h-5 w-5" />} label="Time" value={e.time} />}
             {e.venue && <MetaTile icon={<MapPin className="h-5 w-5" />} label="Venue" value={e.venue} />}

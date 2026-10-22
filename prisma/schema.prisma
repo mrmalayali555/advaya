@@ -80,7 +80,8 @@ model Event {
   title       String
   slug        String            @unique
   description String
-  date        DateTime
+  date        DateTime?
+  dateText    String?
   endDate     DateTime? // null = single-day event
   time        String?
   venue       String?

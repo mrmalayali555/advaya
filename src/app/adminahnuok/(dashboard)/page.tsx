@@ -3,7 +3,7 @@ import { Trophy, CalendarDays, Bell, MessageSquareWarning, ArrowUpRight } from "
 import { AdminHeader, StatCard, AdminCard, EmptyRow, StatusPill } from "@/components/admin/admin-ui";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
-import { formatDate, timeAgo } from "@/lib/utils";
+import { formatEventDate, timeAgo } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const admin = await requireAdmin();
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
                         <span className="truncate text-sm font-medium text-ink-800">{e.title}</span>
                         <StatusPill status={e.status} />
                       </div>
-                      <p className="mt-0.5 text-xs text-ink-400">{formatDate(e.date)}</p>
+                      <p className="mt-0.5 text-xs text-ink-400">{formatEventDate(e.date, e.dateText, e.endDate)}</p>
                     </div>
                     <ArrowUpRight className="h-4 w-4 shrink-0 text-ink-300 transition-transform group-hover:translate-x-0.5" />
                   </Link>
@@ -108,4 +108,3 @@ export default async function DashboardPage() {
     </>
   );
 }
-

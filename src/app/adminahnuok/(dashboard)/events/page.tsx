@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { AdminHeader, EmptyRow, StatusPill } from "@/components/admin/admin-ui";
-import { formatDateRange } from "@/lib/utils";
+import { formatEventDate } from "@/lib/utils";
 import { Select, SubmitBtn } from "@/components/admin/form-fields";
 import { AdminCard } from "@/components/admin/admin-ui";
 import { db as database } from "@/lib/db";
@@ -67,7 +67,7 @@ export default async function AdminEventsPage({
                       {e.title}
                     </Link>
                   </td>
-                  <td className="hidden px-5 py-3.5 text-ink-500 sm:table-cell">{formatDateRange(e.date, e.endDate)}</td>
+                  <td className="hidden px-5 py-3.5 text-ink-500 sm:table-cell">{formatEventDate(e.date, e.dateText, e.endDate)}</td>
                   <td className="px-5 py-3.5"><StatusPill status={e.status} /></td>
                   <td className="hidden px-5 py-3.5 md:table-cell">
                     <StatusPill status={e.published ? "published" : "draft"} />

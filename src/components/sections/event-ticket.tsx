@@ -1,9 +1,10 @@
 import Link from "next/link";
 import styles from "./event-ticket.module.css";
 import { LogoMark } from "@/components/ui/logo";
-import { formatDate } from "@/lib/utils";
+import { formatEventDate } from "@/lib/utils";
 
-function daysUntil(date: Date): number {
+function daysUntil(date: Date | null): number | null {
+  if (!date) return null;
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   const d = new Date(date);
@@ -17,7 +18,8 @@ export function EventTicket({
   event: {
     title: string;
     slug: string;
-    date: Date;
+    date: Date | null;
+    dateText: string | null;
     time: string | null;
     venue: string | null;
     status: string;
@@ -46,7 +48,7 @@ export function EventTicket({
               <div className={styles.details}>
                 <div className={styles.detailItem}>
                   <span className={styles.label}>Date</span>
-                  <span className={styles.value}>{formatDate(event.date)}</span>
+                  <span className={styles.value}>{formatEventDate(event.date, event.dateText)}</span>
                 </div>
                 <div className={styles.detailItem}>
                   <span className={styles.label}>Time</span>
@@ -74,8 +76,8 @@ export function EventTicket({
               <div className={styles.barcodeId}>ADV-{shortId || "EVENT"}</div>
             </div>
             <div className={styles.admit}>
-              <div className={styles.admitText}>{dLeft === 0 ? "Today" : "Days to go"}</div>
-              <div className={styles.admitNum}>{dLeft === 0 ? "★" : dLeft}</div>
+              <div className={styles.admitText}>{dLeft === null ? "Date" : dLeft === 0 ? "Today" : "Days to go"}</div>
+              <div className={styles.admitNum}>{dLeft === null ? "TBA" : dLeft === 0 ? "★" : dLeft}</div>
             </div>
           </div>
         </div>

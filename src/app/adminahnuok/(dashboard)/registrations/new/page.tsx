@@ -14,7 +14,7 @@ export default async function NewRegistrationPage() {
   const events = await db.event.findMany({
     where: { registrationForm: null },
     orderBy: { date: "desc" },
-    select: { id: true, title: true, date: true },
+    select: { id: true, title: true, date: true, dateText: true },
   });
 
   return (
@@ -56,7 +56,7 @@ export default async function NewRegistrationPage() {
               options={[
                 { label: "None (Standalone Form)", value: "" },
                 ...events.map(e => ({
-                  label: `${e.title} (${new Date(e.date).toLocaleDateString()})`,
+                  label: `${e.title} (${e.date ? new Date(e.date).toLocaleDateString() : e.dateText || "Date TBA"})`,
                   value: e.id,
                 })),
               ]}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, CalendarDays, MapPin, FileText, Download, Users } from "lucide-react";
 import { Badge, Card } from "@/components/ui/primitives";
-import { formatDate, formatDateRange } from "@/lib/utils";
+import { formatDate, formatEventDate } from "@/lib/utils";
 
 type CategoryTone = Record<string, "purple" | "info" | "success" | "warning">;
 const achTone: CategoryTone = {
@@ -92,7 +92,8 @@ export function EventCard({
     title: string;
     slug: string;
     description: string;
-    date: Date;
+    date: Date | null;
+    dateText: string | null;
     endDate: Date | null;
     time: string | null;
     venue: string | null;
@@ -148,7 +149,7 @@ export function EventCard({
             <div className="flex items-start gap-1.5">
               <CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0 text-purple-400 sm:h-4 sm:w-4" strokeWidth={1.75} />
               <span className="line-clamp-2">
-                {formatDateRange(event.date, event.endDate)}
+                {formatEventDate(event.date, event.dateText, event.endDate)}
                 {event.time ? ` · ${event.time}` : ""}
               </span>
             </div>

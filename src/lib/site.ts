@@ -47,4 +47,5 @@ export const QUICK_LINKS = [
   { label: "Emergency", href: "/emergency", icon: "Siren" },
   { label: "Subcommittee", href: "/subcommittee", icon: "Users" },
   { label: "Contact", href: "/contact", icon: "Mail" },
+  { label: "Union Accounts", href: "/finance", icon: "Wallet" },
 ] as const;

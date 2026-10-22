@@ -8,7 +8,13 @@ if (isProductionDatabase) {
     await prisma.$executeRawUnsafe(
       'ALTER TABLE "FinanceEntry" ADD COLUMN IF NOT EXISTS "endDate" TIMESTAMP(3)'
     );
-    console.log("Production finance schema checked.");
+    await prisma.$executeRawUnsafe(
+      'ALTER TABLE "Event" ADD COLUMN IF NOT EXISTS "dateText" TEXT'
+    );
+    await prisma.$executeRawUnsafe(
+      'ALTER TABLE "Event" ALTER COLUMN "date" DROP NOT NULL'
+    );
+    console.log("Production schema checked.");
   } finally {
     await prisma.$disconnect();
   }

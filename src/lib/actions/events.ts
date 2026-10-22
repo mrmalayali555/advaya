@@ -20,6 +20,7 @@ async function uniqueSlug(base: string, ignoreId?: string): Promise<string> {
 }
 
 function parse(formData: FormData) {
+  const dateRaw = String(formData.get("date") || "").trim();
   const endDateRaw = String(formData.get("endDate") || "").trim();
   let committeeIds: string[] = [];
   try {
@@ -30,7 +31,7 @@ function parse(formData: FormData) {
         committeeIds = parsed.filter((id) => typeof id === "string" && id.trim().length > 0);
       }
     }
-  } catch (e) {}
+  } catch {}
 
   const committeeIdRaw = String(formData.get("committeeId") || "").trim();
   if (committeeIds.length === 0 && committeeIdRaw) {
@@ -40,7 +41,8 @@ function parse(formData: FormData) {
   return {
     title: String(formData.get("title") || "").trim(),
     description: String(formData.get("description") || "").trim(),
-    date: new Date(String(formData.get("date") || Date.now())),
+    date: dateRaw ? new Date(dateRaw) : null,
+    dateText: String(formData.get("dateText") || "").trim() || null,
     endDate: endDateRaw ? new Date(endDateRaw) : null,
     time: String(formData.get("time") || "").trim() || null,
     venue: String(formData.get("venue") || "").trim() || null,
@@ -101,4 +103,3 @@ export async function deleteEvent(id: string) {
   revalidatePath("/");
   redirect("/adminahnuok/events");
 }
-

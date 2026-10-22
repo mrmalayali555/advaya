@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { formatEventDate } from "@/lib/utils";
 
 interface EventItem {
   id: string;
   title: string;
   slug: string;
   description: string;
-  date: Date;
+  date: Date | null;
+  dateText: string | null;
   time: string | null;
   venue: string | null;
   poster: string | null;
@@ -62,7 +63,7 @@ export function FanEvents({ events }: { events: EventItem[] }) {
                     {event.status}
                   </span>
                   <div className="text-xs font-semibold text-white/70 bg-white/5 px-2 py-0.5 rounded-md">
-                    {formatDate(event.date).split(" ")[0]} {formatDate(event.date).split(" ")[1]}
+                    {event.date ? formatEventDate(event.date, event.dateText).split(" ").slice(0, 2).join(" ") : "TBA"}
                   </div>
                 </div>
 
@@ -79,7 +80,7 @@ export function FanEvents({ events }: { events: EventItem[] }) {
                   <div className="mt-4 pt-3 border-t border-white/10 space-y-1 text-xs text-white/50">
                     <div className="flex items-center gap-1.5">
                       <CalendarDays className="h-3.5 w-3.5 text-purple-400" />
-                      <span>{formatDate(event.date)} {event.time ? ` · ${event.time}` : ""}</span>
+                      <span>{formatEventDate(event.date, event.dateText)} {event.time ? ` · ${event.time}` : ""}</span>
                     </div>
                     {event.venue && (
                       <div className="flex items-center gap-1.5">

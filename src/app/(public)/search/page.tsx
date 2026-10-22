@@ -15,7 +15,7 @@ import { Container, Card } from "@/components/ui/primitives";
 import { SearchBox } from "@/components/forms/search-box";
 import { EmptyState } from "@/components/ui/empty-state";
 import { searchAll } from "@/lib/queries";
-import { formatDate, formatDateRange } from "@/lib/utils";
+import { formatDate, formatEventDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Search",
@@ -80,7 +80,7 @@ export default async function SearchPage({
                   icon={<CalendarDays className="h-4 w-4" />}
                   kind="Event"
                   title={e.title}
-                  meta={formatDateRange(e.date, e.endDate)}
+                  meta={formatEventDate(e.date, e.dateText, e.endDate)}
                 />
               ))}
               {results.interventions.map((i) => (

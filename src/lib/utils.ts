@@ -26,9 +26,10 @@ export function formatDate(input: string | Date): string {
  * - Different years → "28 Dec 2027 – 3 Jan 2028"
  */
 export function formatDateRange(
-  start: string | Date,
+  start: string | Date | null,
   end?: string | Date | null,
 ): string {
+  if (!start) return "Date to be announced";
   const s = typeof start === "string" ? new Date(start) : start;
   if (!end) return formatDate(s);
   const e = typeof end === "string" ? new Date(end) : end;
@@ -52,6 +53,14 @@ export function formatDateRange(
   }
   // e.g. "28 Dec 2027 – 3 Jan 2028"
   return `${s.toLocaleDateString("en-IN", opts)} – ${e.toLocaleDateString("en-IN", opts)}`;
+}
+
+export function formatEventDate(
+  start: string | Date | null,
+  dateText?: string | null,
+  end?: string | Date | null,
+): string {
+  return dateText || formatDateRange(start, end);
 }
 
 /** Format a date and time as e.g. "15 Oct 2026, 02:30 PM". */
