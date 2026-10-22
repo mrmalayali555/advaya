@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-const isProductionDatabase = Boolean(process.env.POSTGRES_PRISMA_URL);
+const isProductionDatabase = Boolean(
+  process.env.POSTGRES_PRISMA_URL ||
+  process.env.POSTGRES_URL_NON_POOLING ||
+  process.env.DATABASE_URL
+);
 
 if (isProductionDatabase) {
   const prisma = new PrismaClient();
