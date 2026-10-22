@@ -1,6 +1,7 @@
 import "server-only";
 
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 
 export const DEFAULT_FINANCE_CONFIG = {
   title: "Union Accounts",
@@ -17,18 +18,37 @@ export const DEFAULT_FINANCE_CONFIG = {
 
 export type FinanceConfig = typeof DEFAULT_FINANCE_CONFIG;
 
-async function ensureFinanceSchema() {
-  if (
-    !process.env.POSTGRES_PRISMA_URL &&
-    !process.env.POSTGRES_URL_NON_POOLING &&
-    !process.env.DATABASE_URL
-  ) {
-    return;
-  }
+async function getFinanceEntries() {
+  try {
+    return await db.financeEntry.findMany({
+      orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+    });
+  } catch (error) {
+    if (!(error instanceof Prisma.PrismaClientKnownRequestError) && !(error instanceof Prisma.PrismaClientUnknownRequestError)) {
+      throw error;
+    }
 
-  await db.$executeRawUnsafe(
-    'ALTER TABLE "FinanceEntry" ADD COLUMN IF NOT EXISTS "endDate" TIMESTAMP(3)'
-  );
+    console.error("Finance schema is missing a newer optional column; using the legacy read-only query.", error);
+    return db.$queryRaw<
+      Array<{
+        id: string;
+        kind: string;
+        category: string;
+        label: string;
+        amount: number;
+        note: string | null;
+        receiptUrl: string | null;
+        date: Date | null;
+        endDate: Date | null;
+        createdAt: Date;
+      }>
+    >(Prisma.sql`
+      SELECT "id", "kind", "category", "label", "amount", "note", "receiptUrl",
+             "date", NULL::timestamp AS "endDate", "createdAt"
+      FROM "FinanceEntry"
+      ORDER BY "date" DESC NULLS LAST, "createdAt" DESC
+    `);
+  }
 }
 
 export async function getFinanceConfig(): Promise<FinanceConfig> {
@@ -52,10 +72,6 @@ export async function getFinanceConfig(): Promise<FinanceConfig> {
 }
 
 export async function getFinanceData() {
-  await ensureFinanceSchema();
-  const [entries, config] = await Promise.all([
-    db.financeEntry.findMany({ orderBy: [{ date: "desc" }, { createdAt: "desc" }] }),
-    getFinanceConfig(),
-  ]);
+  const [entries, config] = await Promise.all([getFinanceEntries(), getFinanceConfig()]);
   return { entries, config };
 }
