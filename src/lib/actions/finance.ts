@@ -29,6 +29,14 @@ export async function createFinance(formData: FormData) {
     throw new Error("A label and a positive amount are required.");
   }
   await db.financeEntry.create({ data });
+  const current = await getFinanceConfig();
+  if (!current.categories.some((category) => category.toLowerCase() === data.category.toLowerCase())) {
+    await db.setting.upsert({
+      where: { key: "finance_config" },
+      update: { value: JSON.stringify({ ...current, categories: [...current.categories, data.category] }) },
+      create: { key: "finance_config", value: JSON.stringify({ ...current, categories: [...current.categories, data.category] }) },
+    });
+  }
   revalidatePath("/adminahnuok/finance");
   revalidatePath("/finance");
 }

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import { createFinance, deleteFinance, saveFinanceConfig } from "@/lib/actions/finance";
 import { getFinanceConfig } from "@/lib/finance";
+import { FinanceCategoryField } from "@/components/admin/finance-category-field";
 
 export default async function AdminFinancePage() {
   const [entries, config] = await Promise.all([
@@ -28,10 +29,7 @@ export default async function AdminFinancePage() {
           <h3 className="mb-4 font-semibold text-ink-900">Add entry</h3>
           <form action={createFinance} className="grid gap-4">
             <Select label="Type" name="kind" options={[{ value: "income", label: "Income" }, { value: "expenditure", label: "Expenditure" }]} />
-            <Field label="Category" name="category" placeholder={config.unionFundLabel} list="finance-categories" hint="Choose an existing category or type a new one." />
-            <datalist id="finance-categories">
-              {config.categories.map((category) => <option key={category} value={category} />)}
-            </datalist>
+            <FinanceCategoryField categories={config.categories} defaultValue={config.unionFundLabel} />
             <Field label="Label" name="label" required placeholder="Annual union fund collection" />
             <Field label="Amount (₹)" name="amount" type="number" required placeholder="480000" />
             <Field label="Collected up to (optional)" name="endDate" type="date" hint="Use this when you want to show the date up to which the amount was collected." />
