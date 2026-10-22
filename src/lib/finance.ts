@@ -24,35 +24,42 @@ async function getFinanceEntries() {
       orderBy: [{ date: "desc" }, { createdAt: "desc" }],
     });
   } catch (error) {
-    if (!(error instanceof Prisma.PrismaClientKnownRequestError) && !(error instanceof Prisma.PrismaClientUnknownRequestError)) {
-      throw error;
-    }
-
     console.error("Finance schema is missing a newer optional column; using the legacy read-only query.", error);
-    return db.$queryRaw<
-      Array<{
-        id: string;
-        kind: string;
-        category: string;
-        label: string;
-        amount: number;
-        note: string | null;
-        receiptUrl: string | null;
-        date: Date | null;
-        endDate: Date | null;
-        createdAt: Date;
-      }>
-    >(Prisma.sql`
-      SELECT "id", "kind", "category", "label", "amount", "note", "receiptUrl",
-             "date", NULL::timestamp AS "endDate", "createdAt"
-      FROM "FinanceEntry"
-      ORDER BY "date" DESC NULLS LAST, "createdAt" DESC
-    `);
+    try {
+      return await db.$queryRaw<
+        Array<{
+          id: string;
+          kind: string;
+          category: string;
+          label: string;
+          amount: number;
+          note: string | null;
+          receiptUrl: string | null;
+          date: Date | null;
+          endDate: Date | null;
+          createdAt: Date;
+        }>
+      >(Prisma.sql`
+        SELECT "id", "kind", "category", "label", "amount", "note", "receiptUrl",
+               "date", NULL::timestamp AS "endDate", "createdAt"
+        FROM "FinanceEntry"
+        ORDER BY "date" DESC NULLS LAST, "createdAt" DESC
+      `);
+    } catch (fallbackError) {
+      console.error("Unable to load finance entries; showing an empty account history.", fallbackError);
+      return [];
+    }
   }
 }
 
 export async function getFinanceConfig(): Promise<FinanceConfig> {
-  const setting = await db.setting.findUnique({ where: { key: "finance_config" } });
+  let setting;
+  try {
+    setting = await db.setting.findUnique({ where: { key: "finance_config" } });
+  } catch (error) {
+    console.error("Unable to load finance settings; using defaults.", error);
+    return DEFAULT_FINANCE_CONFIG;
+  }
   if (!setting) return DEFAULT_FINANCE_CONFIG;
 
   try {
