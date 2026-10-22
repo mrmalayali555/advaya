@@ -17,6 +17,20 @@ export const DEFAULT_FINANCE_CONFIG = {
 
 export type FinanceConfig = typeof DEFAULT_FINANCE_CONFIG;
 
+async function ensureFinanceSchema() {
+  if (
+    !process.env.POSTGRES_PRISMA_URL &&
+    !process.env.POSTGRES_URL_NON_POOLING &&
+    !process.env.DATABASE_URL
+  ) {
+    return;
+  }
+
+  await db.$executeRawUnsafe(
+    'ALTER TABLE "FinanceEntry" ADD COLUMN IF NOT EXISTS "endDate" TIMESTAMP(3)'
+  );
+}
+
 export async function getFinanceConfig(): Promise<FinanceConfig> {
   const setting = await db.setting.findUnique({ where: { key: "finance_config" } });
   if (!setting) return DEFAULT_FINANCE_CONFIG;
@@ -38,6 +52,7 @@ export async function getFinanceConfig(): Promise<FinanceConfig> {
 }
 
 export async function getFinanceData() {
+  await ensureFinanceSchema();
   const [entries, config] = await Promise.all([
     db.financeEntry.findMany({ orderBy: [{ date: "desc" }, { createdAt: "desc" }] }),
     getFinanceConfig(),
